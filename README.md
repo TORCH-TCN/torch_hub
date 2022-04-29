@@ -32,6 +32,6 @@ Once prefect is installed, run the workflow as follows:
 
 Arguments to the application are as follows:
 
-- -d (or --directory): The directory name to process
-- -p (or --parallel): Process files in parallel using a built-in Dask Executor
-- -h (or --help): See documentation for this app
+- `-d` (or `--directory`): The directory name to process
+- `-p` (or `--parallel`): Process files in parallel using a built-in Dask Executor
+- `-h` (or `--help`): See documentation for this app
