@@ -1,12 +1,11 @@
+from pathlib import Path
 from prefect import prefect, task
-import os
-
 
 @task
 def log_new_file_name(new_path):
     logger = prefect.context.get('logger')
 
-    logfile = os.path.dirname(new_path) + '\\newfiles.txt'
+    logfile = Path(new_path).parent / 'newfiles.txt'
     with open(logfile, 'a') as log:
         log.write(new_path + '\n')
 
