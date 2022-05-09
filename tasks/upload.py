@@ -7,22 +7,22 @@ from botocore.config import Config
 
 
 @task
-def upload(config, path: str, to_directory: str):
+def upload(config, path: str):
     logger = prefect.context.get('logger')
 
     logger.info(f'Uploading {path} via {config.upload.type}...')
 
     match config.upload.type:
         case 'sftp':
-            return upload_via_sftp(config, path, to_directory)
+            return upload_via_sftp(config, path)
         case 's3':
-            return upload_via_s3(config, path, to_directory)
+            return upload_via_s3(config, path)
         case _:
             raise NotImplementedError(
                 f"Upload type {config.upload.type} is not yet implemented.")
 
 
-def upload_via_sftp(config, path, to_directory):
+def upload_via_sftp(config, path):
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
 
@@ -33,10 +33,10 @@ def upload_via_sftp(config, path, to_directory):
         cnopts=cnopts
     ) as sftp:
         try:
-            sftp.chdir(to_directory)
+            sftp.chdir(config.upload.path)
         except IOError:
-            sftp.mkdir(to_directory)
-            sftp.chdir(to_directory)
+            sftp.mkdir(config.upload.path)
+            sftp.chdir(config.upload.path)
 
         sftp.put(path)
 
@@ -45,7 +45,7 @@ def upload_via_sftp(config, path, to_directory):
             + f'/{os.path.basename(path)}'
 
 
-def upload_via_s3(config, path, to_directory):
+def upload_via_s3(config, path):
     amazon_config = Config(
         region_name=config.upload.host,
     )
@@ -58,7 +58,10 @@ def upload_via_s3(config, path, to_directory):
     )
 
     try:
-        response = s3.upload_file(path, to_directory, os.path.basename(path))
+        response = s3.upload_file(
+            path,
+            config.upload.path,
+            os.path.basename(path))
         return response
     except ClientError:
         return None

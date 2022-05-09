@@ -2,6 +2,7 @@
     "upload": {
         "type": "sftp",
         "host": "torchhub.blob.core.windows.net",
+        "path": "brit",
         "username": "torchhub.torchadmin",
         "password": "[contact Joseph for password]"
     }

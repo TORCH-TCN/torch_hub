@@ -11,8 +11,7 @@ with Flow("process-specimen") as process_specimen:
     files = read_dir(path)
     new_path = upload.map(
         path=files,
-        config=unmapped(config),
-        to_directory=unmapped('process-specimen'))
+        config=unmapped(config))
     log_new_file_name.map(
         new_path=new_path,
         directory=unmapped(path))
