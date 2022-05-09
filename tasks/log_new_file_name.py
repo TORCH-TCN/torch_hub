@@ -1,6 +1,7 @@
 from pathlib import Path
 from prefect import prefect, task
 
+
 @task
 def log_new_file_name(new_path):
     logger = prefect.context.get('logger')
