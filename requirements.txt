@@ -3,5 +3,5 @@
 prefect # Workflow engine
 
 pysftp # SFTP upload
-botocore
 boto3 # Amazon S3 upload
+pillow # Derivative image processing

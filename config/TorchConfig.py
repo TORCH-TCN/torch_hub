@@ -7,8 +7,8 @@ class TorchConfig:
         vars(self).update(dict)
 
     @staticmethod
-    def from_json(json_file) -> "TorchConfig":
+    def from_json(json_file) -> object:
         f = open(json_file)
-        config = json.load(f, object_hook=TorchConfig)
+        config = json.load(f)
         f.close()
         return config

@@ -9,17 +9,17 @@ from botocore.config import Config
 @task
 def upload(config, path: str):
     logger = prefect.context.get('logger')
+    type = config['upload']['type']
+    logger.info(f"Uploading {path} via {type}...")
 
-    logger.info(f'Uploading {path} via {config.upload.type}...')
-
-    match config.upload.type:
+    match type:
         case 'sftp':
-            return upload_via_sftp(config, path)
+            return upload_via_sftp(config['upload'], path)
         case 's3':
-            return upload_via_s3(config, path)
+            return upload_via_s3(config['upload'], path)
         case _:
             raise NotImplementedError(
-                f"Upload type {config.upload.type} is not yet implemented.")
+                f"Upload type {type} is not yet implemented.")
 
 
 def upload_via_sftp(config, path):
@@ -27,40 +27,40 @@ def upload_via_sftp(config, path):
     cnopts.hostkeys = None
 
     with pysftp.Connection(
-        host=config.upload.host,
-        username=config.upload.username,
-        password=config.upload.password,
+        host=config['host'],
+        username=config['username'],
+        password=config['password'],
         cnopts=cnopts
     ) as sftp:
         try:
-            sftp.chdir(config.upload.path)
+            sftp.chdir(config['path'])
         except IOError:
-            sftp.mkdir(config.upload.path)
-            sftp.chdir(config.upload.path)
+            sftp.mkdir(config['path'])
+            sftp.chdir(config['path'])
 
         sftp.put(path)
 
-        return f'{config.upload.host}' \
+        return f'{config["host"]}' \
             + sftp.getcwd() \
             + f'/{os.path.basename(path)}'
 
 
 def upload_via_s3(config, path):
     amazon_config = Config(
-        region_name=config.upload.host,
+        region_name=config['host'],
     )
 
     s3 = boto3.client(
         's3',
         config=amazon_config,
-        aws_access_key_id=config.upload.username,
-        aws_secret_access_key=config.upload.password
+        aws_access_key_id=config['username'],
+        aws_secret_access_key=config['password']
     )
 
     try:
         response = s3.upload_file(
             path,
-            config.upload.path,
+            config['path'],
             os.path.basename(path))
         return response
     except ClientError:
