@@ -40,6 +40,10 @@ def upload_via_sftp(config, path, to_directory):
 
         sftp.put(path)
 
+        return f'{config.upload.host}' \
+            + sftp.getcwd() \
+            + f'/{os.path.basename(path)}'
+
 
 def upload_via_s3(config, path, to_directory):
     amazon_config = Config(

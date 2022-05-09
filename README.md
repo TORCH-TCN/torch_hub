@@ -5,8 +5,8 @@ This repository is currently a reference implementation of a Prefect-based archi
 When you run this reference implementation:
 
 - all files in the directory will be read 
-- each file will be copied (with suffix -copy) into the same directory
-- a log file `newfiles.txt` will be added to the same directory with a full list of all new (copied) files
+- each file will be uploaded to the location specified in the config
+- a log file `newfiles.txt` will be added to the same directory with a full list of the new URLs for all uploaded files
 
 This demonstrates a full working end-to-end Prefect workflow for a group of files.
 
@@ -17,21 +17,22 @@ In addition, two execution flows have been implemented:
 
 ## Installation
 
-The only dependency is prefect:
+All dependencies are listed in requirements.txt:
 ```bash
-    pip install prefect
+    pip install -r requirements.txt
 ```
 
 ## How to run
 
-Once prefect is installed, run the workflow as follows:
+Once the dependencies are installed, run the workflow as follows:
 
 ```bash
-    python3 torch.py -d c:\users\me\FilesToProcess
+    python3 torch.py -d c:\users\me\FilesToProcess -c .\config\example-config.json -p
 ```
 
 Arguments to the application are as follows:
 
 - `-d` (or `--directory`): The directory name to process
+- `-c` (or `--config`): The JSON config file to use 
 - `-p` (or `--parallel`): Process files in parallel using a built-in Dask Executor
 - `-h` (or `--help`): See documentation for this app
