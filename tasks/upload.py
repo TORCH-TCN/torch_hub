@@ -9,17 +9,17 @@ from botocore.config import Config
 @task
 def upload(config, path: str):
     logger = prefect.context.get('logger')
-    type = config['upload']['type']
-    logger.info(f"Uploading {path} via {type}...")
+    upload_type = config['upload']['type']
+    logger.info(f"Uploading {path} via {upload_type}...")
 
-    match type:
+    match upload_type:
         case 'sftp':
             return upload_via_sftp(config['upload'], path)
         case 's3':
             return upload_via_s3(config['upload'], path)
         case _:
             raise NotImplementedError(
-                f"Upload type {type} is not yet implemented.")
+                f"Upload type {upload_type} is not yet implemented.")
 
 
 def upload_via_sftp(config, path):
