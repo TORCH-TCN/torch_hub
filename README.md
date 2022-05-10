@@ -14,6 +14,9 @@ In addition, two execution flows have been implemented:
 
 - Local, Linear, & Synchronous: Processes files one by one in sequence (no -p argument provided)
 - Parallel and Multithreaded: Processes files in parallel using a built-in Dask Executor (-p argument provided)
+## Requirements
+
+Requires Python 3.10*
 
 ## Installation
 
