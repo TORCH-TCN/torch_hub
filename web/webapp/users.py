@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_security.utils import hash_password
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
-auth = Blueprint('auth', __name__)
+users = Blueprint('users', __name__)
 
-# @auth.route('/login', methods=['GET','POST'])
+# @auth.route('/create', methods=['GET','POST'])
 # def login():
 #     if request.method == 'POST':
 #         email = request.form.get('email')
@@ -48,10 +49,12 @@ auth = Blueprint('auth', __name__)
 #         elif len(password1) < 7:
 #             flash('Password must be at least 7 characters.', category='error')
 #         else:
-#             new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
-#             db.session.add(new_user)
+#             # new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+#             # db.session.add(new_user)
+            
+#             # login_user(new_user, remember=True)
+#             user_datastore.create_user(email=email,password=hash_password(password1))
 #             db.session.commit()
-#             login_user(new_user, remember=True)
 #             flash('Account created!', category='success')
 #             return redirect(url_for('views.home'))
 

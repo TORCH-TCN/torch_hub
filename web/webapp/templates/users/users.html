@@ -1,0 +1,24 @@
+{% extends "base.html" %} 
+{% block title %}Users{% endblock %} 
+{% block content %}
+    <h1 align="center">Users</h1>
+    <a href="users/create">Add User</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Email</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{user.email}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+   
+{% endblock %}
