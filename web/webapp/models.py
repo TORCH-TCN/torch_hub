@@ -1,6 +1,6 @@
 from . import db
 from sqlalchemy.sql import func
-from flask_security import RoleMixin, Security, SQLAlchemyUserDatastore, UserMixin
+from flask_security import RoleMixin, UserMixin
 
 class Institution(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -26,12 +26,8 @@ def create_app():
     #mail = Mail(app)
 
     from .views import views
-    from .auth import auth
-    from .users import users
 
     app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(auth, url_prefix='/')
-    app.register_blueprint(users, url_prefix='/users')
 
     from .models import User, Role, Institution
 
