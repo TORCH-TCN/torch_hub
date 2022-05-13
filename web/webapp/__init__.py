@@ -5,6 +5,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMix
 from flask_mail import Mail
 
 db = SQLAlchemy()
+
 DB_NAME = 'torch-hub.db'
 
 def create_app():

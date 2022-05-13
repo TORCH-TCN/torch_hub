@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
     active = db.Column(db.Boolean)
     confirmed_at = db.Column(db.DateTime)
     institution_id = db.Column(db.Integer, db.ForeignKey('institution.id'))
