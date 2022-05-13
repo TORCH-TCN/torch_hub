@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, roles_accepted, roles_required
 from flask_mail import Mail
+#from flask_migrate import Migrate
 
 db = SQLAlchemy()
-
+#migrate = Migrate()
 DB_NAME = 'torch-hub.db'
 
 def create_app():
@@ -20,6 +21,7 @@ def create_app():
     #app.config.from_pyfile('mail_config.cfg')
 
     db.init_app(app)
+    #migrate.init_app(app,db)
     #mail = Mail(app)
 
     from .views import views
@@ -36,14 +38,6 @@ def create_app():
 
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
-
-    # login_manager = LoginManager()
-    # login_manager.login_view = 'auth.login'
-    # login_manager.init_app(app)
-
-    # @login_manager.user_loader
-    # def load_user(id):
-    #     return User.query.get(int(id))
         
     return app
 
