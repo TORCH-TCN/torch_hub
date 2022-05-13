@@ -1,0 +1,70 @@
+{% extends "base.html" %} 
+{% block title %}Users{% endblock %} 
+{% block content %}
+    <h1 align="center">Users</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Email</td>
+                <td>Roles</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        
+                        {% for role in user.roles %}
+                            <p>
+                            {{role.name}}  <button type="button" class="close" onClick="deleteRoleFromUser({{ user.id }}, '{{ role.name }}')">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </p>
+                        {%endfor%}
+                    
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-link" onClick="openRoleModal({{ user.id }})">
+                            Add role
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Assign Role</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                
+              <form>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Role:</label>
+                  <select class="form-control" id="selectedRole">
+                      <option value="0">Select an option</option>
+                    {% for role in roles %}
+                        <option value="{{role.name}}">{{role.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="addRoleToUser()">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
