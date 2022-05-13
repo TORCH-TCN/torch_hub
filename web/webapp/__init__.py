@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
-from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, roles_accepted, roles_required
+from flask_security import RegisterForm, Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, roles_accepted, roles_required
 from flask_mail import Mail
+from wtforms import StringField
 #from flask_migrate import Migrate
 
 db = SQLAlchemy()
@@ -36,8 +37,12 @@ def create_app():
 
     create_database(app)
 
+    class ExtendedRegisterForm(RegisterForm):
+        first_name = StringField('First Name')
+        last_name = StringField('Last Name')
+
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security = Security(app, user_datastore)
+    security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
         
     return app
 
