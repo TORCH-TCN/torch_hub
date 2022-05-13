@@ -1,0 +1,30 @@
+{
+    "collection": {
+        "name": "BRIT",
+        "prefix": "BRIT",
+        "catalog_number_regex": "(?P<catNum>(?P<instID>BRIT)(-(?P<collID>XX)-)*(?P<numerical>\\d+))"
+    },
+    "upload": {
+        "type": "sftp",
+        "host": "torchhub.blob.core.windows.net",
+        "path": "brit",
+        "username": "torchhub.torchadmin",
+        "password": "[contact Joseph for password]"
+    },
+    "generate_derivatives": {
+        "regex": "(_(?P<suffix>a-z|0-9))*((_)(?P<size>thumb|med))?(\\.)(?i)(?P<ext>jpg|jpeg)",
+        "sizes": {
+            "full": {
+                "output_path": "web/BRIT/"
+            },
+            "med": {
+                "width": 900,
+                "output_path": "web/BRIT/"
+            },
+            "thumb": {
+                "width": 390,
+                "output_path": "web/BRIT/"
+            }
+        }
+    }
+}

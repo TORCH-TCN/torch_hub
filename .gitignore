@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 .vscode
 dask-worker-space
+config.json
