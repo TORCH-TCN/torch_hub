@@ -1,0 +1,3 @@
+To retrieve remote images for testing:
+
+cat brit_random_urls_20.csv | while read f; do curl "${f}" -OJ; done;
