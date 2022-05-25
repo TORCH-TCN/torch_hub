@@ -15,9 +15,9 @@ with Flow("process-specimen") as process_specimen:
         input_file=files,
         config=unmapped(config))
 
-    # new_path = upload.map(
-    #     path=files,
-    #     config=unmapped(config))
+    new_path = upload.map(
+        path=files,
+        config=unmapped(config))
 
     # log_new_file_name.map(
     #     new_path=new_path,

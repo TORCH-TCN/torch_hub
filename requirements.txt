@@ -5,3 +5,6 @@ prefect # Workflow engine
 pysftp # SFTP upload
 boto3 # Amazon S3 upload
 pillow # Derivative image processing
+
+pyzbar
+tqdm
