@@ -99,3 +99,17 @@ def delete_role_user():
     db.session.commit()
 
     return jsonify({})
+
+
+@views.route('/change-user-active', methods=['POST'])
+@roles_accepted('admin')
+def deactivate_user():
+    data = json.loads(request.data)
+    userId = data['userId']
+        
+    user = User.query.get(userId)
+    user.active = 0 if user.active == 1 else 1
+
+    db.session.commit()
+
+    return jsonify({})

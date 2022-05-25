@@ -14,7 +14,14 @@
         <tbody>
             {% for user in users %}
                 <tr>
-                    <td>{{ user.email }}</td>
+                    <td>
+                      {% if user.active %}
+                        <i class="fa fa-user" style="color:green"></i> 
+                      {% else %}
+                      <i class="fa fa-user"></i> 
+                      {% endif %}
+                      {{ user.email }}
+                    </td>
                     <td>
                         
                         {% for role in user.roles %}
@@ -30,6 +37,14 @@
                         <button type="button" class="btn btn-link" onClick="openRoleModal({{ user.id }})">
                             Add role
                         </button>
+                        |
+                        <button type="button" class="btn btn-link" onClick="changeUserActive({{ user.id }}, '{{user.active}}')">
+                          {% if user.active %}
+                            Deactivate
+                          {% else %}
+                            Activate
+                          {% endif %}
+                      </button>
                     </td>
                 </tr>
             {% endfor %}
