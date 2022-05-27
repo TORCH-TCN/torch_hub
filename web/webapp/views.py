@@ -60,6 +60,52 @@ def roles():
         #user_datastore
     roles = Role.query.all()
     return render_template("roles/roles.html", user=current_user, roles=roles)
+    
+@views.route('/files', methods=['GET','POST'])
+# @login_required
+def files():
+    if request.method == 'POST':
+        current_user.first_name = request.form.get('firstName')
+        current_user.last_name = request.form.get('lastName')
+        db.session.commit()
+        flash('Updated successfully!', category='success')
+
+    return render_template("files.html",user=current_user)
+
+@views.route('/history', methods=['GET','POST'])
+# @login_required
+def history():
+    if request.method == 'POST':
+        current_user.first_name = request.form.get('firstName')
+        current_user.last_name = request.form.get('lastName')
+        db.session.commit()
+        flash('Updated successfully!', category='success')
+
+    return render_template("history.html",user=current_user)
+
+@views.route('/settings', methods=['GET','POST'])
+# @login_required
+def settings():
+    if request.method == 'POST':
+        current_user.first_name = request.form.get('firstName')
+        current_user.last_name = request.form.get('lastName')
+        db.session.commit()
+        flash('Updated successfully!', category='success')
+
+    return render_template("settings.html",user=current_user)
+
+@views.route('/overview', methods=['GET','POST'])
+    # @login_required
+def overview():
+    if request.method == 'POST':
+        current_user.first_name = request.form.get('firstName')
+        current_user.last_name = request.form.get('lastName')
+        db.session.commit()
+        flash('Updated successfully!', category='success')
+
+    return render_template("overview.html",user=current_user)
+
+@views.route('/history', methods=['GET','POST'])
 
 @views.route('/delete-institution', methods=['POST'])
 def delete_institution():
