@@ -1,12 +1,13 @@
 {% extends "base.html" %} 
 {% block title %}Users{% endblock %} 
 {% block content %}
-    <h1 align="center">Users</h1>
+    <h3 align="left" class="my-4">Users</h3>
     
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <td>Email</td>
+                <td>Institution</td>
                 <td>Roles</td>
                 <td></td>
             </tr>
@@ -22,6 +23,7 @@
                       {% endif %}
                       {{ user.email }}
                     </td>
+                    <td>{{user.institution_code}}</td>
                     <td>
                         
                         {% for role in user.roles %}
@@ -34,6 +36,8 @@
                     
                     </td>
                     <td>
+                        <a class="btn btn-link" href="/users/edit/{{user.id}}">Edit</a>
+                        | 
                         <button type="button" class="btn btn-link" onClick="openRoleModal({{ user.id }})">
                             Add role
                         </button>
@@ -45,6 +49,7 @@
                             Activate
                           {% endif %}
                       </button>
+
                     </td>
                 </tr>
             {% endfor %}

@@ -22,6 +22,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(150))
     active = db.Column(db.Boolean)
     confirmed_at = db.Column(db.DateTime)
+    institution_code = db.Column(db.String(10))
     institution_id = db.Column(db.Integer, db.ForeignKey('institution.id'))
     fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
     roles = db.relationship('Role',secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
