@@ -1,0 +1,317 @@
+{% extends "base.html" %} 
+{% block title %}Files{% endblock %} 
+{% block content %}
+
+<section class="settings-page">
+    <header>
+        <h6>Settings</h6>
+        <p class="small">Adjust settings of the upload process.</p>
+    </header>
+    
+    <div class="content-wrapper">
+        <div class="settings-grid">
+            <!-- Start of Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-item">
+                    <p class="small">Category One</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category extra long</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <div class="sidebar-item">
+                    <p class="small">Category</p>
+                </div>
+                <button>Save Changes</button>
+            </div>
+            <!-- End of Sidebar -->
+
+            <div class="main-content">
+                <!-- Header -->
+                <div class="grid-block">
+                    <h6 class="header-large">Category Title</h6>
+                    <p class="small">A line of description</p>
+                </div>
+
+                <!-- Card Details -->
+                <div class="grid-block card-details">
+                    <div class="block-title">
+                        <p class="small">Section Name (Card Example)</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <label for="name">Name</label>
+                            <input class="card-name" id="name" type="text" placeholder="Olivia Rhye">
+                        </div>
+                        <div class="input-wrapper Expiry">
+                            <label for="Expiry">Expiry</label>
+                            <input class="card-expiry" id="Expiry" type="text" placeholder="06/2024">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="cardnumber">Card Number</label>
+                            <input class="card-number" id="cardnumber" type="text" maxlength="16" placeholder="1234 1234 1234 1234">
+                        </div>
+                        <div class="input-wrapper cvv">
+                            <label for="cvv">CVV</label>
+                            <input class="card-cvv" id="cvv" type="text" maxlength="3" placeholder="***">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additinal inputs -->
+                <div class="grid-block card-email">
+                    <div class="block-title">
+                        <p class="small">Additional inputs</p>
+                        <p class="small">Section info/tip</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="useremail@torch.com">
+                        </div>
+                        <div class="add">
+                            <i>icon</i>
+                            <p class="small">Add Another</p>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Single inputs -->
+                <div class="grid-block">
+                    <div class="block-title">
+                        <p class="small">Single inputs</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="100 Smith Street">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Name -->
+                <div class="grid-block section-name">
+                    <div class="block-title">
+                        <p class="small">Section Name</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="Collingwood">
+                        </div>
+                        <p class="small hint-text">A bit of hint text</p>
+                    </div>
+                </div>
+
+                <!-- Double Input -->
+                <div class="grid-block double-input">
+                    <div class="block-title">
+                        <p class="small">Double Input</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="VIC">
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="3066">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dropdown -->
+                <div class="grid-block dropdown">
+                    <div class="block-title">
+                        <p class="small">Dropdown</p>
+                    </div>
+                    <div class="block-content">
+                        <select name="country" id="country">
+                            <option value="">Select</option>
+                            <option value="1">Australia</option>
+                            <option value="2">England</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text with markdown -->
+                <div class="grid-block text-markup">
+                    <div class="block-title">
+                        <p class="small">Text with markdown</p>
+                        <p class="small">Write a short bio</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="text-style">
+                            <select name="textStyle" id="textStyle">
+                                <option value="">Normal text</option>
+                                <option value="1">Bold Text</option>
+                            </select>
+                        </div>
+                        <div>
+                            <textarea name="textarea" id="textarea" cols="30" rows="10" placeholder="I'm a Product Designer based in Bristol.
+                            "></textarea>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="grid-block settings-location">
+                    <div class="block-title">
+                        <p class="small">Location</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="may">
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="grid-block checkboxes">
+                    <div class="block-title">
+                        <p class="small">Checkboxes</p>
+                        <p class="small">Examples of checkbox section</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input id="reports" type="checkbox" checked>
+                            <label for="reports">Reports</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <input id="checkEmail" type="checkbox">
+                            <label for="checkEmail">Emails</label>
+                        </div>
+                        <p class="small">checkbox info</p>
+                    </div>
+                </div>
+
+                <!-- Radio -->
+                <div class="grid-block radios">
+                    <div class="block-title">
+                        <p class="small">Radio</p>
+                        <p class="small">Examples of radios too</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="input-wrapper">
+                            <input name="notifcations" id="reports" type="radio" >
+                            <label for="reports">Do not notify me</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <input name="notifcations" id="checkEmail" type="radio">
+                            <label for="checkEmail">Important reminders only</label>
+                            <p class="small">only notify me if the reminder is tagged as Important</p>
+                        </div>
+                        <div class="input-wrapper">
+                            <input name="notifcations" id="checkEmail" type="radio" checked>
+                            <label for="checkEmail">All reminders</label>
+                            <p class="small">only notify me for all reminders</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Management -->
+                <div class="grid-block team-management">
+                    <div class="block-title">
+                        <p class="small">Team Management</p>
+                        <p class="small">Add team</p>
+                        <a href="">Add Member</a>
+                    </div>
+                    <div class="block-content">
+                        <div class="grid">
+                            <div class="grid-wrapper">
+                                <div class="grid-headers">
+                                    <div class="grid-header-item">
+                                        <p class="xsmall">Name</p>
+                                    </div>
+                                    <div class="grid-header-item">
+                                        <p class="xsmall">Email</p>
+                                    </div>
+                                </div>
+                                <div class="grid-items">
+                                    <div class="grid-item">
+                                        <!-- <img src="" alt="img"> -->
+                                        <p class="small username">Olivia Rhye</p>
+                                    </div>
+                                    <div class="grid-item">
+                                        <p class="small user-email">olivia@untitledui.com</p>
+                                    </div>
+                                    <div class="grid-item cta-buttons">
+                                        <a class="delete" href="">Delete</a>
+                                        <a class="edit" href="">Edit</a>
+                                    </div>
+
+                                    <div class="grid-item">
+                                        <!-- <img src="" alt="img"> -->
+                                        <p class="small username">Olivia Rhye</p>
+                                    </div>
+                                    <div class="grid-item">
+                                        <p class="small user-email">olivia@untitledui.com</p>
+                                    </div>
+                                    <div class="grid-item cta-buttons">
+                                        <a class="delete" href="">Delete</a>
+                                        <a class="edit" href="">Edit</a>
+                                    </div>
+                                    <div class="grid-item">
+                                        <!-- <img src="" alt="img"> -->
+                                        <p class="small username">Olivia Rhye</p>
+                                    </div>
+                                    <div class="grid-item">
+                                        <p class="small user-email">olivia@untitledui.com</p>
+                                    </div>
+                                    <div class="grid-item cta-buttons">
+                                        <a class="delete" href="">Delete</a>
+                                        <a class="edit" href="">Edit</a>
+                                    </div>
+                                    <div class="grid-item">
+                                        <!-- <img src="" alt="img"> -->
+                                        <p class="small username">Olivia Rhye</p>
+                                    </div>
+                                    <div class="grid-item">
+                                        <p class="small user-email">olivia@untitledui.com</p>
+                                    </div>
+                                    <div class="grid-item cta-buttons">
+                                        <a class="delete" href="">Delete</a>
+                                        <a class="edit" href="">Edit</a>
+                                    </div>
+                                    <div class="grid-item">
+                                        <!-- <img src="" alt="img"> -->
+                                        <p class="small username">Olivia Rhye</p>
+                                    </div>
+                                    <div class="grid-item">
+                                        <p class="small user-email">olivia@untitledui.com</p>
+                                    </div>
+                                    <div class="grid-item cta-buttons">
+                                        <a class="delete" href="">Delete</a>
+                                        <a class="edit" href="">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

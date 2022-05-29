@@ -3,6 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -14,34 +17,39 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/base.css') }}"/>
 
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbar"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <div class="navbar-nav">
-          {% if user.is_authenticated %}
-            <a class="nav-item nav-link" id="home" href="/">Home</a>
-            <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
-            {% if current_user.has_role('admin') %}
-              <a class="nav-item nav-link" id="users" href="/users">Users</a>
-              <a class="nav-item nav-link" id="users" href="/roles">Roles</a>
-              <a class="nav-item nav-link" id="home" href="/institutions">Institutions</a>
+    <nav>
+      <div class="container">
+        <div class="nav">
+          <div class="nav-left">
+            {% if user.is_authenticated %}
+              <a class="nav-item nav-link" id="home" href="/">Home</a>
+              {% if current_user.has_role('admin') %}
+                <a class="nav-item nav-link" id="users" href="/users">Users</a>
+                <a class="nav-item nav-link" id="users" href="/roles">Roles</a>
+                <a class="nav-item nav-link" id="home" href="/institutions">Institutions</a>
+              {% endif %}
+              <a class="nav-item nav-link" id="home" href="/overview">OverView</a>
+              <a class="nav-item nav-link" id="files" href="/files">Files</a>
+              <!-- <a class="nav-item nav-link" id="history" href="/history">History</a> -->
+              <a class="nav-item nav-link" id="settings" href="/settings">Settings</a>
+              
+            {% else %}
+              <a class="nav-item nav-link" id="login" href="/login">Login</a>
+              <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
             {% endif %}
-            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-          {% else %}
-            <a class="nav-item nav-link" id="login" href="/login">Login</a>
-            <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-          {% endif %}
+          </div>
+            {% if user.is_authenticated %}
+              <div class="nav-right">
+                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+                <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
+                <button class="nav-button">Upload</button>
+              </div>
+            {% endif %}
         </div>
       </div>
     </nav>
