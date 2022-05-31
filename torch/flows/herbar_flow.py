@@ -17,7 +17,6 @@ INPUT_FILE_TYPES = ['.jpg', '.jpeg', '.JPG', '.JPEG', '.tif', '.TIF', '.TIFF', '
 ARCHIVE_FILE_TYPES = ['.CR2', '.cr2', '.RAW', '.raw', '.NEF', '.nef', '.DNG', '.dng']
 # Barcode symbologies accepted, others ignored
 ACCEPTED_SYMBOLOGIES = ['CODE39']
-JPG_RENAME_STRING = 'unprocessed' # string optionally added to JPG file names
 # this allows downstream processing to generate a new JPG from the raw file without name conflicts
 UNIQUE_QUALIFIERS = list(string.ascii_uppercase) # list of characters added to file names to make unique
 

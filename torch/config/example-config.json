@@ -25,6 +25,22 @@
                 "width": 390,
                 "output_path": "web/BRIT/"
             }
-        }
-    }
+        },
+        "JPG_RENAME_STRING": "unprocessed"
+    },
+    "SECRET_KEY": "TORCH1WEBAPP",
+    "SQLALCHEMY_DATABASE_URI": "sqlite:///torch-hub.db",
+    "SECURITY_REGISTERABLE": true,
+    "SECURITY_PASSWORD_SALT": "torchsalt",
+    "SECURITY_SEND_REGISTER_EMAIL": false,
+    "SECURITY_RECOVERABLE": true,
+    "SECURITY_CHANGEABLE": true,
+    "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+    "MAIL_SERVER": "smtp.gmail.com",
+    "MAIL_USERNAME": "antonio@kuviocreative.com",
+    "MAIL_PASSWORD": "",
+    "MAIL_DEFAULT_SENDER": "antonio@kuviocreative.com",
+    "MAIL_PORT": 587,
+    "MAIL_USE_SSL": true,
+    "MAIL_USE_TLS": true
 }
