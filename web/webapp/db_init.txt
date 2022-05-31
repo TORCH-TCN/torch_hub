@@ -1,0 +1,30 @@
+#Flask-Migrate commands:
+flask db init (create db only)
+
+flask db migrate -m "description"
+flask db upgrade
+
+#more info https://flask-migrate.readthedocs.io/en/latest/
+
+#Here are some insert commands for the database
+#ROLES
+#WORKFLOW AND TASKS
+INSERT INTO workflow(name, collection_id) VALUES ('TORCH WORKFLOW',1);
+INSERT INTO task(name,plugin_name,sort_order,workflow_id) VALUES ('PROCESS FILE','process_file',1,1);
+INSERT INTO task(name,plugin_name,sort_order,workflow_id) VALUES ('PROCESS SPECIMEN','process_specimen',2,1);
+INSERT INTO task(name,plugin_name,sort_order,workflow_id) VALUES ('TACC UPLOAD','tacc',3,1);
+
+
+#SETTINGS
+INSERT INTO workflow_settings(workflow_id,category,label,name,value) VALUES (1,'Versions','Config Format','config_format','3.0');
+INSERT INTO workflow_settings(workflow_id,category,label,name,value) VALUES (1,'Files','Folder Increment','folder_increment','1000');
+INSERT INTO workflow_settings(workflow_id,category,label,name,value) VALUES (1,'Files','Number pad','number_pad','7');
+INSERT INTO workflow_settings(workflow_id,category,label,name,value) VALUES (1,'Files','Output Base Path','output_base_path','/corral-repl/projects/TORCH/');
+INSERT INTO workflow_settings(workflow_id,category,label,name,value) VALUES (1,'Files','Input Path','input_path','/corral-repl/projects/TORCH/staging/BRIT/ready_to_sort');
+
+#File types
+INSERT INTO workflow_file_type(workflow_id,category,label,name,file_regex,output_sub_path) VALUES (1,'File Types','JPG','web_jpg','(_(?P<suffix>a-z|0-9))*(\\.)(?i)(?P<ext>jpg|jpeg)','web/BRIT/');
+INSERT INTO workflow_file_type(workflow_id,category,label,name,file_regex,output_sub_path) VALUES (1,'File Types','JPG MED','web_jpg_med','(_(?P<suffix>a-z|0-9))*(_)(?P<size>med)(\\.)(?i)(?P<ext>jpg|jpeg)','web/BRIT/');
+INSERT INTO workflow_file_type(workflow_id,category,label,name,file_regex,output_sub_path) VALUES (1,'File Types','JPG THUMB','web_jpg_thumb','(_(?P<suffix>a-z|0-9))*(_)(?P<size>thumb)(\\.)(?i)(?P<ext>jpg|jpeg)','web/BRIT/');
+INSERT INTO workflow_file_type(workflow_id,category,label,name,file_regex,output_sub_path) VALUES (1,'File Types','Archive DNG','archive_dng','(_(?P<suffix>a-z|0-9))*(\\.)(?i)(?P<ext>dng)','archive/BRIT/');
+INSERT INTO workflow_file_type(workflow_id,category,label,name,file_regex,output_sub_path) VALUES (1,'File Types','OCR','ocr','(_(?P<suffix>a-z|0-9))*(_ocr)(\\.)(?i)(?P<ext>txt|json)','web/BRIT/');

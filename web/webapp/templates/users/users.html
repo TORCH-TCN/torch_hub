@@ -1,12 +1,13 @@
 {% extends "base.html" %} 
 {% block title %}Users{% endblock %} 
 {% block content %}
-    <h1 align="center">Users</h1>
+    <h3 align="left" class="my-4">Users</h3>
     
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <td>Email</td>
+                <td>Institution</td>
                 <td>Roles</td>
                 <td></td>
             </tr>
@@ -14,7 +15,15 @@
         <tbody>
             {% for user in users %}
                 <tr>
-                    <td>{{ user.email }}</td>
+                    <td>
+                      {% if user.active %}
+                        <i class="fa fa-user" style="color:green"></i> 
+                      {% else %}
+                      <i class="fa fa-user"></i> 
+                      {% endif %}
+                      {{ user.email }}
+                    </td>
+                    <td>{{user.institution_code}}</td>
                     <td>
                         
                         {% for role in user.roles %}
@@ -27,9 +36,20 @@
                     
                     </td>
                     <td>
+                        <a class="btn btn-link" href="/users/edit/{{user.id}}">Edit</a>
+                        | 
                         <button type="button" class="btn btn-link" onClick="openRoleModal({{ user.id }})">
                             Add role
                         </button>
+                        |
+                        <button type="button" class="btn btn-link" onClick="changeUserActive({{ user.id }}, '{{user.active}}')">
+                          {% if user.active %}
+                            Deactivate
+                          {% else %}
+                            Activate
+                          {% endif %}
+                      </button>
+
                     </td>
                 </tr>
             {% endfor %}

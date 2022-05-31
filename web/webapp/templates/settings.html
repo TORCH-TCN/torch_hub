@@ -1,0 +1,108 @@
+{% extends "base.html" %} 
+{% block title %}Files{% endblock %} 
+{% block content %}
+
+<section class="settings-page">
+    <header>
+        <h6>Settings</h6>
+        <p class="small">Adjust settings of the {{workflow.name}} workflow.</p>
+    </header>
+    
+    <div class="content-wrapper">
+        <div class="settings-grid">
+            <!-- Start of Sidebar -->
+            <div class="sidebar">
+                {% for category in categories %}
+                    <div class="sidebar-item">
+                        <p class="small">{{category.category}}</p>
+                    </div>
+                {%endfor%}
+                
+            </div>
+            <!-- End of Sidebar -->
+
+            <form method="POST" class="main-content">
+                <!-- Header -->
+                
+                   
+                        <div class="grid-block">
+                            <h6 class="header-large">Settings</h6>
+                        </div>
+                        {% for setting in settings %}
+                        <!-- <div class="grid-block">
+                            <h6 class="header-large">{{setting.category}}</h6>
+                        </div> -->
+                        <!-- Single inputs -->
+                        <div class="grid-block">
+                            <div class="block-title">
+                                <p class="small">{{setting.label}}</p>
+                            </div>
+                            <div class="block-content">
+                                <div class="input-wrapper">
+                                    <input name="{{setting.name}}" value="{{setting.value}}" type="text">
+                                </div>
+                            </div>
+                            </div>
+                        {%endfor%}
+                       
+                    
+         
+                
+
+                <!-- File types -->
+                <div class="grid-block team-management">
+                    <div class="block-title">
+                        <p class="small">File types</p>
+                        <!-- <p class="small">Add type</p> -->
+                        <a href="">Add Type</a>
+                    </div>
+                    <div class="block-content">
+                        <!-- change this to table -->
+                        <div class="grid"> 
+                            <div class="grid-wrapper">
+                                <div class="grid-headers">
+                                    <div class="grid-header-item">
+                                        <p class="xsmall">Name</p>
+                                    </div>
+                                    <!-- <div class="grid-header-item">
+                                        <p class="xsmall">Regex</p>
+                                    </div> -->
+                                    <div class="grid-header-item">
+                                        <p class="xsmall">Path</p>
+                                    </div>
+                                    <!-- <div class="grid-header-item">
+                                        <p class="xsmall">Actions</p>
+                                    </div> -->
+                                </div>
+                                <div class="grid-items">
+                                    {% for type in filetypes %}
+                                        <div class="grid-item">
+                                            <p class="small username">{{type.name}}</p>
+                                        </div>
+                                        <!-- <div class="grid-item">
+                                            <p class="small user-email">{{type.file_regex}}</p>
+                                        </div> -->
+                                        <div class="grid-item">
+                                            <p class="small">{{type.output_sub_path}}</p>
+                                        </div>
+                                        <div class="grid-item cta-buttons">
+                                            <a class="delete" href="">Delete</a>
+                                            <a class="edit" href="">Edit</a>
+                                        </div>
+                                    {%endfor%}
+                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

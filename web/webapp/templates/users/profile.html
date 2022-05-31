@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
 {% block title %}Profile{% endblock %} 
 {% block content %}
-    <h2>Profile</h2>
+    <h3 align="left" class="my-4">Profile</h3>
     <a href="/change">Reset password</a>
     <form method="POST">
         <div class="form-group">
@@ -26,6 +26,7 @@
               placeholder="Enter last name"
             />
           </div>
+          
           <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 {% endblock %}
