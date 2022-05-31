@@ -4,10 +4,11 @@ from os import path
 from flask_security import RegisterForm, Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user, roles_accepted, roles_required
 from flask_mail import Mail
 from wtforms import StringField
-#from flask_migrate import Migrate
+from flask_migrate import Migrate
+
 
 db = SQLAlchemy()
-#migrate = Migrate()
+migrate = Migrate()
 DB_NAME = 'torch-hub.db'
 
 def create_app():
@@ -19,19 +20,23 @@ def create_app():
     app.config['SECURITY_SEND_REGISTER_EMAIL'] = False #set this to true, uncomnent mail_config and set configs in file in case we need
     app.config['SECURITY_RECOVERABLE'] = True
     app.config['SECURITY_CHANGEABLE'] = True
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     #app.config.from_pyfile('mail_config.cfg')
 
     db.init_app(app)
-    #migrate.init_app(app,db)
+
+    
+
+    migrate.init_app(app,db)
     #mail = Mail(app)
 
     from .views import views
 
     app.register_blueprint(views, url_prefix='/')
 
+    from webapp import models
     from .models import User, Role, Institution
-
-    create_database(app)
+    #create_database(app)
 
     class ExtendedRegisterForm(RegisterForm):
         first_name = StringField('First Name')
