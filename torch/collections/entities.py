@@ -6,7 +6,7 @@ from sqlalchemy import (
     ForeignKey,
     Text,
 )
-from config.TorchDatabase import Entity
+from config.database.TorchDatabase import Entity
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask_security import RegisterForm, RoleMixin
