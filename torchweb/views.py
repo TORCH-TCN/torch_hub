@@ -1,12 +1,14 @@
-from glob import glob
 import os
-from uuid import uuid4
-from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for
-from flask_security import login_required, current_user, roles_accepted, SQLAlchemyUserDatastore
-from .models import Collection, Institution, Role, User, Workflow, WorkflowFileType, WorkflowSettings
-from . import db
-from flask_sqlalchemy import orm
 import json
+from glob import glob
+from uuid import uuid4
+from flask import Blueprint, redirect, render_template, request, flash, jsonify
+from flask_sqlalchemy import orm
+from flask_security import login_required, current_user, roles_accepted, \
+                           SQLAlchemyUserDatastore
+from collections import Collection, Institution, Role, User, Workflow, \
+                        WorkflowFileType, WorkflowSettings
+from config import db
 
 views = Blueprint('views', __name__)
 

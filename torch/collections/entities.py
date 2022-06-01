@@ -2,16 +2,14 @@ from sqlalchemy import (
     Integer,
     String,
     Column,
-    Boolean,
     DateTime,
-    Table,
     ForeignKey,
     Text,
 )
 from config.TorchDatabase import Entity
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship, backref
-from flask_security import RegisterForm, RoleMixin, UserMixin
+from sqlalchemy.orm import relationship
+from flask_security import RegisterForm, RoleMixin
 from wtforms import StringField
 
 

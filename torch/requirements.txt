@@ -1,7 +1,7 @@
 # Requirements for torch.py
 
 prefect # Workflow engine
-
+SqlAlchemy # Database engine
 pysftp # SFTP upload
 boto3 # Amazon S3 upload
 pillow # Derivative image processing
