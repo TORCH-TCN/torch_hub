@@ -2,7 +2,7 @@ from click import DateTime
 from flask_security import UserMixin
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship, backref
-from torch.config.TorchDatabase import Entity
+from torch.config.database.TorchDatabase import Entity, db
 
 
 roles_users = Table(
@@ -28,15 +28,12 @@ class User(Entity, UserMixin):
     )
 
 
-class UserService:
-    def __init__(self, db) -> None:
-        self.db = db
+def get_user(id) -> User:
+    return User.query.filter_by(id=id).first()
 
-    def get_user(self, id) -> User:
-        return User.query.filter_by(id=id).first()
 
-    def save_user(self, id, first_name, last_name):
-        user = self.get_user()
-        user.first_name = first_name
-        user.last_name = last_name
-        self.db.session.commit()
+def save_user(id, first_name, last_name):
+    user = get_user(id)
+    user.first_name = first_name
+    user.last_name = last_name
+    db.commit()
