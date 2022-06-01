@@ -2,7 +2,10 @@
     "collection": {
         "name": "BRIT",
         "prefix": "BRIT",
-        "catalog_number_regex": "(?P<catNum>(?P<instID>BRIT)(-(?P<collID>XX)-)*(?P<numerical>\\d+))"
+        "catalog_number_regex": "(?P<catNum>(?P<instID>BRIT)(-(?P<collID>XX)-)*(?P<numerical>\\d+))",
+        "project_ids": ["TX", "ANHC", "VDB", "TEST", "Ferns", "TORCH", "EF"],
+        "default_prefix": null,
+        "barcode_prefix": ""
     },
     "upload": {
         "type": "sftp",
