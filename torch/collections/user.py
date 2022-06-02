@@ -2,6 +2,7 @@ from click import DateTime
 from flask_security import UserMixin
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship, backref
+from torch.collections.entities import Institution
 from torch.config.database.TorchDatabase import Entity, db
 
 
@@ -32,8 +33,17 @@ def get_user(id) -> User:
     return User.query.filter_by(id=id).first()
 
 
-def save_user(id, first_name, last_name):
+def save_user(id, first_name, last_name, institution_id):
     user = get_user(id)
     user.first_name = first_name
     user.last_name = last_name
+
+    if institution_id is not None:
+        institution = Institution.query.filter_by(id=institution_id).first()
+        user.institution_id = institution.id
+        user.institution_code = institution.code
+    elif user.institution_code is not None:
+        institution = Institution.query.filter_by(code=user.institution_code).first()
+        user.institution_id = institution.id
+
     db.commit()
