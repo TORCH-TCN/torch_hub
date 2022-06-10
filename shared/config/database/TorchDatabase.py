@@ -3,15 +3,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-config = open("config.json")
-connection_string = json.load(config)["SQLALCHEMY_DATABASE_URI"]
+
+with open("../shared/config/config.json",'r') as config:
+    connection_string = json.load(config)["SQLALCHEMY_DATABASE_URI"]
 
 engine = create_engine(connection_string)
 session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 db = scoped_session(session)
 
 Entity = declarative_base()
-Entity.query = scoped_session.query_property()
+Entity.query = db.query_property()
 
 
 def init_db():

@@ -1,19 +1,22 @@
-from click import DateTime
+import sys
+sys.path.append('../shared/config/database')
 from flask_security import UserMixin
-from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Table
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, DateTime, Table
 from sqlalchemy.orm import relationship, backref
-from torch.collections.entities import Institution
-from torch.config.database.TorchDatabase import Entity, db
+from entities import Institution
+from TorchDatabase import Entity, db
 
 
 roles_users = Table(
     "roles_users",
+    Entity.metadata,
     Column("user_id", Integer, ForeignKey("user.id")),
     Column("role_id", Integer, ForeignKey("role.id")),
 )
 
 
 class User(Entity, UserMixin):
+    __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
     email = Column(String(150), unique=True)
     password = Column(String(150))

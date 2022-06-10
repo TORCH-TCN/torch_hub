@@ -1,12 +1,14 @@
+import sys
+sys.path.append('../shared/config/database')
 from sqlalchemy import (
     Integer,
     String,
     Column,
     DateTime,
     ForeignKey,
-    Text,
+    Text
 )
-from config.database.TorchDatabase import Entity
+from TorchDatabase import Entity, db
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask_security import RegisterForm, RoleMixin
@@ -14,6 +16,7 @@ from wtforms import StringField
 
 
 class Institution(Entity):
+    __tablename__ = 'Institution'
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
@@ -23,12 +26,14 @@ class Institution(Entity):
 
 
 class Role(Entity, RoleMixin):
+    __tablename__ = 'Role'
     id = Column(Integer, primary_key=True)
     name = Column(String(80), unique=True)
     description = Column(String(255))
 
 
 class Collection(Entity):
+    __tablename__ = 'Collection'
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
@@ -40,6 +45,7 @@ class Collection(Entity):
 
 
 class Image(Entity):
+    __tablename__ = 'Image'
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     uploaded_date = Column(DateTime(timezone=True), default=func.now())

@@ -3,7 +3,7 @@ import argparse
 from prefect.executors import DaskExecutor, LocalExecutor
 from config.TorchConfig import TorchConfig
 from flows.process_specimen import process_specimen
-from torch.config.database.TorchDatabase import TorchDatabase
+from config.database.TorchDatabase import TorchDatabase
 
 # from flows.herbar_flow import herbar_flow
 

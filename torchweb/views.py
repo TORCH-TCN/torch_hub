@@ -9,15 +9,20 @@ from flask_security import (
     roles_accepted,
     SQLAlchemyUserDatastore,
 )
-from collections import (
+import sys
+sys.path.append('../shared/collections')
+from entities import (
     Collection,
     Institution,
     Role,
-    User,
-    Workflow,
-    WorkflowFileType,
-    WorkflowSettings,
+    # Workflow,
+    # WorkflowFileType,
+    # WorkflowSettings
 )
+
+from user import User
+# from app import db
+from . import db
 
 views = Blueprint("views", __name__)
 
@@ -60,47 +65,47 @@ def history():
     return render_template("history.html", user=current_user)
 
 
-@views.route("/workflow-settings/<workflowid>", methods=["GET", "POST"])
-# @login_required
-def settings(workflowid=1):
-    if request.method == "POST":
-        config_format = WorkflowSettings.query.filter_by(name="config_format").first()
-        config_format.value = request.form.get("config_format")
+# @views.route("/workflow-settings/<workflowid>", methods=["GET", "POST"])
+# # @login_required
+# def settings(workflowid=1):
+#     if request.method == "POST":
+#         config_format = WorkflowSettings.query.filter_by(name="config_format").first()
+#         config_format.value = request.form.get("config_format")
 
-        folder_increment = WorkflowSettings.query.filter_by(
-            name="folder_increment"
-        ).first()
-        folder_increment.value = request.form.get("folder_increment")
+#         folder_increment = WorkflowSettings.query.filter_by(
+#             name="folder_increment"
+#         ).first()
+#         folder_increment.value = request.form.get("folder_increment")
 
-        number_pad = WorkflowSettings.query.filter_by(name="number_pad").first()
-        number_pad.value = request.form.get("number_pad")
+#         number_pad = WorkflowSettings.query.filter_by(name="number_pad").first()
+#         number_pad.value = request.form.get("number_pad")
 
-        output_base_path = WorkflowSettings.query.filter_by(
-            name="output_base_path"
-        ).first()
-        output_base_path.value = request.form.get("output_base_path")
+#         output_base_path = WorkflowSettings.query.filter_by(
+#             name="output_base_path"
+#         ).first()
+#         output_base_path.value = request.form.get("output_base_path")
 
-        input_path = WorkflowSettings.query.filter_by(name="input_path").first()
-        input_path.value = request.form.get("input_path")
+#         input_path = WorkflowSettings.query.filter_by(name="input_path").first()
+#         input_path.value = request.form.get("input_path")
 
-        db.session.commit()
+#         db.session.commit()
 
-        flash("Updated successfully!", category="success")
+#         flash("Updated successfully!", category="success")
 
-    workflow = Workflow.query.filter_by(id=workflowid).first()
-    settings = WorkflowSettings.query.filter_by(workflow_id=workflowid).all()
-    filetypes = WorkflowFileType.query.filter_by(workflow_id=workflowid).all()
+#     workflow = Workflow.query.filter_by(id=workflowid).first()
+#     settings = WorkflowSettings.query.filter_by(workflow_id=workflowid).all()
+#     filetypes = WorkflowFileType.query.filter_by(workflow_id=workflowid).all()
 
-    categories = WorkflowSettings.query.group_by(WorkflowSettings.category)
+#     categories = WorkflowSettings.query.group_by(WorkflowSettings.category)
 
-    return render_template(
-        "settings.html",
-        user=current_user,
-        settings=settings,
-        filetypes=filetypes,
-        workflow=workflow,
-        categories=categories,
-    )
+#     return render_template(
+#         "settings.html",
+#         user=current_user,
+#         settings=settings,
+#         filetypes=filetypes,
+#         workflow=workflow,
+#         categories=categories,
+#     )
 
 
 @views.route("/overview", methods=["GET", "POST"])
