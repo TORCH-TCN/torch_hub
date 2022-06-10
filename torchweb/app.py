@@ -5,7 +5,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_migrate import Migrate
-from . import views
 import sys
 sys.path.append('../shared/collections')
 from entities import Role, ExtendedRegisterForm
@@ -20,6 +19,7 @@ db = SQLAlchemy(app)
 migrate = Migrate()
 migrate.init_app(app, db)
 
+from .views import views
 app.register_blueprint(views, url_prefix='/')
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)

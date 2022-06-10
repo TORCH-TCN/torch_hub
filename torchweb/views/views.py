@@ -22,7 +22,7 @@ from entities import (
 
 from user import User
 # from app import db
-from . import db
+from .. import db
 
 views = Blueprint("views", __name__)
 
