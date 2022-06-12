@@ -1,5 +1,5 @@
-import sys
-sys.path.append('../shared/config/database')
+# import sys
+# sys.path.append('../shared/config/database')
 from flask_security import UserMixin
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, DateTime, Table
 from sqlalchemy.orm import relationship, backref
@@ -10,8 +10,8 @@ from TorchDatabase import Entity, db
 roles_users = Table(
     "roles_users",
     Entity.metadata,
-    Column("user_id", Integer, ForeignKey("user.id")),
-    Column("role_id", Integer, ForeignKey("role.id")),
+    Column("user_id", Integer, ForeignKey("User.id")),
+    Column("role_id", Integer, ForeignKey("Role.id")),
 )
 
 
@@ -25,7 +25,7 @@ class User(Entity, UserMixin):
     active = Column(Boolean)
     confirmed_at = Column(DateTime)
     institution_code = Column(String(10))
-    institution_id = Column(Integer, ForeignKey("institution.id"))
+    institution_id = Column(Integer, ForeignKey("Institution.id"))
     fs_uniquifier = Column(String(255), unique=True, nullable=False)
     roles = relationship(
         "Role", secondary=roles_users, backref=backref("users", lazy="dynamic")

@@ -8,7 +8,7 @@ from sqlalchemy import (
     ForeignKey,
     Text
 )
-from TorchDatabase import Entity, db
+from TorchDatabase import Entity
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask_security import RegisterForm, RoleMixin
@@ -40,8 +40,8 @@ class Collection(Entity):
     catalog_number_regex = Column(String(150))
     web_base = Column(String(150))
     url_base = Column(String(150))
-    institution_id = Column(Integer, ForeignKey("institution.id"))
-    workflows = relationship("Workflow")
+    institution_id = Column(Integer, ForeignKey("Institution.id"))
+    # workflows = relationship("Workflow")
 
 
 class Image(Entity):
@@ -52,7 +52,7 @@ class Image(Entity):
     med_image_url = Column(Text)  # possible change this to string?
     thumbnail_url = Column(Text)
     barcode = Column(String(20))
-    collection_id = Column(Integer, ForeignKey("collection.id"))
+    collection_id = Column(Integer, ForeignKey("Collection.id"))
     catalog_number = Column(String(150))
 
 
