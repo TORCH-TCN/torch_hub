@@ -1,0 +1,33 @@
+{% extends "security/base.html" %} 
+{% from "security/_macros.html" import render_field_with_errors, render_field %} 
+
+{% block content %} 
+{% include "security/_messages.html" %}
+
+<div class="content">
+  <div class="box">
+    <div class="header">
+      <h1>{{ _('Log in to your account') }}</h1>
+      <h2>Welcome back! Please enter your details.</h2>
+    </div>
+    <div class="content2">
+      <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+        {{ login_user_form.hidden_tag() }}
+        {{ render_field_with_errors(login_user_form.email) }} 
+        {{ render_field_with_errors(login_user_form.password) }}         
+        <div class="row">
+          <div class="row-left">
+            {{ render_field_with_errors(login_user_form.remember) }}
+          </div>
+          <div class="row-right">
+            <h3><a href="/reset">Forgot password</a></h3>
+          </div>
+        </div>
+        <button>{{ render_field(login_user_form.submit) }}</button>
+        <h3>Don't have an account? <a href="/register">Sign up</a></h3>        
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
