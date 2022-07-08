@@ -4,11 +4,9 @@ from glob import glob
 from uuid import uuid4
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_security import (
-    login_required,
     current_user,
 )
 from collections import (
-    Collection,
     Institution,
     Workflow,
     WorkflowFileType,
@@ -108,66 +106,6 @@ def delete_institution():
         db.session.commit()
 
     return jsonify({})
-
-
-@views.route("/institutions", methods=["GET", "POST"])
-@login_required
-def institutions():
-    if request.method == "POST":
-        institution = request.form.get("institution")
-        code = request.form.get("code")
-
-        if len(institution) < 1:
-            flash("Name is too short!", category="error")
-        else:
-            new_institution = Institution(name=institution, code=code)
-            db.session.add(new_institution)
-            db.session.commit()
-            flash("Institution added!", category="success")
-
-    institutions = Institution.query.all()
-
-    return render_template(
-        "institutions.html", user=current_user, institutions=institutions
-    )
-
-
-@views.route("/", methods=["GET", "POST"])
-@views.route("collections/<institutionid>", methods=["GET", "POST"])
-@login_required
-def collections(institutionid=None):
-
-    if current_user.has_role("admin") and institutionid == None:
-        institutionid = 1
-
-    if institutionid == None:
-        institutionid = (
-            Institution.query.filter_by(code=current_user.institution_code).first().id
-        )
-
-    if request.method == "POST":
-        collection = request.form.get("collection")
-        code = request.form.get("code")
-
-        if len(collection) < 1:
-            flash("Name is too short!", category="error")
-        else:
-            new_collection = Collection(
-                name=collection, code=code, institution_id=institutionid
-            )
-            db.session.add(new_collection)
-            db.session.commit()
-            flash("Collection added!", category="success")
-
-    institution = Institution.query.filter_by(id=institutionid).first()
-    collections = Collection.query.filter_by(institution_id=institutionid).all()
-
-    return render_template(
-        "collections.html",
-        user=current_user,
-        institution=institution,
-        collections=collections,
-    )
 
 
 @views.route("/upload", methods=["POST"])

@@ -8,29 +8,8 @@ from sqlalchemy import (
 )
 from config.database.TorchDatabase import Entity
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
 from flask_security import RegisterForm
 from wtforms import StringField
-
-
-class Institution(Entity):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
-    code = Column(String(10), unique=True)
-    created_date = Column(DateTime(timezone=True), default=func.now())
-    users = relationship("User")
-    collections = relationship("Collection")
-
-
-class Collection(Entity):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
-    code = Column(String(10), unique=True)
-    catalog_number_regex = Column(String(150))
-    web_base = Column(String(150))
-    url_base = Column(String(150))
-    institution_id = Column(Integer, ForeignKey("institution.id"))
-    workflows = relationship("Workflow")
 
 
 class Image(Entity):
