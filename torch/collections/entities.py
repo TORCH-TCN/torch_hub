@@ -9,7 +9,7 @@ from sqlalchemy import (
 from config.database.TorchDatabase import Entity
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from flask_security import RegisterForm, RoleMixin
+from flask_security import RegisterForm
 from wtforms import StringField
 
 

@@ -6,14 +6,10 @@ from flask import Blueprint, render_template, request, flash, jsonify
 from flask_security import (
     login_required,
     current_user,
-    roles_accepted,
-    SQLAlchemyUserDatastore,
 )
 from collections import (
     Collection,
     Institution,
-    Role,
-    User,
     Workflow,
     WorkflowFileType,
     WorkflowSettings,
@@ -110,50 +106,6 @@ def delete_institution():
     if institution:
         db.session.delete(institution)
         db.session.commit()
-
-    return jsonify({})
-
-
-@views.route("/assign-role", methods=["POST"])
-@roles_accepted("admin")
-def assign_role():
-    data = json.loads(request.data)
-    userId = data["userId"]
-    role = data["role"]
-
-    user = User.query.get(userId)
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    user_datastore.add_role_to_user(user, role)
-    db.session.commit()
-
-    return jsonify({})
-
-
-@views.route("/delete-role-user", methods=["POST"])
-@roles_accepted("admin")
-def delete_role_user():
-    data = json.loads(request.data)
-    userId = data["userId"]
-    role = data["role"]
-
-    user = User.query.get(userId)
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    user_datastore.remove_role_from_user(user, role)
-    db.session.commit()
-
-    return jsonify({})
-
-
-@views.route("/change-user-active", methods=["POST"])
-@roles_accepted("admin")
-def deactivate_user():
-    data = json.loads(request.data)
-    userId = data["userId"]
-
-    user = User.query.get(userId)
-    user.active = 0 if user.active == 1 else 1
-
-    db.session.commit()
 
     return jsonify({})
 

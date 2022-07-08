@@ -47,3 +47,10 @@ def save_user(id, first_name, last_name, institution_id):
         user.institution_id = institution.id
 
     db.commit()
+
+
+def toggle_user_active(id):
+    user = User.query.get(id)
+    user.active = 0 if user.active == 1 else 1
+
+    db.session.commit()

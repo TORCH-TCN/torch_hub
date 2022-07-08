@@ -1,9 +1,16 @@
-from flask import Blueprint, flash, redirect, render_template, request
+import json
+from flask import Blueprint, flash, jsonify, redirect, render_template, request
 from flask_login import current_user, login_required
 from flask_security import roles_accepted
-from torch.collections.entities import Institution, Role
+from torch.collections.entities import Institution
 from flask_sqlalchemy import orm
-from torch.collections.user import User, get_user, save_user
+from torch.collections.role import (
+    assign_role_to_user,
+    get_roles,
+    add_role,
+    unassign_role_from_user,
+)
+from torch.collections.user import User, get_user, save_user, toggle_user_active
 
 
 users = Blueprint("users", __name__, url_prefix="/users")
@@ -47,10 +54,44 @@ def edit(userid):
 @roles_accepted("admin")
 def users():
     users = User.query.options(orm.joinedload("roles"))
-    roles = Role.query.all()
+    roles = get_roles()
     return render_template("users.html", user=current_user, users=users, roles=roles)
+
+
+@users.route("/change-user-active", methods=["POST"])
+@roles_accepted("admin")
+def deactivate_user():
+    data = json.loads(request.data)
+    toggle_user_active(data["userId"])
+    return jsonify({})
 
 
 @users.route("/modal/<userid>")
 def modal(userid=None):
     return render_template("addrolemodal.html", user=current_user, userid=userid)
+
+
+@users.route("/roles", methods=["GET", "POST"])
+@roles_accepted("admin")
+def roles():
+    if request.method == "POST":
+        add_role(request.form.get("name"), request.form.get("description"))
+
+    roles = get_roles()
+    return render_template("roles.html", user=current_user, roles=roles)
+
+
+@users.route("/assign-role", methods=["POST"])
+@roles_accepted("admin")
+def assign_role():
+    data = json.loads(request.data)
+    assign_role_to_user(data["userId"], data["role"])
+    return jsonify({})
+
+
+@users.route("/delete-role-user", methods=["POST"])
+@roles_accepted("admin")
+def delete_role_user():
+    data = json.loads(request.data)
+    unassign_role_from_user(data["userId"], data["role"])
+    return jsonify({})
