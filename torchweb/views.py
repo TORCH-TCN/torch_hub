@@ -22,20 +22,6 @@ from collections import (
 views = Blueprint("views", __name__)
 
 
-@views.route("/roles", methods=["GET", "POST"])
-@roles_accepted("admin")
-def roles():
-    if request.method == "POST":
-        name = request.form.get("name")
-        description = request.form.get("description")
-        new_role = Role(name=name, description=description)
-        db.session.add(new_role)
-        db.session.commit()
-        # user_datastore
-    roles = Role.query.all()
-    return render_template("roles/roles.html", user=current_user, roles=roles)
-
-
 @views.route("/files", methods=["GET", "POST"])
 # @login_required
 def files():

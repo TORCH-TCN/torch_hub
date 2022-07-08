@@ -22,12 +22,6 @@ class Institution(Entity):
     collections = relationship("Collection")
 
 
-class Role(Entity, RoleMixin):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), unique=True)
-    description = Column(String(255))
-
-
 class Collection(Entity):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
