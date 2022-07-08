@@ -1,7 +1,9 @@
 from typing import List
+from flask_security import RegisterForm
 from sqlalchemy import Column, DateTime, Integer, String, func
 from torch.config.database.TorchDatabase import Entity, db
 from sqlalchemy.orm import relationship
+from wtforms import StringField
 
 
 class Institution(Entity):
@@ -11,6 +13,12 @@ class Institution(Entity):
     created_date = Column(DateTime(timezone=True), default=func.now())
     users = relationship("User")
     collections = relationship("Collection")
+
+
+class ExtendedRegisterForm(RegisterForm):
+    first_name = StringField("First Name")
+    last_name = StringField("Last Name")
+    institution_code = StringField("Institution Code")
 
 
 def get_institutions() -> List[Institution]:
