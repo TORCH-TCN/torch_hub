@@ -29,3 +29,10 @@ def save_institution(institution, code):
     new_institution = Institution(name=institution, code=code)
     db.session.add(new_institution)
     db.session.commit()
+
+
+def delete_institution(id):
+    institution = Institution.query.get(id)
+    if institution:
+        db.session.delete(institution)
+        db.session.commit()
