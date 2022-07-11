@@ -1,33 +1,14 @@
-import os
-import json
-from glob import glob
-from uuid import uuid4
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash
 from flask_security import (
     current_user,
 )
 from collections import (
-    Institution,
     Workflow,
     WorkflowFileType,
     WorkflowSettings,
 )
 
-from torch.collections.image import upload_images
-
 views = Blueprint("views", __name__)
-
-
-@views.route("/files", methods=["GET", "POST"])
-# @login_required
-def files():
-    if request.method == "POST":
-        current_user.first_name = request.form.get("firstName")
-        current_user.last_name = request.form.get("lastName")
-        db.session.commit()
-        flash("Updated successfully!", category="success")
-
-    return render_template("files.html", user=current_user)
 
 
 @views.route("/history", methods=["GET", "POST"])
@@ -95,5 +76,3 @@ def overview():
         flash("Updated successfully!", category="success")
 
     return render_template("overview.html", user=current_user)
-
-
