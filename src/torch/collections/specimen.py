@@ -13,7 +13,7 @@ from config.database.TorchDatabase import Entity
 from sqlalchemy.sql import func
 
 
-class Image(Entity):
+class Specimen(Entity):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     uploaded_date = Column(DateTime(timezone=True), default=func.now())
@@ -24,7 +24,7 @@ class Image(Entity):
     catalog_number = Column(String(150))
 
 
-def get_images_by_batch_id(batch_id):
+def get_specimens_by_batch_id(batch_id):
     root = "webapp/static/uploads/{}".format(batch_id)
     files = []
 
@@ -36,7 +36,7 @@ def get_images_by_batch_id(batch_id):
         files.append(fname)
 
 
-def upload_images(files):
+def upload_specimens(files):
     # Create a unique "session ID" for this particular batch of uploads.
     batch_id = str(uuid4())
 

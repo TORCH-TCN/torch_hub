@@ -2,7 +2,7 @@ from click import DateTime
 from flask_security import UserMixin
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship, backref
-from torch.collections.image import Institution
+from torch.collections.specimen import Institution
 from torch.config.database.TorchDatabase import Entity, db
 
 
