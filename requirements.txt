@@ -1,7 +1,19 @@
 # Requirements for torch.py
 
-prefect # Workflow engine
-SqlAlchemy # Database engine
+# Workflow engine
+prefect
+SqlAlchemy
+docker-compose # for Prefect Server backend
+
+# Web
+Flask
+Flask_Mail
+Flask_Migrate
+Flask_SQLAlchemy
+flask-socketio
+WTForms
+
+# TORCH Tasks
 pysftp # SFTP upload
 boto3 # Amazon S3 upload
 pillow # Derivative image processing
