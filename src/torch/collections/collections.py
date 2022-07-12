@@ -1,9 +1,20 @@
 import json
 from flask import Blueprint, flash, render_template, request
 from flask_login import current_user
-from torch.collections.collection import get_collections, save_collection
-from torch.collections.specimen import get_specimens_by_batch_id, upload_specimens
-from torch.collections.institution import get_institution_by_code
+from sqlalchemy import Column, ForeignKey, Integer, String
+from torch.config.database.TorchDatabase import Entity, db
+from torch.specimens.specimens import get_specimens_by_batch_id, upload_specimens
+from torch.institutions.institution import get_institution_by_code
+
+
+class Collection(Entity):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), unique=True)
+    code = Column(String(10), unique=True)
+    catalog_number_regex = Column(String(150))
+    web_base = Column(String(150))
+    url_base = Column(String(150))
+    institution_id = Column(Integer, ForeignKey("institution.id"))
 
 
 collections = Blueprint("collections", __name__, url_prefix="/collections")
@@ -12,7 +23,7 @@ collections = Blueprint("collections", __name__, url_prefix="/collections")
 @collections.route("/", methods=["GET"])
 def collections():
     institution = get_institution_by_code(current_user.institution_code)
-    collections = get_collections(institution.id)
+    collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(
         "collections.html",
@@ -30,7 +41,14 @@ def collections():
     if len(collection) < 1:
         flash("Name is too short!", category="error")
     else:
-        save_collection(collection, request.form.get("code"), institution.id)
+        new_collection = Collection(
+            name=collection,
+            code=request.form.get("code"),
+            institution_id=institution.id,
+        )
+        db.session.add(new_collection)
+        db.session.commit()
+
         flash("Collection added!", category="success")
 
     return collections()

@@ -11,6 +11,12 @@ from torch.collections.role import (
 from torch.collections.user import User, get_user, save_user, toggle_user_active
 
 
+class ExtendedRegisterForm(RegisterForm):
+    first_name = StringField("First Name")
+    last_name = StringField("Last Name")
+    institution_code = StringField("Institution Code")
+
+
 users = Blueprint("users", __name__, url_prefix="/users")
 
 

@@ -43,6 +43,7 @@ if __name__ == "__main__":
     freeze_support()
 
     app.config.from_file("config.json", load=json.load)
+    # migrate.init_app(app, db)
 
     server = threading.Thread(target=lambda: start_prefect_server())
     server.daemon = True
