@@ -1,12 +1,15 @@
 from glob import glob
 import os
 from uuid import uuid4
-from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for
+from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for, make_response
 from flask_security import login_required, current_user, roles_accepted, SQLAlchemyUserDatastore
+from sqlalchemy import inspect
 from .models import Collection, Institution, Role, User, Workflow, WorkflowFileType, WorkflowSettings
 from . import db
 from flask_sqlalchemy import orm
 import json
+import csv
+import io
 
 views = Blueprint('views', __name__)
 
@@ -190,6 +193,40 @@ def deactivate_user():
 
     return jsonify({})
 
+
+# @views.route('/download')
+# def post(self):
+#     si = io.StringIO()
+#     cw = csv.writer(si)
+#     cw.writerows(csvList)
+#     output = make_response(si.getvalue())
+#     output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+#     output.headers["Content-type"] = "text/csv"
+#     return output
+
+@views.route('/reports', methods=['GET', 'POST'])
+@roles_accepted('admin')
+def reports():
+    if request.method == 'POST':
+        selectedtable = request.form.get('selecttable')
+        whereclause = request.form.get('whereclause')
+        
+        result = db.engine.execute("select * from " + selectedtable + ' ' + whereclause)
+
+        outfile = open('report_' + selectedtable + '.csv', 'w', newline='')
+        outcsv = csv.writer(outfile, delimiter=',')
+        outcsv.writerow(result.keys())
+        outcsv.writerows(result.fetchall())
+
+        flash('csv file generated!', category='success')
+
+
+    tables = db.engine.table_names()
+    
+    # inspector = inspect(db.engine)
+    # columns = inspector.get_columns('institution') future reference to load fields from selected table
+
+    return render_template("reports.html", user=current_user, tables=tables)
 
 @views.route('/institutions', methods=['GET', 'POST'])
 @login_required
