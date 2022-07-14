@@ -213,12 +213,22 @@ def reports():
         
         result = db.engine.execute("select * from " + selectedtable + ' ' + whereclause)
 
-        outfile = open('report_' + selectedtable + '.csv', 'w', newline='')
-        outcsv = csv.writer(outfile, delimiter=',')
-        outcsv.writerow(result.keys())
-        outcsv.writerows(result.fetchall())
+        # generate local file or export file
+        # outfile = open('report_' + selectedtable + '.csv', 'w', newline='')
+        # outcsv = csv.writer(outfile, delimiter=',')
+        # outcsv.writerow(result.keys())
+        # outcsv.writerows(result.fetchall())
 
         flash('csv file generated!', category='success')
+
+        si = io.StringIO()
+        cw = csv.writer(si, delimiter=",")
+        cw.writerow(result.keys())
+        cw.writerows(result.fetchall())
+        output = make_response(si.getvalue())
+        output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+        output.headers["Content-type"] = "text/csv"
+        return output
 
 
     tables = db.engine.table_names()
