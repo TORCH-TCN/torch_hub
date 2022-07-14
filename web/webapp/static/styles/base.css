@@ -430,7 +430,7 @@ header{
 
 /* Start of Settings Page */
 
-.settings-page .content-wrapper{
+.content-wrapper{
     background: var(--white);
     padding: 32px 24px;
     border-radius: 8px;

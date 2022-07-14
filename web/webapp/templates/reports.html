@@ -1,0 +1,33 @@
+{% extends "base.html" %} 
+{% block title %}Reports{% endblock %} 
+{% block content %}
+
+<section>
+    <header>
+        <h6>Reports</h6>
+        <p class="small">Select a table or view to generate a file with results</p>
+    </header>
+    
+    <div class="content-wrapper">
+        <form method="POST">
+            <div class="form-group">
+                <label for="selecttable">Select a table</label>
+                <select class="form-control" name="selecttable">
+                    {% for table in tables %}
+                        <option value="{{table}}">{{table}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="whereclause">Where clause</label>
+                <input type="text" placeholder="Where clause" class="form-control" name="whereclause"  />
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      
+    </div>
+</section>
+
+{% endblock %}
+
