@@ -2,9 +2,20 @@
 {% block title %}Import{% endblock %} 
 {% block content%}
 
-<h3 align="left" class="mt-4">Import CSV Files</h3>
-<p class="mb-4">Press the button and select a file to import</p>
-<button type="submit" class="btn btn-primary">Import File</button>
+<h3 align="left" class="mt-4">Import</h3>
+<p class="mb-4">Press the button and select a CSV file to import</p>
+
+<!-- ----------------need to define ids, action, enctype, name-------------------- -->
+<form id="" action="" method="POST" enctype="">
+  <strong>Files:</strong><br>
+  Select files OR drag them into the box below.
+  <input id="" type="file" name="" accept=".csv" multiple class="mb-4" value="Import File"><p>
+  
+  <div id="" class="mb-4">
+      Drag and Drop Files Here
+  </div>
+  <button type="submit" class="btn btn-primary btn-sm mb-4" id="">Import File</button>
+</form>
 
 <table class="table table-bordered">
   <thead>
