@@ -1,0 +1,28 @@
+{% extends "base.html" %} 
+{% block title %}Import{% endblock %} 
+{% block content%}
+
+<h3 align="left" class="mt-4">Import CSV Files</h3>
+<p class="mb-4">Press the button and select a file to import</p>
+<button type="submit" class="btn btn-primary">Import File</button>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      {% for column in header %}
+      <td>{{column}}</td>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in reader %}
+    <tr>
+      {% for item in row %}
+      <td>{{item}}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

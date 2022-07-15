@@ -204,7 +204,7 @@ def deactivate_user():
 #     output.headers["Content-type"] = "text/csv"
 #     return output
 
-@views.route('/reports', methods=['GET', 'POST'])
+@views.route('/reports/export', methods=['GET', 'POST'])
 @roles_accepted('admin')
 def reports():
     if request.method == 'POST':
@@ -226,7 +226,22 @@ def reports():
     # inspector = inspect(db.engine)
     # columns = inspector.get_columns('institution') future reference to load fields from selected table
 
-    return render_template("reports.html", user=current_user, tables=tables)
+    return render_template("export.html", user=current_user, tables=tables)
+
+@views.route("/reports/import")
+def csvfiles_import():
+    with open('report_institution.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        data_read = [row for row in reader]
+        print(data_read)
+
+        header = data_read[0]
+        for element in header:
+           print(element)
+
+        data_read.pop(0)     
+
+    return render_template("import.html", user=current_user, header=header, reader=data_read)
 
 @views.route('/institutions', methods=['GET', 'POST'])
 @login_required
