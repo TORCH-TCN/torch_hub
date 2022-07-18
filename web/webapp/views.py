@@ -219,8 +219,7 @@ def reports():
         # outcsv.writerow(result.keys())
         # outcsv.writerows(result.fetchall())
 
-        flash('csv file generated!', category='success')
-
+        
         si = io.StringIO()
         cw = csv.writer(si, delimiter=",")
         cw.writerow(result.keys())
@@ -238,18 +237,22 @@ def reports():
 
     return render_template("export.html", user=current_user, tables=tables)
 
-@views.route("/reports/import")
+@views.route('/reports/import', methods=['GET', 'POST'])
+@roles_accepted('admin')
 def csvfiles_import():
-    with open('report_institution.csv', newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-        data_read = [row for row in reader]
-        print(data_read)
 
-        header = data_read[0]
-        for element in header:
-           print(element)
+    header = [] 
+    data_read = []
+    if request.method == 'POST':
+            file = request.files['csv-file']
+            str_file_value = file.read().decode('utf-8')
+            file_t = str_file_value.splitlines()
+            reader = csv.reader(file_t, delimiter=',', quotechar='"')
+            data_read = [row for row in reader]
 
-        data_read.pop(0)     
+            header = data_read[0]
+                            
+            data_read.pop(0)     
 
     return render_template("import.html", user=current_user, header=header, reader=data_read)
 

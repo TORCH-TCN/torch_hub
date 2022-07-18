@@ -5,18 +5,15 @@
 <h3 align="left" class="mt-4">Import</h3>
 <p class="mb-4">Press the button and select a CSV file to import</p>
 
-<!-- ----------------need to define ids, action, enctype, name-------------------- -->
-<form id="" action="" method="POST" enctype="">
+<form id="upload-import" method="POST" enctype="multipart/form-data">
   <strong>Files:</strong><br>
-  Select files OR drag them into the box below.
-  <input id="" type="file" name="" accept=".csv" multiple class="mb-4" value="Import File"><p>
+  Select a file 
+  <input id="csv-file" type="file" name="csv-file" accept=".csv" multiple class="mb-4" value="Import File"><p>
   
-  <div id="" class="mb-4">
-      Drag and Drop Files Here
-  </div>
   <button type="submit" class="btn btn-primary btn-sm mb-4" id="">Import File</button>
 </form>
 
+{% if header != null %}
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -35,5 +32,6 @@
     {% endfor %}
   </tbody>
 </table>
+{% endif %}
 
 {% endblock %}
