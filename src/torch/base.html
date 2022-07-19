@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('shared',filename='styles/base.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('shared',filename='styles/upload.css') }}"/>
+
+    <title>{% block title %}Home{% endblock %}</title>
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <div class="nav">
+          <div class="nav-left">
+            <!-- {% if user.is_authenticated %}
+              <a class="nav-item nav-link" id="home" href="/">Home</a>
+              {% if current_user.has_role('admin') %}
+                <a class="nav-item nav-link" id="users" href="/users">Users</a>
+                <a class="nav-item nav-link" id="users" href="/roles">Roles</a>
+                <a class="nav-item nav-link" id="home" href="/institutions">Institutions</a>
+              {% endif %}
+              <a class="nav-item nav-link" id="home" href="/overview">OverView</a>
+              <a class="nav-item nav-link" id="files" href="/files">Files</a>
+             
+              <a class="nav-item nav-link" id="settings" href="/workflow-settings/1">Settings</a>
+              
+            {% else %}
+              <a class="nav-item nav-link" id="login" href="/login">Login</a>
+              <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+            {% endif %} -->
+          </div>
+            <!-- {% if user.is_authenticated %}
+              <div class="nav-right">
+                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+                <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
+                <button class="nav-button">Upload</button>
+              </div>
+            {% endif %} -->
+        </div>
+      </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %} {% if category ==
+    'error' %}
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+    <div class="container">{% block content %} {% endblock %}</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" src="{{ url_for('shared', filename='js/uploadr.js') }}"></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('shared', filename='index.js') }}"
+    ></script>
+  </body>
+</html>
