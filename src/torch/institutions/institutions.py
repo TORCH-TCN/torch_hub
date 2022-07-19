@@ -1,36 +1,39 @@
 from flask import Blueprint, flash, jsonify, render_template, request
 from sqlalchemy import Column, DateTime, Integer, String, func
-from torch.config.database.TorchDatabase import Entity, db
+#from torch.config.database.TorchDatabase import Entity, db
+from torch import db
 from sqlalchemy.orm import relationship
-from flask_login import current_user
+from flask_security import current_user
 
 
-class Institution(Entity):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
-    code = Column(String(10), unique=True)
-    created_date = Column(DateTime(timezone=True), default=func.now())
-    users = relationship("User")
-    collections = relationship("Collection")
+class Institution(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=True)
+    code = db.Column(db.String(10), unique=True)
+    created_date = db.Column(db.DateTime(timezone=True), default=func.now())
+    users = db.relationship('User')
+    collections = db.relationship('Collection')
+
+
 
 
 def get_institution_by_code(code) -> Institution:
     return Institution.query.filter_by(code=code).first()
 
 
-institutions = Blueprint("institutions", __name__, url_prefix="/institutions")
+institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions")
 
 
-@institutions.route("/", methods=["GET"])
+@institutions_bp.route("/", methods=["GET"])
 def institutions():
     institutions = Institution.query.all()
 
     return render_template(
-        "institutions.html", user=current_user, institutions=institutions
+        "/institutions/institutions.html", user=current_user, institutions=institutions
     )
 
 
-@institutions.route("/", methods=["POST"])
+@institutions_bp.route("/", methods=["POST"])
 def post_institution():
     institution = request.form.get("institution")
 
@@ -46,7 +49,7 @@ def post_institution():
     return institutions()
 
 
-@institutions.route("/institutions/<id>", methods=["DELETE"])
+@institutions_bp.route("/institutions/<id>", methods=["DELETE"])
 def delete(id):
     institution = Institution.query.get(id)
     if institution:

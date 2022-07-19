@@ -27,7 +27,7 @@
       <div class="container">
         <div class="nav">
           <div class="nav-left">
-            <!-- {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
               <a class="nav-item nav-link" id="home" href="/">Home</a>
               {% if current_user.has_role('admin') %}
                 <a class="nav-item nav-link" id="users" href="/users">Users</a>
@@ -44,13 +44,13 @@
               <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
             {% endif %} -->
           </div>
-            <!-- {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
               <div class="nav-right">
                 <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
                 <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
                 <button class="nav-button">Upload</button>
               </div>
-            {% endif %} -->
+            {% endif %}
         </div>
       </div>
     </nav>

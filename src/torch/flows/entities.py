@@ -1,4 +1,4 @@
-from . import db
+from torch import db
 
 
 class Workflow(db.Model):

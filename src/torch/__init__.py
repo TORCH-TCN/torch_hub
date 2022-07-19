@@ -8,10 +8,11 @@ from wtforms import StringField
 from flask_migrate import Migrate
 # from torch.users.role import Role
 # from torch.users.user import User
-
 # from torch.users.users import ExtendedRegisterForm
 
-# db = SQLAlchemy()
+
+
+db = SQLAlchemy()
 # migrate = Migrate()
 
 def create_app():
@@ -19,22 +20,39 @@ def create_app():
 
     app.config.from_file("config.json", load=json.load)
     
-    #db.init_app(app)
+    db.init_app(app)
 
     # mail = Mail(app)
 
-    from torch.test.test import views 
+    #from torch.test.test import views 
 
-    # from flows.flows import views
-    # from users.users import users
-    # from institutions.institutions import institutions
-    # from collections.collections import collections
+    #from torch.flows.flows import flows_bp
+    from torch.users.users import users_bp, ExtendedRegisterForm
+    from torch.users.roles import roles_bp
+    from torch.institutions.institutions import institutions_bp
+    from torch.collections.collections import collections_bp
 
-    app.register_blueprint(views,url_prefix='/')
+    #app.register_blueprint(flows_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(roles_bp)
+    app.register_blueprint(institutions_bp)
+    app.register_blueprint(collections_bp)
 
-    # create_database(app)
+    
+    from torch.users.users import User
+    from torch.users.role import Role
+    from torch.institutions.institutions import Institution
+    from torch.collections.collections import Collection 
 
-    #user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    #security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
+    create_database(app)
+
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
 
     return app
+
+
+def create_database(app):
+    if not path.exists('torch/torch-hub.db' ):
+        db.create_all(app=app)
+        print('Created Database!')

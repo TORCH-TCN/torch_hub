@@ -2,28 +2,29 @@ from flask import Blueprint, render_template, request, flash
 from flask_security import (
     current_user,
 )
-from collections import (
+from torch.collections.collections import (
     Workflow,
     WorkflowFileType,
     WorkflowSettings,
 )
+from torch import db
 
-views = Blueprint("views", __name__)
-
-
-@views.route("/history", methods=["GET", "POST"])
-# @login_required
-def history():
-    if request.method == "POST":
-        current_user.first_name = request.form.get("firstName")
-        current_user.last_name = request.form.get("lastName")
-        db.session.commit()
-        flash("Updated successfully!", category="success")
-
-    return render_template("history.html", user=current_user)
+flows_bp = Blueprint("flows", __name__)
 
 
-@views.route("/workflow-settings/<workflowid>", methods=["GET", "POST"])
+# @flows_bp.route("/history", methods=["GET", "POST"])
+# # @login_required
+# def history():
+#     if request.method == "POST":
+#         current_user.first_name = request.form.get("firstName")
+#         current_user.last_name = request.form.get("lastName")
+#         db.session.commit()
+#         flash("Updated successfully!", category="success")
+
+#     return render_template("history.html", user=current_user)
+
+
+@flows_bp.route("/workflow-settings/<workflowid>", methods=["GET", "POST"])
 # @login_required
 def settings(workflowid=1):
     if request.method == "POST":
@@ -57,7 +58,7 @@ def settings(workflowid=1):
     categories = WorkflowSettings.query.group_by(WorkflowSettings.category)
 
     return render_template(
-        "settings.html",
+        "/flows/settings.html",
         user=current_user,
         settings=settings,
         filetypes=filetypes,
@@ -66,7 +67,7 @@ def settings(workflowid=1):
     )
 
 
-@views.route("/overview", methods=["GET", "POST"])
+@flows_bp.route("/overview", methods=["GET", "POST"])
 # @login_required
 def overview():
     if request.method == "POST":
@@ -75,4 +76,4 @@ def overview():
         db.session.commit()
         flash("Updated successfully!", category="success")
 
-    return render_template("overview.html", user=current_user)
+    return render_template("/flows/overview.html", user=current_user)

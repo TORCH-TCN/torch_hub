@@ -2,39 +2,41 @@ import json
 from flask import Blueprint, flash, render_template, request
 from flask_login import current_user
 from sqlalchemy import Column, ForeignKey, Integer, String
-from torch.config.database.TorchDatabase import Entity, db
+#from torch.config.database.TorchDatabase import Entity, db
+from torch import db
 from torch.specimens.specimens import get_specimens_by_batch_id, upload_specimens
-from torch.institutions.institution import get_institution_by_code
+from torch.institutions.institutions import get_institution_by_code
 
 
-class Collection(Entity):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
-    code = Column(String(10), unique=True)
-    catalog_number_regex = Column(String(150))
-    web_base = Column(String(150))
-    url_base = Column(String(150))
-    institution_id = Column(Integer, ForeignKey("institution.id"))
+class Collection(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=True)
+    code = db.Column(db.String(10), unique=True)
+    catalog_number_regex = db.Column(db.String(150))
+    web_base = db.Column(db.String(150))
+    url_base = db.Column(db.String(150))
+    institution_id = db.Column(db.Integer, db.ForeignKey('institution.id'))
 
 
-collections = Blueprint("collections", __name__, url_prefix="/collections")
+
+collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
 
-@collections.route("/", methods=["GET"])
+@collections_bp.route("/", methods=["GET"])
 def collections():
     institution = get_institution_by_code(current_user.institution_code)
     collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(
-        "collections.html",
+        "/collections/collections.html",
         user=current_user,
         institution=institution,
         collections=collections,
     )
 
 
-@collections.route("/", methods=["POST"])
-def collections():
+@collections_bp.route("/", methods=["POST"])
+def collectionspost():
     institution = get_institution_by_code(current_user.institution_code)
     collection = request.form.get("collection")
 
@@ -54,7 +56,7 @@ def collections():
     return collections()
 
 
-@collections.route("/<collectionid>/specimens", methods=["POST"])
+@collections_bp.route("/<collectionid>/specimens", methods=["POST"])
 def upload():
     is_ajax = request.form.get("__ajax", None) == "true"
 
@@ -66,10 +68,10 @@ def upload():
         flash("Upload completed!", category="success")
 
 
-@collections.route("/<collectionid>/specimens/<batch_id>")
+@collections_bp.route("/<collectionid>/specimens/<batch_id>")
 def upload_complete(batch_id):
     specimens = get_specimens_by_batch_id(batch_id)
-    return render_template("specimens.html", batch_id=batch_id, files=specimens)
+    return render_template("/specimens/specimens.html", batch_id=batch_id, files=specimens)
 
 
 def ajax_response(status, msg):
