@@ -22,6 +22,7 @@ class Specimen(Entity):
     barcode = Column(String(20))
     collection_id = Column(Integer, ForeignKey("collection.id"))
     catalog_number = Column(String(150))
+    flow_run_id = Column(String(150))
 
 
 def get_specimens_by_batch_id(batch_id):

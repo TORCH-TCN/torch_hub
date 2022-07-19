@@ -14,10 +14,6 @@ class Institution(Entity):
     collections = relationship("Collection")
 
 
-def get_institution_by_code(code) -> Institution:
-    return Institution.query.filter_by(code=code).first()
-
-
 institutions = Blueprint("institutions", __name__, url_prefix="/institutions")
 
 

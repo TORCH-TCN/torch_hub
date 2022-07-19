@@ -3,8 +3,8 @@ from flask import Blueprint, flash, render_template, request
 from flask_login import current_user
 from sqlalchemy import Column, ForeignKey, Integer, String
 from torch.config.database.TorchDatabase import Entity, db
-from torch.specimens.specimens import get_specimens_by_batch_id, upload_specimens
-from torch.institutions.institution import get_institution_by_code
+from torch.institutions.institutions import Institution
+from torch.collections.specimens import get_specimens_by_batch_id, upload_specimens
 
 
 class Collection(Entity):
@@ -15,14 +15,17 @@ class Collection(Entity):
     web_base = Column(String(150))
     url_base = Column(String(150))
     institution_id = Column(Integer, ForeignKey("institution.id"))
+    flow_id = Column(String(150))
 
 
 collections = Blueprint("collections", __name__, url_prefix="/collections")
 
 
 @collections.route("/", methods=["GET"])
-def collections():
-    institution = get_institution_by_code(current_user.institution_code)
+def get_collections():
+    institution = Institution.query.filter_by(
+        code=current_user.institution_code
+    ).first()
     collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(
@@ -34,8 +37,10 @@ def collections():
 
 
 @collections.route("/", methods=["POST"])
-def collections():
-    institution = get_institution_by_code(current_user.institution_code)
+def post_collection():
+    institution = Institution.query.filter_by(
+        code=current_user.institution_code
+    ).first()
     collection = request.form.get("collection")
 
     if len(collection) < 1:
@@ -51,7 +56,7 @@ def collections():
 
         flash("Collection added!", category="success")
 
-    return collections()
+    return get_collections()
 
 
 @collections.route("/<collectionid>/specimens", methods=["POST"])
