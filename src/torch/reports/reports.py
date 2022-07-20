@@ -10,9 +10,18 @@ from flask_security import current_user, roles_accepted
 
 reports_bp = Blueprint("reports", __name__, url_prefix="/reports")
 
-@reports_bp.route('/import', methods=['GET', 'POST'])
+@reports_bp.route('/import', methods=['GET'])
 # @roles_accepted('admin')
 def csvfiles_import():
+
+    header = [] 
+    data_read = [] 
+
+    return render_template("/reports/import.html", user=current_user, header=header, reader=data_read)
+
+@reports_bp.route('/import', methods=[ 'POST'])
+# @roles_accepted('admin')
+def csvfiles_import_post():
 
     header = [] 
     data_read = []
@@ -29,22 +38,22 @@ def csvfiles_import():
 
     return render_template("/reports/import.html", user=current_user, header=header, reader=data_read)
 
-@reports_bp.route('/export', methods=['GET', 'POST'])
+@reports_bp.route('/export', methods=['GET'])
 # @roles_accepted('admin')
 def reports():
+    tables = db.engine.table_names()
+
+    return render_template("/reports/export.html", user=current_user, tables=tables)
+
+@reports_bp.route('/export', methods=['POST'])
+# @roles_accepted('admin')
+def reports_post():
     if request.method == 'POST':
         selectedtable = request.form.get('selecttable')
         whereclause = request.form.get('whereclause')
         
         result = db.engine.execute("select * from " + selectedtable + ' ' + whereclause)
 
-        # generate local file or export file
-        # outfile = open('report_' + selectedtable + '.csv', 'w', newline='')
-        # outcsv = csv.writer(outfile, delimiter=',')
-        # outcsv.writerow(result.keys())
-        # outcsv.writerows(result.fetchall())
-
-        
         si = io.StringIO()
         cw = csv.writer(si, delimiter=",")
         cw.writerow(result.keys())
@@ -56,8 +65,5 @@ def reports():
 
 
     tables = db.engine.table_names()
-    
-    # inspector = inspect(db.engine)
-    # columns = inspector.get_columns('institution') future reference to load fields from selected table
 
     return render_template("/reports/export.html", user=current_user, tables=tables)

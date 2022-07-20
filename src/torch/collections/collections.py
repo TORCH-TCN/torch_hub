@@ -26,6 +26,7 @@ def home():
     print("home collections")
     return redirect('/collections')
 
+@collections_bp.route("/", methods=["GET"], defaults = {'institutioncode':None})
 @collections_bp.route("/<institutioncode>", methods=["GET"])
 @login_required
 def collections(institutioncode):
