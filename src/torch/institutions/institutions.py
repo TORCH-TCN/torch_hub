@@ -51,7 +51,7 @@ def post_institution():
     return institutions()
 
 
-@institutions_bp.route("/institutions/<id>", methods=["DELETE"])
+@institutions_bp.route("/<id>", methods=["DELETE"])
 def delete(id):
     institution = Institution.query.get(id)
     if institution:
