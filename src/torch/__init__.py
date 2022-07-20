@@ -6,11 +6,6 @@ from flask_security import RegisterForm, Security, SQLAlchemyUserDatastore, User
 from flask_mail import Mail
 from wtforms import StringField
 from flask_migrate import Migrate
-# from torch.users.role import Role
-# from torch.users.user import User
-# from torch.users.users import ExtendedRegisterForm
-
-
 
 db = SQLAlchemy()
 # migrate = Migrate()
@@ -24,21 +19,16 @@ def create_app():
 
     # mail = Mail(app)
 
-    #from torch.test.test import views 
-
-    #from torch.flows.flows import flows_bp
     from torch.users.users import users_bp, ExtendedRegisterForm
     from torch.users.roles import roles_bp
     from torch.institutions.institutions import institutions_bp
     from torch.collections.collections import collections_bp, home_bp
-
-    #app.register_blueprint(flows_bp)
+    
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
     app.register_blueprint(institutions_bp)
     app.register_blueprint(collections_bp)
     app.register_blueprint(home_bp)
-
     
     from torch.users.users import User
     from torch.users.role import Role
