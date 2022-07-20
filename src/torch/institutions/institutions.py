@@ -1,4 +1,5 @@
 from flask import Blueprint, flash, jsonify, render_template, request
+from flask_login import login_required
 from sqlalchemy import Column, DateTime, Integer, String, func
 #from torch.config.database.TorchDatabase import Entity, db
 from torch import db
@@ -25,6 +26,7 @@ institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions"
 
 
 @institutions_bp.route("/", methods=["GET"])
+@login_required
 def institutions():
     institutions = Institution.query.all()
 
