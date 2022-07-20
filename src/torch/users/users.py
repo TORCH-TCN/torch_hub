@@ -4,7 +4,7 @@ from flask_login import current_user
 from flask_security import RegisterForm, roles_accepted
 from flask_sqlalchemy import orm
 from wtforms import StringField
-
+from torch import db
 from torch.users.user import User
 from torch.users.role import (
     assign_role_to_user,
@@ -39,15 +39,17 @@ def users_get(userid):
 @users_bp.route("/<userid>", methods=["POST"])
 def users_post(userid):
     if request.method == "POST":
+        
         save_user(
             userid,
             request.form.get("firstName"),
             request.form.get("lastName"),
-            request.form.get("institutionid"),
+            request.form.get("institutionid")
         )
+
         flash("Updated successfully!", category="success")
 
-    return users_get()
+    return users_get(userid)
 
 
 @users_bp.route("/<userid>/active", methods=["POST"])
@@ -64,7 +66,7 @@ def user_add_role(userid):
 
 @users_bp.route("/<userid>/roles", methods=["POST"])
 @roles_accepted("admin")
-def assign_role():
+def assign_role(userid):
     data = json.loads(request.data)
     assign_role_to_user(data["userId"], data["role"])
     return jsonify({})
@@ -72,7 +74,8 @@ def assign_role():
 
 @users_bp.route("/<userid>/roles", methods=["DELETE"])
 @roles_accepted("admin")
-def delete_role_user():
+def delete_role_user(userid):
     data = json.loads(request.data)
+    print(data)
     unassign_role_from_user(data["userId"], data["role"])
     return jsonify({})

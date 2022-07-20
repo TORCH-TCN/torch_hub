@@ -1,10 +1,10 @@
 from click import DateTime
 from flask_security import UserMixin
-from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship, backref
 from torch.institutions.institutions import Institution
 #from torch.config.database.TorchDatabase import Entity, db
 from torch import db
+from sqlalchemy.orm.attributes import flag_modified
 
 
 roles_users = db.Table('roles_users',
@@ -31,8 +31,11 @@ def get_user(id) -> User:
 
 def save_user(id, first_name, last_name, institution_id):
     user = get_user(id)
+    
     user.first_name = first_name
     user.last_name = last_name
+
+    print(last_name)
 
     if institution_id is not None:
         institution = Institution.query.filter_by(id=institution_id).first()
@@ -42,7 +45,7 @@ def save_user(id, first_name, last_name, institution_id):
         institution = Institution.query.filter_by(code=user.institution_code).first()
         user.institution_id = institution.id
 
-    db.commit()
+    db.session.commit()
 
 
 def toggle_user_active(id):

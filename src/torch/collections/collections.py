@@ -26,10 +26,11 @@ def home():
     print("home collections")
     return redirect('/collections')
 
-@collections_bp.route("/", methods=["GET"])
+@collections_bp.route("/<institutioncode>", methods=["GET"])
 @login_required
-def collections():
-    institution = get_institution_by_code(current_user.institution_code)
+def collections(institutioncode):
+    code = institutioncode if institutioncode is not None else current_user.institution_code
+    institution = get_institution_by_code(code)
     collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(
@@ -40,9 +41,10 @@ def collections():
     )
 
 
-@collections_bp.route("/", methods=["POST"])
-def collectionspost():
-    institution = get_institution_by_code(current_user.institution_code)
+@collections_bp.route("/<institutioncode>", methods=["POST"])
+def collectionspost(institutioncode):
+    code = institutioncode if institutioncode is not None else current_user.institution_code
+    institution = get_institution_by_code(code)
     collection = request.form.get("collection")
 
     if len(collection) < 1:
@@ -58,7 +60,7 @@ def collectionspost():
 
         flash("Collection added!", category="success")
 
-    return collections()
+    return collections(code)
 
 
 @collections_bp.route("/<collectionid>/specimens", methods=["POST"])

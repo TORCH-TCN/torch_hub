@@ -20,7 +20,7 @@ function changeUserActive(userId, active){
   str = eval(active.toLowerCase()) == true ? "deactivate" : "activate";
 
   if (confirm(`Are you sure you want to ${str} this user?`) == true) {
-    fetch("/change-user-active", {
+    fetch("/users/" + userId + "/active", {
       method: "POST",
       body: JSON.stringify({ userId: userId }),
     }).then((_res) => {
@@ -34,7 +34,7 @@ function addRoleToUser(){
   var selectedRole = document.getElementById('selectedRole').value;
   console.log('addRoleToUser', selectedUserId, selectedRole);
 
-  fetch("/assign-role", {
+  fetch("/users/"+selectedUserId+"/roles", {
     method: "POST",
     body: JSON.stringify({ userId: selectedUserId, role: selectedRole }),
   }).then((_res) => {
@@ -46,8 +46,8 @@ function addRoleToUser(){
 function deleteRoleFromUser(userId, role){
   
   if (confirm("Are you sure you want to remove this role?") == true) {
-    fetch("/delete-role-user", {
-      method: "POST",
+    fetch("/users/" + userId + "/roles", {
+      method: "DELETE",
       body: JSON.stringify({ userId: userId, role: role }),
     }).then((_res) => {
       window.location.href = "/users";
