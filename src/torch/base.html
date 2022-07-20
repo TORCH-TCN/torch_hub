@@ -47,7 +47,7 @@
             {% if user.is_authenticated %}
               <div class="nav-right">
                 <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-                <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
+                <a class="nav-item nav-link" id="profile" href="/users/{{current_user.id}}">Profile</a>
                 <button class="nav-button">Upload</button>
               </div>
             {% endif %}

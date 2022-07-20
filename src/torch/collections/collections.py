@@ -1,6 +1,6 @@
 import json
-from flask import Blueprint, flash, render_template, request
-from flask_login import current_user
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from sqlalchemy import Column, ForeignKey, Integer, String
 #from torch.config.database.TorchDatabase import Entity, db
 from torch import db
@@ -18,11 +18,16 @@ class Collection(db.Model):
     institution_id = db.Column(db.Integer, db.ForeignKey('institution.id'))
 
 
-
+home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
+@home_bp.route("/", methods=["GET"])
+def home():
+    print("home collections")
+    return redirect('/collections')
 
 @collections_bp.route("/", methods=["GET"])
+@login_required
 def collections():
     institution = get_institution_by_code(current_user.institution_code)
     collections = Collection.query.filter_by(institution_id=institution.id).all()

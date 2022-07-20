@@ -32,8 +32,8 @@ def users():
 
 
 @users_bp.route("/<userid>", methods=["GET"])
-def users_get():
-    return render_template("/users/profile.html", user=get_user(current_user.id))
+def users_get(userid):
+    return render_template("/users/profile.html", user=get_user(userid))
 
 
 @users_bp.route("/<userid>", methods=["POST"])

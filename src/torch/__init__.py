@@ -30,13 +30,14 @@ def create_app():
     from torch.users.users import users_bp, ExtendedRegisterForm
     from torch.users.roles import roles_bp
     from torch.institutions.institutions import institutions_bp
-    from torch.collections.collections import collections_bp
+    from torch.collections.collections import collections_bp, home_bp
 
     #app.register_blueprint(flows_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
     app.register_blueprint(institutions_bp)
     app.register_blueprint(collections_bp)
+    app.register_blueprint(home_bp)
 
     
     from torch.users.users import User
