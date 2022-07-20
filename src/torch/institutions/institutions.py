@@ -19,7 +19,7 @@ class Institution(db.Model):
 
 
 def get_institution_by_code(code) -> Institution:
-    return Institution.query.filter_by(code=code).first()
+     return Institution.query.filter_by(code=code).first()
 
 
 institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions")
