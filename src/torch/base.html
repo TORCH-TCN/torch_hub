@@ -19,6 +19,8 @@
     />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/base.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/upload.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dropdown.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/reports.css') }}"/>
 
     <title>{% block title %}Home{% endblock %}</title>
   </head>
@@ -33,6 +35,13 @@
                 <a class="nav-item nav-link" id="users" href="/users">Users</a>
                 <a class="nav-item nav-link" id="users" href="/roles">Roles</a>
                 <a class="nav-item nav-link" id="home" href="/institutions">Institutions</a>
+                <div class="dropdown">
+                  <button class="dropbtn">Reports</button>
+                  <div class="dropdown-content">
+                    <a class="nav-item nav-link" id="report-export" href="/reports/export">Export</a>
+                    <a class="nav-item nav-link" id="report-import" href="/reports/import">Import</a>                    
+                  </div>
+                </div>
               {% endif %}
               <a class="nav-item nav-link" id="home" href="/overview">OverView</a>
               <a class="nav-item nav-link" id="files" href="/files">Files</a>
