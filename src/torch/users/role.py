@@ -1,14 +1,15 @@
 from typing import List
 from flask_security import RoleMixin, SQLAlchemyUserDatastore
 from sqlalchemy import Column, Integer, String
-from torch.collections.user import User
-from torch.config.database.TorchDatabase import Entity, db
+from torch.users.user import User
+#from torch.config.database.TorchDatabase import Entity, db
+from torch import db
 
 
-class Role(Entity, RoleMixin):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), unique=True)
-    description = Column(String(255))
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
 
 
 def get_roles() -> List[Role]:

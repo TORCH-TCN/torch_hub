@@ -9,11 +9,12 @@ from sqlalchemy import (
     ForeignKey,
     Text,
 )
-from config.database.TorchDatabase import Entity
+#from config.database.TorchDatabase import Entity
+from torch import db
 from sqlalchemy.sql import func
 
 
-class Specimen(Entity):
+class Specimen(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     uploaded_date = Column(DateTime(timezone=True), default=func.now())
