@@ -13,7 +13,6 @@ flows_bp = Blueprint("flows", __name__)
 
 
 # @flows_bp.route("/history", methods=["GET", "POST"])
-# # @login_required
 # def history():
 #     if request.method == "POST":
 #         current_user.first_name = request.form.get("firstName")
@@ -25,7 +24,6 @@ flows_bp = Blueprint("flows", __name__)
 
 
 @flows_bp.route("/workflow-settings/<workflowid>", methods=["GET", "POST"])
-# @login_required
 def settings(workflowid=1):
     if request.method == "POST":
         config_format = WorkflowSettings.query.filter_by(name="config_format").first()
@@ -68,7 +66,6 @@ def settings(workflowid=1):
 
 
 @flows_bp.route("/overview", methods=["GET", "POST"])
-# @login_required
 def overview():
     if request.method == "POST":
         current_user.first_name = request.form.get("firstName")

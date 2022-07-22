@@ -40,4 +40,6 @@ if __name__ == "__main__":
     ui.daemon = True
     ui.start()
 
+    time.sleep(5)  # make sure server is ready
+
     DockerAgent().start()

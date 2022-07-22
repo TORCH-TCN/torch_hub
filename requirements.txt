@@ -10,7 +10,7 @@ Flask
 Flask_Mail
 Flask_Migrate
 Flask_SQLAlchemy
-Flask_Security
+Flask-Security-Too
 flask-socketio
 WTForms
 email_validator

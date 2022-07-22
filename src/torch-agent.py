@@ -1,8 +1,7 @@
 from multiprocessing.dummy import freeze_support
-from prefect.agent.local import LocalAgent
+from prefect.agent.docker import DockerAgent
 
 
 if __name__ == "__main__":
     freeze_support()
-
-    LocalAgent().start()
+    DockerAgent().start()

@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, flash, redirect, render_template, request
-from flask_login import current_user, login_required
+from flask_login import current_user
 from torch import db
 from torch.collections.specimens import get_specimens_by_batch_id, upload_specimens
 from torch.institutions.institutions import Institution
@@ -27,15 +27,11 @@ def home():
     return redirect("/collections")
 
 
-@collections_bp.route("/<institutioncode>", methods=["GET"])
-@login_required
-def collections(institutioncode):
-    code = (
-        institutioncode
-        if institutioncode is not None
-        else current_user.institution_code
-    )
-    institution = Institution.query.filter_by(code=code).first()
+@collections_bp.route("/", methods=["GET"])
+def collections():
+    institution = Institution.query.filter_by(
+        code=current_user.institution_code
+    ).first()
     collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(
@@ -46,14 +42,11 @@ def collections(institutioncode):
     )
 
 
-@collections_bp.route("/<institutioncode>", methods=["POST"])
-def collectionspost(institutioncode):
-    code = (
-        institutioncode
-        if institutioncode is not None
-        else current_user.institution_code
-    )
-    institution = Institution.query.filter_by(code=code).first()
+@collections_bp.route("/", methods=["POST"])
+def collectionspost():
+    institution = Institution.query.filter_by(
+        code=current_user.institution_code
+    ).first()
     collection = request.form.get("collection")
 
     if len(collection) < 1:
@@ -69,7 +62,7 @@ def collectionspost(institutioncode):
 
         flash("Collection added!", category="success")
 
-    return collections(code)
+    return collections()
 
 
 @collections_bp.route("/<collectionid>/specimens", methods=["POST"])
