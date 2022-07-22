@@ -3,11 +3,11 @@ import socket
 import threading
 import time
 from flask_socketio import SocketIO
-from prefect.agent.local import LocalAgent
+from flask_mail import Mail
+from prefect.agent.docker import DockerAgent
 from prefect.cli.server import start as start_prefect_server
 from torch import create_app
 
-# from torch.config.TorchConfig import TorchConfig
 
 def wait_for_prefect_server():
     for i in range(120):
@@ -23,22 +23,21 @@ def wait_for_prefect_server():
         finally:
             s.close()
 
+
 app = create_app()
+mail = Mail(app)
+socketio = SocketIO(app)
 
 if __name__ == "__main__":
-    app.run(debug=True) #testing only web app
-    # socketio = SocketIO(app)
+    freeze_support()
 
-    # freeze_support()
-    
-    # server = threading.Thread(target=lambda: start_prefect_server())
-    # server.daemon = True
-    # server.start()
-    # wait_for_prefect_server()
+    server = threading.Thread(target=lambda: start_prefect_server())
+    server.daemon = True
+    server.start()
+    wait_for_prefect_server()
 
-        
-    # ui = threading.Thread(target=lambda: socketio.run(app))
-    # ui.daemon = True
-    # ui.start()
+    ui = threading.Thread(target=lambda: socketio.run(app))
+    ui.daemon = True
+    ui.start()
 
-    # LocalAgent().start()
+    DockerAgent().start()
