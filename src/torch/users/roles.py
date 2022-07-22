@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request
-from flask_login import current_user
-from flask_security import roles_accepted
+from flask_security import current_user, roles_accepted
 from torch.users.role import (
     get_roles,
     add_role,

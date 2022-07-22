@@ -1,7 +1,6 @@
 import json
 from flask import Blueprint, flash, jsonify, render_template, request
-from flask_login import current_user
-from flask_security import RegisterForm, roles_accepted
+from flask_security import current_user, RegisterForm, roles_accepted
 from flask_sqlalchemy import orm
 from wtforms import StringField
 from torch.users.role import (

@@ -13,6 +13,7 @@ Flask_SQLAlchemy
 Flask-Security-Too
 flask-socketio
 WTForms
+simple-websocket
 email_validator
 
 # TORCH Tasks

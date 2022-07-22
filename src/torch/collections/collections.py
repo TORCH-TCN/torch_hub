@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, flash, redirect, render_template, request
-from flask_login import current_user
+from flask_security import current_user
 from torch import db
 from torch.collections.specimens import get_specimens_by_batch_id, upload_specimens
 from torch.institutions.institutions import Institution
@@ -21,6 +21,11 @@ home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
 
+def get_user_institution():
+    code = current_user.institution_code if current_user.is_authenticated else "default"
+    return Institution.query.filter_by(code=code).first()
+
+
 @home_bp.route("/", methods=["GET"])
 def home():
     print("home collections")
@@ -29,9 +34,7 @@ def home():
 
 @collections_bp.route("/", methods=["GET"])
 def collections():
-    institution = Institution.query.filter_by(
-        code=current_user.institution_code
-    ).first()
+    institution = get_user_institution()
     collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(
@@ -44,9 +47,7 @@ def collections():
 
 @collections_bp.route("/", methods=["POST"])
 def collectionspost():
-    institution = Institution.query.filter_by(
-        code=current_user.institution_code
-    ).first()
+    institution = get_user_institution()
     collection = request.form.get("collection")
 
     if len(collection) < 1:
@@ -65,7 +66,13 @@ def collectionspost():
     return collections()
 
 
-@collections_bp.route("/<collectionid>/specimens", methods=["POST"])
+@collections_bp.route("/<collectionid>", methods=["GET"])
+def collection(collectionid):
+    collection = Collection.query.filter_by(code=collectionid).first()
+    return render_template("/collections/specimens.html", collection=collection)
+
+
+@collections_bp.route("/<collectionid>", methods=["POST"])
 def upload():
     is_ajax = request.form.get("__ajax", None) == "true"
 

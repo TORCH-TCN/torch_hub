@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
 {% block title %}Home{% endblock %} 
 {% block content %}
-    <h3 align="left" class="mt-4">{{institution.code}} - {{institution.name}}</h3>
+    <h3 align="left" class="mt-4">{{institution.name}} ({{institution.code}})</h3>
     <p class="mb-4">Collections</p>
 
     <table class="table table-bordered">
@@ -15,15 +15,24 @@
         <tbody>
             {% for collection in collections %}
                 <tr>
-                    <td>{{collection.code}}</td>
+                    <td>
+                        <a href="/collections/{{collection.code}}">{{collection.code}}</a>
+                    </td>
                     <td>{{collection.name}}</td>
                     <td></td>
                 </tr>
             {% endfor %}
         </tbody>
-        
+        {% if not collections|length %}
+            <tfoot>
+                <td colspan="3">
+                    No collections found! Create your first collection below.
+                </td>
+            </tfoot>
+        {% endif %}
     </table>
-    {% if user.has_role('IM') or user.has_role('admin') %}
+    
+    {% if institution.code == 'default' or user.has_role('IM') or user.has_role('admin') %}
     <form method="POST" class="form-inline">
         <div class="form-group">
             <label for="collection" class="mr-2">Name:</label>
