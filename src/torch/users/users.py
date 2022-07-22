@@ -4,8 +4,6 @@ from flask_login import current_user
 from flask_security import RegisterForm, roles_accepted
 from flask_sqlalchemy import orm
 from wtforms import StringField
-from torch import db
-from torch.users.user import User
 from torch.users.role import (
     assign_role_to_user,
     get_roles,
@@ -17,7 +15,6 @@ from torch.users.user import User, get_user, save_user, toggle_user_active
 class ExtendedRegisterForm(RegisterForm):
     first_name = StringField("First Name")
     last_name = StringField("Last Name")
-    institution_code = StringField("Institution Code")
 
 
 users_bp = Blueprint("users", __name__, url_prefix="/users")
@@ -28,7 +25,9 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 def users():
     users = User.query.options(orm.joinedload("roles"))
     roles = get_roles()
-    return render_template("/users/users.html", user=current_user, users=users, roles=roles)
+    return render_template(
+        "/users/users.html", user=current_user, users=users, roles=roles
+    )
 
 
 @users_bp.route("/<userid>", methods=["GET"])
@@ -39,12 +38,12 @@ def users_get(userid):
 @users_bp.route("/<userid>", methods=["POST"])
 def users_post(userid):
     if request.method == "POST":
-        
+
         save_user(
             userid,
             request.form.get("firstName"),
             request.form.get("lastName"),
-            request.form.get("institutionid")
+            request.form.get("institutionid"),
         )
 
         flash("Updated successfully!", category="success")
