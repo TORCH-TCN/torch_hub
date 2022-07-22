@@ -1,27 +1,30 @@
 from multiprocessing.dummy import freeze_support
-import socket
 import threading
 import time
 from flask_socketio import SocketIO
 from flask_mail import Mail
 from prefect.agent.docker import DockerAgent
 from prefect.cli.server import start as start_prefect_server
-from torch import create_app
+import requests
+from torch import create_app, db, client
+from torch.institutions.institutions import Institution
 
 
 def wait_for_prefect_server():
     for i in range(120):
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(1)
-            s.connect(("127.0.0.1", int(4200)))
-            s.shutdown(socket.SHUT_RDWR)
-            print("Prefect Server is UP")
-        except OSError:
+            response = requests.get(
+                "http://localhost:4200/.well-known/apollo/server-health"
+            )
+            if response.status_code == 200:
+                print("Prefect Server is UP")
+                break
+            else:
+                time.sleep(1)
+                print("Prefect Server is almost up")
+        except requests.RequestException:
             time.sleep(1)
             print("Prefect Server is not up yet")
-        finally:
-            s.close()
 
 
 app = create_app()
@@ -40,6 +43,16 @@ if __name__ == "__main__":
     ui.daemon = True
     ui.start()
 
-    time.sleep(5)  # make sure server is ready
+    # make sure at least one institution exists
+    app.app_context().push()
+    institutions = Institution.query.all()
+    if len(institutions) == 0:
+        print("Creating default tenant...")
+        default_institution = Institution(name="Default Institution", code="default")
+        db.session.add(default_institution)
+        db.session.commit()
+    if len(client.get_available_tenants()) == 0:
+        print("Registering default tenant with prefect...")
+        client.create_tenant("default")
 
     DockerAgent().start()

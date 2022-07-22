@@ -3,11 +3,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_security import Security, SQLAlchemyUserDatastore
-
-from torch.institutions.institutions import Institution
-
+from prefect import Client
 
 db = SQLAlchemy()
+client = Client()
 # migrate = Migrate()
 
 
@@ -43,7 +42,4 @@ def create_app():
 def create_database(app):
     if not path.exists("torch/torch-hub.db"):
         db.create_all(app=app)
-        default_institution = Institution(name="Default", code="default")
-        db.session.add(default_institution)
-        db.session.commit()
         print("Created Database!")
