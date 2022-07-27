@@ -92,6 +92,11 @@ def upload_complete(batch_id):
     )
 
 
+@collections_bp.route("/<collectionid>/settings", methods=["GET", "POST"])
+def settings(collectionid="default"):
+    return render_template("/collections/settings.html", user=current_user)
+
+
 def ajax_response(status, msg):
     status_code = "ok" if status else "error"
     return json.dumps(
