@@ -9,6 +9,8 @@ import requests
 from torch import create_app, db, client
 from torch.institutions.institutions import Institution
 
+# Make sure to run 'prefect backend server' before running this
+
 
 def wait_for_prefect_server():
     for i in range(120):
@@ -21,10 +23,8 @@ def wait_for_prefect_server():
                 break
             else:
                 time.sleep(1)
-                print("Prefect Server is almost up")
         except requests.RequestException:
             time.sleep(1)
-            print("Prefect Server is not up yet")
 
 
 app = create_app()
