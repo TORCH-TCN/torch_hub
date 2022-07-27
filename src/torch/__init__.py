@@ -24,6 +24,7 @@ def create_app():
     from torch.institutions.institutions import institutions_bp
     from torch.collections.collections import collections_bp, home_bp
     from torch.reports.reports import reports_bp
+    from torch.flows.workflow import workflow_bp
     
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
@@ -31,11 +32,13 @@ def create_app():
     app.register_blueprint(collections_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(reports_bp)
+    app.register_blueprint(workflow_bp)
     
     from torch.users.users import User
     from torch.users.role import Role
     from torch.institutions.institutions import Institution
     from torch.collections.collections import Collection 
+    from torch.flows.workflow import WorkflowSettings
 
     create_database(app)
 
