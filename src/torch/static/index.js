@@ -1,11 +1,13 @@
 function deleteInstitution(institutionId) {
+  if (confirm("Are you sure you want to remove this institution?") == true) {
     fetch("/delete-institution", {
       method: "POST",
       body: JSON.stringify({ institutionId: institutionId }),
     }).then((_res) => {
-      window.location.href = "/";
+      window.location.href = "/institutions";
     });
   }
+}
 
 var selectedUserId = 0;
 
@@ -54,4 +56,15 @@ function deleteRoleFromUser(userId, role){
     });
   } 
 
+}
+
+function deleteWorkflowSetting(workflowSettingId) {
+  if (confirm("Are you sure you want to remove this workflow setting?") == true) {
+    fetch("/workflows/settings/" + workflowSettingId, {
+      method: "DELETE",
+      body: JSON.stringify({ workflowSettingId: workflowSettingId }),
+    }).then((_res) => {
+      window.location.href = "/workflows/settings";
+    });
+  }
 }
