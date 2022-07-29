@@ -31,6 +31,22 @@ app = create_app()
 mail = Mail(app)
 socketio = SocketIO(app)
 
+
+def check_default_institution(app):
+    app.app_context().push()
+    institutions = Institution.query.all()
+
+    if len(institutions) == 0:
+        print("Creating default tenant...")
+        default_institution = Institution(name="Default Institution", code="default")
+        db.session.add(default_institution)
+        db.session.commit()
+
+    if len(client.get_available_tenants()) == 0:
+        print("Registering default tenant with prefect...")
+        client.create_tenant("default")
+
+
 if __name__ == "__main__":
     freeze_support()
 
@@ -43,16 +59,6 @@ if __name__ == "__main__":
     ui.daemon = True
     ui.start()
 
-    # make sure at least one institution exists
-    app.app_context().push()
-    institutions = Institution.query.all()
-    if len(institutions) == 0:
-        print("Creating default tenant...")
-        default_institution = Institution(name="Default Institution", code="default")
-        db.session.add(default_institution)
-        db.session.commit()
-    if len(client.get_available_tenants()) == 0:
-        print("Registering default tenant with prefect...")
-        client.create_tenant("default")
+    check_default_institution(app)
 
     DockerAgent().start()
