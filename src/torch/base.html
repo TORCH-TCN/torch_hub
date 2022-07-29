@@ -29,26 +29,19 @@
       <div class="container">
         <div class="nav">
           <div class="nav-left">
-              {% if current_user.has_role('admin') %}
-                <a class="nav-item nav-link" id="users" href="/users">Users</a>
-<<<<<<< HEAD
-                <a class="nav-item nav-link" id="roles" href="/roles">Roles</a>
-                <a class="nav-item nav-link" id="institutions" href="/institutions">Institutions</a>
-              {% endif %}
+              
               {% if collection is defined %}
                 <a class="nav-item nav-link" id="back" href="/collections">&larr;</a>
                 <strong class="nav-item">{{collection.name}}</strong>
                 <a class="nav-item nav-link" id="overview" href="/collections/{{collection.code}}">Specimens</a>
                 <a class="nav-item nav-link" id="settings" href="/collections/{{collection.code}}/settings">Settings</a>
+                <a class="nav-item nav-link" id="workflow" href="/workflows">Workflows Settings</a>
               {% else %}
                 <a class="nav-item nav-link" id="collections" href="/collections">Collections</a>
               {% endif %}
             </div>
             <div class="nav-right">
               {% if current_user.is_authenticated %}
-=======
-                <a class="nav-item nav-link" id="users" href="/roles">Roles</a>
-                <a class="nav-item nav-link" id="home" href="/institutions">Institutions</a>
                 <div class="dropdown">
                   <button class="dropbtn">Reports</button>
                   <div class="dropdown-content">
@@ -56,23 +49,17 @@
                     <a class="nav-item nav-link" id="report-import" href="/reports/import">Import</a>                    
                   </div>
                 </div>
-              {% endif %}
-              <!-- <a class="nav-item nav-link" id="home" href="/overview">OverView</a>
-              <a class="nav-item nav-link" id="files" href="/files">Files</a>
-             
-              <a class="nav-item nav-link" id="settings" href="/workflow-settings/1">Settings</a> -->
-              <a class="nav-item nav-link" id="workflow" href="/workflows">Workflows Settings</a>
-              
-            {% else %}
-              <a class="nav-item nav-link" id="login" href="/login">Login</a>
-              <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-            {% endif %}
-          </div>
-            {% if user.is_authenticated %}
-              <div class="nav-right">
->>>>>>> feature/one-project-webapp
-                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-                <a class="nav-item nav-link" id="profile" href="/users/{{current_user.id}}">Profile</a>
+                {% if current_user.has_role('admin') %}
+                  <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+                  <a class="nav-item nav-link" id="profile" href="/users/{{current_user.id}}">Profile</a>
+                  <div class="dropdown">
+                    <button class="dropbtn">Admin</button>
+                  <div class="dropdown-content">
+                    <a class="nav-item nav-link" id="users" href="/users">Users</a>
+                    <a class="nav-item nav-link" id="roles" href="/roles">Roles</a>
+                    <a class="nav-item nav-link" id="institutions" href="/institutions">Institutions</a>
+                  </div>
+                {% endif %}
               {% else %}
                 <a class="nav-item nav-link" id="login" href="/login">Login</a>
                 <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
@@ -81,6 +68,7 @@
                 <button class="nav-button">Upload</button>
               {% endif %}
             </div>
+          </div>
         </div>
       </div>
     </nav>

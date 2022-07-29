@@ -4,6 +4,7 @@
 prefect
 SqlAlchemy
 docker-compose # for Prefect Server backend
+watchdog
 
 # Web
 Flask

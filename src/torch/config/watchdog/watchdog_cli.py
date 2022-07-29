@@ -23,6 +23,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print(args.directory)
-    #todo create a command or agument to activate from database (table WorkflowSettings)
+    # todo create a command or agument to activate from database (table WorkflowSettings)
 
     HubHandler(args.workflowid, args.directory)
