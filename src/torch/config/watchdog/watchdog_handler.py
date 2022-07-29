@@ -2,9 +2,10 @@ import watchdog.events
 import watchdog.observers
 
 class HubHandler(watchdog.events.PatternMatchingEventHandler):
-    def __init__(self, path):
+    def __init__(self, workflowid, path):
         super().__init__(patterns=['*.png'], ignore_patterns=None, ignore_directories=False,case_sensitive=True) 
-        print('after super')
+        
+        self.workflowid = workflowid
         observer = watchdog.observers.Observer()
         observer.schedule(self, path, recursive=True)
         observer.start()
@@ -12,7 +13,8 @@ class HubHandler(watchdog.events.PatternMatchingEventHandler):
 
             
     def on_created(self, event):
-        print(f"file created at {event.src_path}")
+        print(f"file created at {event.src_path} - run workflow {self.workflowid}")
+        #todo trigger the respective workflow everytime a file is added to this path
         return super().on_created(event)
     
     def on_deleted(self, event):

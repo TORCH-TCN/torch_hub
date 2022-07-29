@@ -25,24 +25,24 @@ def workflowsettings():
 
 @workflow_bp.route("/settings", methods=["POST"])
 def post_workflowsettings():
-    workflow = request.form.get("workflow_id")
+    workflowid = request.form.get("workflow_id")
 
-    if len(workflow) < 1:
-        flash("Name is too short!", category="error")
+    if len(workflowid) < 1:
+        flash("You need to add a Workflow ID!", category="error")
     else:
-        new_workflow = WorkflowSettings(workflow_id=workflow, watch_directory_path=request.form.get("watch_directory_path"))
-        db.session.add(new_workflow)
+        new_workflowsettings = WorkflowSettings(workflow_id=workflowid, watch_directory_path=request.form.get("watch_directory_path"))
+        db.session.add(new_workflowsettings)
         db.session.commit()
 
-        flash("Workflow added!", category="success")
+        flash("Settings added!", category="success")
 
     return workflowsettings()
 
 @workflow_bp.route("/settings/<id>", methods=["GET"])
 def workflowsetting_get(id):
-    workflow = WorkflowSettings.query.get(id)
+    workflowsettings = WorkflowSettings.query.get(id)
 
-    return render_template("/flows/edit_workflow_settings.html", user = current_user, ws = workflow) 
+    return render_template("/flows/edit_workflow_settings.html", user = current_user, ws = workflowsettings) 
 
 @workflow_bp.route("/settings/<id>", methods=["POST"])
 def workflowsettings_update(id):
@@ -61,8 +61,7 @@ def workflowsettings_update(id):
 @workflow_bp.route("/settings/<id>", methods=["DELETE"])
 def delete(id):
     workflow = WorkflowSettings.query.get(id)
-    print(workflow)
-    print("printei")
+    
     if workflow:
         db.session.delete(workflow)
         db.session.commit()
