@@ -21,15 +21,32 @@ def create_app():
     from torch.users.roles import roles_bp
     from torch.institutions.institutions import institutions_bp
     from torch.collections.collections import collections_bp, home_bp
+<<<<<<< HEAD
 
+=======
+    from torch.reports.reports import reports_bp
+    from torch.flows.workflow import workflow_bp
+    
+>>>>>>> feature/one-project-webapp
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
     app.register_blueprint(institutions_bp)
     app.register_blueprint(collections_bp)
     app.register_blueprint(home_bp)
+<<<<<<< HEAD
 
     from torch.users.users import User
     from torch.users.role import Role
+=======
+    app.register_blueprint(reports_bp)
+    app.register_blueprint(workflow_bp)
+    
+    from torch.users.users import User
+    from torch.users.role import Role
+    from torch.institutions.institutions import Institution
+    from torch.collections.collections import Collection 
+    from torch.flows.workflow import WorkflowSettings
+>>>>>>> feature/one-project-webapp
 
     create_database(app)
 

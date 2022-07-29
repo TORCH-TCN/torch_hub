@@ -31,10 +31,19 @@ def home():
     print("home collections")
     return redirect("/collections")
 
+<<<<<<< HEAD
 
 @collections_bp.route("/", methods=["GET"])
 def collections():
     institution = get_user_institution()
+=======
+@collections_bp.route("/", methods=["GET"], defaults = {'institutioncode':None})
+@collections_bp.route("/<institutioncode>", methods=["GET"])
+@login_required
+def collections(institutioncode):
+    code = institutioncode if institutioncode is not None else current_user.institution_code
+    institution = get_institution_by_code(code)
+>>>>>>> feature/one-project-webapp
     collections = Collection.query.filter_by(institution_id=institution.id).all()
 
     return render_template(

@@ -48,7 +48,12 @@ def check_default_institution(app):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     freeze_support()
+=======
+     app.run(debug=True) #testing only web app
+    # socketio = SocketIO(app)
+>>>>>>> feature/one-project-webapp
 
     server = threading.Thread(target=lambda: start_prefect_server())
     server.daemon = True
