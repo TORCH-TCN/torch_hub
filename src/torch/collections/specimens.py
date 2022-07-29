@@ -9,7 +9,8 @@ from sqlalchemy import (
     ForeignKey,
     Text,
 )
-#from config.database.TorchDatabase import Entity
+
+# from config.database.TorchDatabase import Entity
 from torch import db
 from sqlalchemy.sql import func
 
@@ -27,7 +28,7 @@ class Specimen(db.Model):
 
 
 def get_specimens_by_batch_id(batch_id):
-    root = "webapp/static/uploads/{}".format(batch_id)
+    root = "static/uploads/{}".format(batch_id)
     files = []
 
     if not os.path.isdir(root):
