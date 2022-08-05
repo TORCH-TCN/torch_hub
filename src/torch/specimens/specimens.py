@@ -12,6 +12,7 @@ from sqlalchemy import (
 #from config.database.TorchDatabase import Entity
 from torch import db
 from sqlalchemy.sql import func
+from PIL import Image
 
 
 class Specimen(db.Model):
@@ -52,3 +53,11 @@ def upload_specimens(files):
         upload.save(destination)
 
     return batch_id
+
+def is_portrait(image_path=None):
+    with Image.open(image_path) as im:
+        width, height = im.size
+        if height > width:
+            return True
+        else:
+            return False

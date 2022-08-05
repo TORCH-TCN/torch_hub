@@ -20,3 +20,4 @@ pillow # Derivative image processing
 
 pyzbar
 tqdm
+watchdog
