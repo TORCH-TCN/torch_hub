@@ -22,6 +22,12 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dropdown.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/reports.css') }}"/>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
+      type="text/css"
+    />
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
@@ -75,19 +81,9 @@
                           <p class="small">Upload files</p>
                       </div>
                       <div class="upload-box">
-                          <form id="upload-form" action="{{ url_for('collections.upload', collectionid=collection.code) }}" method="POST" enctype="multipart/form-data">
-                              <strong>Files:</strong><br>
-                              Select files OR drag them into the box below.
-                              <input id="file-picker" type="file" name="file" accept="image/*" multiple class="mb-4">
-                              
-                              <div id="dropbox" class="mb-4">
-                                  Drag and Drop Files Here
-                              </div>
-                              <button type="submit" class="btn btn-primary btn-sm mb-4" id="upload-button">Upload images</button>
+                          <form id="dropbox" action="{{ url_for('collections.upload', collectionid=collection.code) }}" class="dropzone">
                           </form>
                       </div>
-                      <div class="upload-progression"></div>
-                      <div class="upload-failed"></div>
                   </div>
                 </div>
               {% endif %}

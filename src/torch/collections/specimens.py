@@ -13,6 +13,7 @@ from sqlalchemy import (
 # from config.database.TorchDatabase import Entity
 from torch import db
 from sqlalchemy.sql import func
+from werkzeug.utils import secure_filename
 
 
 class Specimen(db.Model):
@@ -28,7 +29,7 @@ class Specimen(db.Model):
 
 
 def get_specimens_by_batch_id(batch_id):
-    root = "static/uploads/{}".format(batch_id)
+    root = "uploads/{}".format(batch_id)
     files = []
 
     if not os.path.isdir(root):
@@ -39,16 +40,16 @@ def get_specimens_by_batch_id(batch_id):
         files.append(fname)
 
 
-def upload_specimens(files):
+def upload_specimens(target_folder, files):
     # Create a unique "session ID" for this particular batch of uploads.
     batch_id = str(uuid4())
 
-    target = "webapp/static/uploads/{}".format(batch_id)
-    os.mkdir(target)
+    target = "{}/{}".format(target_folder, batch_id)
+    os.makedirs(target)
 
     for upload in files:
-        filename = upload.filename.rsplit("/")[0]
-        destination = "/".join([target, filename])
+        filename = secure_filename(upload.filename)
+        destination = os.path.join(target, filename)
         print("Accept incoming file:", filename)
         print("Save it to:", destination)
         upload.save(destination)

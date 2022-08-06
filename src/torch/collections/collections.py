@@ -73,15 +73,10 @@ def collection(collectionid):
 
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
-def upload():
-    is_ajax = request.form.get("__ajax", None) == "true"
-
-    batch_id = upload_specimens(request.files.getlist("file"))
-
-    if is_ajax:
-        return ajax_response(True, batch_id)
-    else:
-        flash("Upload completed!", category="success")
+def upload(collectionid):
+    files = request.files.getlist("file")
+    batch_id = upload_specimens("static/uploads", files)
+    return ajax_response(True, batch_id)
 
 
 @collections_bp.route("/<collectionid>/specimens/<batch_id>")

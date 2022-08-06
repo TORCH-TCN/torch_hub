@@ -6,6 +6,12 @@ function upload(files) {
   });
 }
 
+Dropzone.options.dropbox = {
+  uploadMultiple: true,
+  parallelUploads: 10,
+  paramName: (n) => 'file'
+};
+
 function deleteInstitution(institutionId) {
   if (confirm("Are you sure you want to remove this institution?") == true) {
     fetch("/delete-institution", {
