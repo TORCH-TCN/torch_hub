@@ -1,3 +1,11 @@
+var socket = io();
+
+function upload(files) {
+  socket.emit("upload", files[0], (status) => {
+    console.log(status);
+  });
+}
+
 function deleteInstitution(institutionId) {
   if (confirm("Are you sure you want to remove this institution?") == true) {
     fetch("/delete-institution", {

@@ -198,29 +198,38 @@ nav{
     max-width: 316px;
 }
 
-.overlay{
+.overlay {
     background: var(--overlay-bg);
-    position: absolute;
+    position: fixed;
     width: 100vw;
     height: 91vh;
     left: 0;
+    right: 0;
     top: 81px;
     display: flex;
     justify-content: flex-end;
     z-index: 10;
-    display: none;
 }
 
-.overlay .popout-card{
+.popout-card{
+    position: fixed;
+    z-index: 11;
     background: var(--white);
     height: 100%;
     width: 100%;
+    top: 0;
+    right: -420px;
     max-width: 400px;
     padding: 24px;
     color: var(--grey-900);
+    transition: right 0.3s ease-in-out;
 }
 
-.overlay .popout-card p.small{
+.popout-card.visible {
+    right: 0;
+}
+
+.popout-card p.small{
     color: var(--grey-500);
 }
 /* End of base page styles*/

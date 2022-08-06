@@ -2,28 +2,7 @@
 {% block title %}Files{% endblock %} 
 {% block content %}
 
-<div class="overlay">
-    <div class="popout-card">
-        <div class="header">
-            <h5 class="header-lx">Upload and attach files</h5>
-            <p class="small">Upload files</p>
-        </div>
-        <div class="upload-box">
-            <form id="upload-form" action="{{ url_for('collections.upload', collectionid=collection.code) }}" method="POST" enctype="multipart/form-data">
-                <strong>Files:</strong><br>
-                Select files OR drag them into the box below.
-                <input id="file-picker" type="file" name="file" accept="image/*" multiple class="mb-4"><p>
-                
-                <div id="dropbox" class="mb-4">
-                    Drag and Drop Files Here
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm mb-4" id="upload-button">Upload images</button>
-            </form>
-        </div>
-        <div class="upload-progression"></div>
-        <div class="upload-failed"></div>
-    </div>
-</div>
+
 
 <section class="file-page">
     <header>
