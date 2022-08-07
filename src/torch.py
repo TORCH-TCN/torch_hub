@@ -36,15 +36,16 @@ def check_default_institution(app):
     app.app_context().push()
     institutions = Institution.query.all()
 
-    if len(institutions) == 0:
-        print("Creating default tenant...")
-        default_institution = Institution(name="Default Institution", code="default")
-        db.session.add(default_institution)
-        db.session.commit()
-
     if len(client.get_available_tenants()) == 0:
         print("Registering default tenant with prefect...")
         client.create_tenant("default")
+
+    if len(institutions) == 0:
+        print("Creating default instutition...")
+        default_institution = Institution(name="Default Institution", code="default")
+        db.session.add(default_institution)
+        db.session.commit()
+        client.create_project(project_name=default_institution.name)
 
 
 if __name__ == "__main__":

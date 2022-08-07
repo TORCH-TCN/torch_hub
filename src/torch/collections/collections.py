@@ -1,9 +1,17 @@
 import json
+import os
+from typing import List
+from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request
 from flask_security import current_user
+
 from torch import db
-from torch.collections.specimens import get_specimens_by_batch_id, upload_specimens
+from torch.collections.specimens import Specimen
 from torch.institutions.institutions import Institution
+from torch.tasks.process_specimen import process_specimen
+from werkzeug import FileStorage
+from werkzeug.utils import secure_filename
+from prefect import Client
 
 
 class Collection(db.Model):
@@ -15,6 +23,30 @@ class Collection(db.Model):
     url_base = db.Column(db.String(150))
     institution_id = db.Column(db.Integer, db.ForeignKey("institution.id"))
     flow_id = db.Column(db.String(150))
+
+    def add_specimens(self, files: List[FileStorage]) -> Specimen:
+        batch_id = str(uuid4())
+        target_dir = "{}/{}".format("static/uploads", batch_id)
+        os.makedirs(target_dir)
+
+        for file in files:
+            filename = secure_filename(file.filename)
+            destination = os.path.join(target_dir, filename)
+            file.save(destination)
+
+            client = Client()
+            flow_run_id = client.create_flow_run(flow_id=self.flow_id)
+
+            specimen = Specimen(
+                name=file.filename,
+                upload_path=destination,
+                collection_id=self.id,
+                flow_run_id=flow_run_id,
+            )
+
+            db.session.add(specimen)
+
+        db.session.commit()
 
 
 home_bp = Blueprint("home", __name__)
@@ -58,6 +90,9 @@ def collectionspost():
             code=request.form.get("code"),
             institution_id=institution.id,
         )
+        new_collection.flow_id = process_specimen.register(
+            project_name=institution.name
+        )
         db.session.add(new_collection)
         db.session.commit()
 
@@ -74,17 +109,11 @@ def collection(collectionid):
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
 def upload(collectionid):
+    collection = Collection.query.filter_by(code=collectionid).first()
     files = request.files.getlist("file")
-    batch_id = upload_specimens("static/uploads", files)
+    batch_id = collection.add_specimens(files)
+
     return ajax_response(True, batch_id)
-
-
-@collections_bp.route("/<collectionid>/specimens/<batch_id>")
-def upload_complete(batch_id):
-    specimens = get_specimens_by_batch_id(batch_id)
-    return render_template(
-        "/specimens/specimens.html", batch_id=batch_id, files=specimens
-    )
 
 
 @collections_bp.route("/<collectionid>/settings", methods=["GET", "POST"])
