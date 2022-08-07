@@ -1,33 +1,36 @@
 from flask_security import UserMixin
 from torch.institutions.institutions import Institution
-from torch import db
+from torch import db, Base
+from sqlalchemy import Table, Integer, Column, String, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship, backref
 
 
-roles_users = db.Table(
+roles_users = Table(
     "roles_users",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-    db.Column("role_id", db.Integer, db.ForeignKey("role.id")),
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("user.id")),
+    Column("role_id", Integer, ForeignKey("role.id")),
 )
 
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    first_name = db.Column(db.String(150))
-    last_name = db.Column(db.String(150))
-    active = db.Column(db.Boolean)
-    confirmed_at = db.Column(db.DateTime)
-    institution_code = db.Column(db.String(10))
-    institution_id = db.Column(db.Integer, db.ForeignKey("institution.id"))
-    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
-    roles = db.relationship(
-        "Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic")
+class User(Base, UserMixin):
+    id = Column(Integer, primary_key=True)
+    email = Column(String(150), unique=True)
+    password = Column(String(150))
+    first_name = Column(String(150))
+    last_name = Column(String(150))
+    active = Column(Boolean)
+    confirmed_at = Column(DateTime)
+    institution_code = Column(String(10))
+    institution_id = Column(Integer, ForeignKey("institution.id"))
+    fs_uniquifier = Column(String(255), unique=True, nullable=False)
+    roles = relationship(
+        "Role", secondary=roles_users, backref=backref("users", lazy="dynamic")
     )
 
 
 def get_user(id) -> User:
-    return User.query.filter_by(id=id).first()
+    return db.session.query(User).filter_by(id=id).first()
 
 
 def save_user(id, first_name, last_name, institution_id):
@@ -50,7 +53,7 @@ def save_user(id, first_name, last_name, institution_id):
 
 
 def toggle_user_active(id):
-    user = User.query.get(id)
+    user = db.session.query(User).get(id)
     user.active = 0 if user.active == 1 else 1
 
     db.session.commit()

@@ -1,11 +1,15 @@
 import json
 from flask import Flask
+from sqlalchemy import MetaData
+from sqlalchemy.ext.declarative import declarative_base
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_security import Security, SQLAlchemyUserDatastore
 from prefect import Client
 
-db = SQLAlchemy()
+metadata = MetaData()
+Base = declarative_base(metadata=metadata)
+db = SQLAlchemy(metadata=metadata)
 client = Client()
 # migrate = Migrate()
 

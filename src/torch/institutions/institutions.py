@@ -1,16 +1,17 @@
 from flask import Blueprint, flash, jsonify, render_template, request
-from sqlalchemy import func
-from torch import db
+from sqlalchemy import func, Column, Integer, String, DateTime
+from sqlalchemy.orm import relationship
+from torch import Base, db
 from flask_security import current_user
 
 
-class Institution(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), unique=True)
-    code = db.Column(db.String(10), unique=True)
-    created_date = db.Column(db.DateTime(timezone=True), default=func.now())
-    users = db.relationship("User")
-    collections = db.relationship("Collection")
+class Institution(Base):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), unique=True)
+    code = Column(String(10), unique=True)
+    created_date = Column(DateTime(timezone=True), default=func.now())
+    users = relationship("User")
+    collections = relationship("Collection")
 
 
 institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions")
@@ -18,7 +19,7 @@ institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions"
 
 @institutions_bp.route("/", methods=["GET"])
 def institutions():
-    institutions = Institution.query.all()
+    institutions = db.session.query(Institution).all()
 
     return render_template(
         "/institutions/institutions.html", user=current_user, institutions=institutions
@@ -43,7 +44,7 @@ def post_institution():
 
 @institutions_bp.route("/<id>", methods=["DELETE"])
 def delete(id):
-    institution = Institution.query.get(id)
+    institution = db.session.query(Institution).get(id)
     if institution:
         db.session.delete(institution)
         db.session.commit()

@@ -4,8 +4,8 @@ from typing import List
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request
 from flask_security import current_user
-
-from torch import db
+from sqlalchemy import Column, Integer, String, ForeignKey
+from torch import db, Base
 from torch.collections.specimens import Specimen
 from torch.institutions.institutions import Institution
 from torch.tasks.process_specimen import process_specimen
@@ -14,15 +14,15 @@ from werkzeug.utils import secure_filename
 from prefect import Client
 
 
-class Collection(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), unique=True)
-    code = db.Column(db.String(10), unique=True)
-    catalog_number_regex = db.Column(db.String(150))
-    web_base = db.Column(db.String(150))
-    url_base = db.Column(db.String(150))
-    institution_id = db.Column(db.Integer, db.ForeignKey("institution.id"))
-    flow_id = db.Column(db.String(150))
+class Collection(Base):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), unique=True)
+    code = Column(String(10), unique=True)
+    catalog_number_regex = Column(String(150))
+    web_base = Column(String(150))
+    url_base = Column(String(150))
+    institution_id = Column(Integer, ForeignKey("institution.id"))
+    flow_id = Column(String(150))
 
     def add_specimens(self, files: List[FileStorage]) -> Specimen:
         batch_id = str(uuid4())
@@ -55,7 +55,7 @@ collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
 def get_user_institution():
     code = current_user.institution_code if current_user.is_authenticated else "default"
-    return Institution.query.filter_by(code=code).first()
+    return db.session.query(Institution).filter_by(code=code).first()
 
 
 @home_bp.route("/", methods=["GET"])
@@ -67,7 +67,9 @@ def home():
 @collections_bp.route("/", methods=["GET"])
 def collections():
     institution = get_user_institution()
-    collections = Collection.query.filter_by(institution_id=institution.id).all()
+    collections = (
+        db.session.query(Collection).filter_by(institution_id=institution.id).all()
+    )
 
     return render_template(
         "/collections/collections.html",
@@ -103,13 +105,13 @@ def collectionspost():
 
 @collections_bp.route("/<collectionid>", methods=["GET"])
 def collection(collectionid):
-    collection = Collection.query.filter_by(code=collectionid).first()
+    collection = db.session.query(Collection).filter_by(code=collectionid).first()
     return render_template("/collections/specimens.html", collection=collection)
 
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
 def upload(collectionid):
-    collection = Collection.query.filter_by(code=collectionid).first()
+    collection = db.session.query(Collection).filter_by(code=collectionid).first()
     files = request.files.getlist("file")
     batch_id = collection.add_specimens(files)
 

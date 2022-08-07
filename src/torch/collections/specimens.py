@@ -6,12 +6,12 @@ from sqlalchemy import (
     ForeignKey,
     Text,
 )
-from torch import db
+from torch import Base
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 
-class Specimen(db.Model):
+class Specimen(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     create_date = Column(DateTime(timezone=True), default=func.now())
@@ -23,7 +23,7 @@ class Specimen(db.Model):
     images = relationship("SpecimenImage")
 
 
-class SpecimenImage(db.Model):
+class SpecimenImage(Base):
     id = Column(Integer, primary_key=True)
     size = Column(String(20))
     height = Column(Integer)
