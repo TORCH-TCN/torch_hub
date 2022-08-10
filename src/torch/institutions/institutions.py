@@ -6,6 +6,7 @@ from flask_security import current_user
 
 
 class Institution(Base):
+    __tablename__ = "institution"
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)

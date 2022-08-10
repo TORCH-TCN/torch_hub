@@ -1,36 +1,36 @@
-import os
 from pathlib import Path
-import re
 from prefect import task
 from PIL import Image
 
 from torch.collections.specimens import Specimen, SpecimenImage
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 
 @task
 def generate_derivatives(specimen: Specimen, config):
-    images = SpecimenImage.query.
-
-    for _, _, files in os.walk(current_dir):
-        matches = [file for file in files if regex.match(file)]
-
     derivatives_to_add = {
         size: config
-        for size, config in config["generate_derivatives"]["sizes"].items()
-        if is_missing(matches, size)
+        for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
+        if is_missing(specimen.images, size)
     }
 
     for derivative in derivatives_to_add.keys():
-        new_file = generate_derivative(
+        new_derivative = generate_derivative(
             specimen, derivative, derivatives_to_add[derivative]
         )
-        matches.append(new_file)
+        specimen.images.append(new_derivative)
 
-    return matches
+    engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
+    with Session(engine) as session:
+        session.add(specimen)
+        session.commit()
+
+    return specimen.images
 
 
-def is_missing(matches, size):
-    return not any(match["size"] == size for match in matches)
+def is_missing(images, size):
+    return not any(image.size == size for image in images)
 
 
 def generate_derivative(specimen: Specimen, size, config) -> SpecimenImage:
@@ -40,14 +40,14 @@ def generate_derivative(specimen: Specimen, size, config) -> SpecimenImage:
 
     try:
         img = Image.open(specimen.upload_path)
-        img.thumbnail((config["width"], config["width"]))
+        img.thumbnail((config["WIDTH"], config["WIDTH"]))
         img.save(derivative_path)
         return SpecimenImage(
             specimen_id=specimen.id,
             size=size,
-            height=config["width"],
-            width=config["width"],
-            url=derivative_path
+            height=config["WIDTH"],
+            width=config["WIDTH"],
+            url=derivative_path,
         )
     except Exception as e:
         print("Unable to create derivative:", e)

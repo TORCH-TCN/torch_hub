@@ -12,6 +12,7 @@ from sqlalchemy.orm import relationship
 
 
 class Specimen(Base):
+    __tablename__ = "specimen"
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     create_date = Column(DateTime(timezone=True), default=func.now())
@@ -24,6 +25,7 @@ class Specimen(Base):
 
 
 class SpecimenImage(Base):
+    __tablename__ = "specimenimage"
     id = Column(Integer, primary_key=True)
     size = Column(String(20))
     height = Column(Integer)

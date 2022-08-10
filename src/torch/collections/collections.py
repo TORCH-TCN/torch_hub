@@ -1,20 +1,19 @@
 import json
 import os
-from typing import List
 from uuid import uuid4
-from flask import Blueprint, flash, redirect, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, current_app
 from flask_security import current_user
 from sqlalchemy import Column, Integer, String, ForeignKey
 from torch import db, Base
 from torch.collections.specimens import Specimen
 from torch.institutions.institutions import Institution
-from torch.tasks.process_specimen import process_specimen
-from werkzeug import FileStorage
 from werkzeug.utils import secure_filename
-from prefect import Client
+
+from torch.tasks.process_specimen import process_specimen
 
 
 class Collection(Base):
+    __tablename__ = "collection"
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
@@ -24,7 +23,7 @@ class Collection(Base):
     institution_id = Column(Integer, ForeignKey("institution.id"))
     flow_id = Column(String(150))
 
-    def add_specimens(self, files: List[FileStorage]) -> Specimen:
+    def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
         target_dir = "{}/{}".format("static/uploads", batch_id)
         os.makedirs(target_dir)
@@ -34,19 +33,11 @@ class Collection(Base):
             destination = os.path.join(target_dir, filename)
             file.save(destination)
 
-            client = Client()
-            flow_run_id = client.create_flow_run(flow_id=self.flow_id)
-
             specimen = Specimen(
-                name=file.filename,
-                upload_path=destination,
-                collection_id=self.id,
-                flow_run_id=flow_run_id,
+                name=file.filename, upload_path=destination, collection_id=self.id
             )
 
-            db.session.add(specimen)
-
-        db.session.commit()
+            process_specimen(specimen, config)
 
 
 home_bp = Blueprint("home", __name__)
@@ -92,9 +83,9 @@ def collectionspost():
             code=request.form.get("code"),
             institution_id=institution.id,
         )
-        new_collection.flow_id = process_specimen.register(
-            project_name=institution.name
-        )
+        # new_collection.flow_id = process_specimen.register(
+        #     project_name=institution.name
+        # )
         db.session.add(new_collection)
         db.session.commit()
 
@@ -113,7 +104,7 @@ def collection(collectionid):
 def upload(collectionid):
     collection = db.session.query(Collection).filter_by(code=collectionid).first()
     files = request.files.getlist("file")
-    batch_id = collection.add_specimens(files)
+    batch_id = collection.add_specimens(files, current_app.config)
 
     return ajax_response(True, batch_id)
 

@@ -14,6 +14,7 @@ roles_users = Table(
 
 
 class User(Base, UserMixin):
+    __tablename__ = "user"
     id = Column(Integer, primary_key=True)
     email = Column(String(150), unique=True)
     password = Column(String(150))
