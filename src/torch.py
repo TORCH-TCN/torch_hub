@@ -17,6 +17,7 @@ def create_tables():
 
 def check_default_institution(app):
     app.app_context().push()
+    create_tables()
     institutions = db.session.query(Institution).all()
 
     if len(institutions) == 0:

@@ -21,7 +21,7 @@ def generate_derivatives(specimen: Specimen, config):
         )
         specimen.images.append(new_derivative)
 
-    engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
+    engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
     with Session(engine) as session:
         session.add(specimen)
         session.commit()
@@ -36,18 +36,22 @@ def is_missing(images, size):
 def generate_derivative(specimen: Specimen, size, config) -> SpecimenImage:
     full_image_path = Path(specimen.upload_path)
     derivative_file_name = full_image_path.stem + "_" + size + full_image_path.suffix
-    derivative_path = full_image_path.parent.joinpath(derivative_file_name)
+    derivative_path = str(full_image_path.parent.joinpath(derivative_file_name))
 
     try:
         img = Image.open(specimen.upload_path)
-        img.thumbnail((config["WIDTH"], config["WIDTH"]))
+        
+        if size != 'FULL':
+            img.thumbnail((config["WIDTH"], config["WIDTH"]))
+        
         img.save(derivative_path)
+        
         return SpecimenImage(
             specimen_id=specimen.id,
             size=size,
-            height=config["WIDTH"],
-            width=config["WIDTH"],
-            url=derivative_path,
+            height=config["WIDTH"] if size != 'FULL' else img.height,
+            width=config["WIDTH"] if size != 'FULL' else img.width,
+            url=derivative_path
         )
     except Exception as e:
         print("Unable to create derivative:", e)
