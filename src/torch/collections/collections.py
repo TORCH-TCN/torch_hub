@@ -2,7 +2,7 @@ import json
 import os
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app
-from flask_security import current_user
+from flask_security import current_user, login_required
 from sqlalchemy import Column, Integer, String, ForeignKey
 from torch import db, Base
 from torch.collections.specimens import Specimen
@@ -44,20 +44,21 @@ home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
 
-def get_user_institution():
-    code = current_user.institution_code if current_user.is_authenticated else "default"
-    return db.session.query(Institution).filter_by(code=code).first()
+def get_default_institution():
+    return db.session.query(Institution).first()
 
 
 @home_bp.route("/", methods=["GET"])
+@login_required
 def home():
     print("home collections")
     return redirect("/collections")
 
 
 @collections_bp.route("/", methods=["GET"])
+@login_required
 def collections():
-    institution = get_user_institution()
+    institution = get_default_institution()
     collections = (
         db.session.query(Collection).filter_by(institution_id=institution.id).all()
     )
@@ -72,7 +73,7 @@ def collections():
 
 @collections_bp.route("/", methods=["POST"])
 def collectionspost():
-    institution = get_user_institution()
+    institution = get_default_institution()
     collection = request.form.get("collection")
 
     if len(collection) < 1:

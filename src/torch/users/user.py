@@ -22,8 +22,8 @@ class User(Base, UserMixin):
     last_name = Column(String(150))
     active = Column(Boolean)
     confirmed_at = Column(DateTime)
-    institution_code = Column(String(10))
-    institution_id = Column(Integer, ForeignKey("institution.id"))
+    # institution_code = Column(String(10))
+    # institution_id = Column(Integer, ForeignKey("institution.id"))
     fs_uniquifier = Column(String(255), unique=True, nullable=False)
     roles = relationship(
         "Role", secondary=roles_users, backref=backref("users", lazy="dynamic")

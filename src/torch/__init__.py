@@ -8,6 +8,7 @@ from flask_security import Security, SQLAlchemyUserDatastore
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 db = SQLAlchemy(metadata=metadata)
+Base.query = db.session.query_property()
 # migrate = Migrate()
 
 

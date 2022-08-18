@@ -11,7 +11,7 @@ class Institution(Base):
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
     created_date = Column(DateTime(timezone=True), default=func.now())
-    users = relationship("User")
+    # users = relationship("User")
     collections = relationship("Collection")
 
 

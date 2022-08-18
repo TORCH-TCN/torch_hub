@@ -14,7 +14,6 @@
         {{ register_user_form.hidden_tag() }}
         {{ render_field_with_errors(register_user_form.first_name) }}
         {{ render_field_with_errors(register_user_form.last_name) }}
-        {{ render_field_with_errors(register_user_form.institution_code) }}
         {{ render_field_with_errors(register_user_form.email) }}
         {{ render_field_with_errors(register_user_form.password) }}
         {% if register_user_form.password_confirm %}
