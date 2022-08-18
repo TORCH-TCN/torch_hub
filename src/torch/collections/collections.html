@@ -4,7 +4,7 @@
     <h3 align="left" class="mt-4">{{institution.name}} ({{institution.code}})</h3>
     <p class="mb-4">Collections</p>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered" x-data="collections">
         <thead>
             <tr>
                 <td>Code</td>
@@ -13,6 +13,7 @@
             </tr>
         </thead>
         <tbody>
+            
             {% for collection in collections %}
                 <tr>
                     <td>
@@ -51,3 +52,4 @@
    
    
 {% endblock %}
+

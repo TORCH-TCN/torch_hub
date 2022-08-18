@@ -21,7 +21,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/upload.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dropdown.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/reports.css') }}"/>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script defer src="https://unpkg.com/alpinejs@3.10.3/dist/cdn.min.js"></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/alpine_modules.js') }}"
+    ></script>
+
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <link
       rel="stylesheet"
@@ -129,5 +135,9 @@
       type="text/javascript"
       src="{{ url_for('static', filename='js/index.js') }}"
     ></script>
+
+   
+
+    
   </body>
 </html>
