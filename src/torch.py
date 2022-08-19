@@ -1,15 +1,13 @@
 from multiprocessing.dummy import freeze_support
-from flask_socketio import SocketIO
+
 from flask_mail import Mail
-from torch import create_app, db
+from torch import create_app, db, socketio
 from torch.institutions.institutions import Institution
 from torch.users.user import User
 
 
 app = create_app()
 mail = Mail(app)
-socketio = SocketIO(app)
-
 
 @app.before_first_request
 def create_tables():
@@ -22,7 +20,7 @@ def check_default_institution(app):
     institutions = db.session.query(Institution).all()
     
     if len(institutions) == 0:
-        print("Creating default instutition...")
+        print("Creating default institution...")
         default_institution = Institution(name="Default Institution", code="default")
         db.session.add(default_institution)
         db.session.commit()

@@ -5,10 +5,14 @@ from PIL import Image
 from torch.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-
+import prefect
 
 @task
 def generate_derivatives(specimen: Specimen, config):
+
+    print(prefect.context.get_run_context().task_run.flow_run_id.hex)
+    specimen.flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+
     derivatives_to_add = {
         size: config
         for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
@@ -26,7 +30,8 @@ def generate_derivatives(specimen: Specimen, config):
         session.add(specimen)
         session.commit()
 
-    return specimen.images
+        return specimen.images
+
 
 
 def is_missing(images, size):
