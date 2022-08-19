@@ -1,9 +1,3 @@
-var socket = io();
-
-socket.on('connect', function() {
-  // socket.emit('my event', {data: 'I\'m connected!'});
-  console.log('a user connected');
-});
 
 function upload(files) {
   socket.emit("upload", files[0], (status) => {

@@ -4,7 +4,7 @@
 
 
 
-<section class="file-page">
+<section class="file-page" x-data="specimens">
     <header>
         <div class="header-wrapper">
             <div class="left">
@@ -21,6 +21,10 @@
         </div>
         <p class="small">Keep track of file upload & transfer progress.</p>
     </header>
+
+    <template x-for="n in notifications" :key="n.id">
+        <li x-text="n.name"></li>
+    </template>
 
     <div class="grid">
         <div class="grid-wrapper">
