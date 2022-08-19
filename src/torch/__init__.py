@@ -15,7 +15,7 @@ Base.query = db.session.query_property()
 def create_app():
     app = Flask(__name__, template_folder=".")
 
-    app.config.from_file("../config.json", load=json.load)
+    app.config.from_file("config.json", load=json.load)
 
     db.init_app(app)
 

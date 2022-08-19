@@ -64,7 +64,7 @@ def collections():
     )
 
     return render_template(
-        "/collections/collections.html",
+        "/collections/all_collections.html",
         user=current_user,
         institution=institution,
         collections=collections,

@@ -21,6 +21,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/upload.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dropdown.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/reports.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/collections.css') }}"/>
     
     <script defer src="https://unpkg.com/alpinejs@3.10.3/dist/cdn.min.js"></script>
     <script
@@ -45,7 +46,7 @@
           </div>
           <div class="nav-right">
               {% if current_user.is_authenticated %}
-                <div class="dropdown">
+                <!-- <div class="dropdown">
                   <button class="dropbtn">Reports</button>
                   <div class="dropdown-content">
                     <a class="nav-item nav-link" id="report-export" href="/reports/export">Export</a>
@@ -53,7 +54,7 @@
                   </div>
                 </div>
 
-                <a class="nav-item nav-link" id="profile" href="/users/{{current_user.id}}">Profile</a>
+                <a class="nav-item nav-link" id="profile" href="/users/{{current_user.id}}">Profile</a> -->
                 
                 
                 {% if current_user.has_role('admin') %}
