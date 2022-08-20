@@ -3,7 +3,7 @@ import os
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app
 from flask_security import current_user, login_required
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, func
 from torch import db, Base
 from torch.collections.specimens import Specimen
 from torch.institutions.institutions import Institution
@@ -95,9 +95,9 @@ def collectionspost():
     return collections()
 
 
-@collections_bp.route("/<collectionid>", methods=["GET"])
-def collection(collectionid):
-    collection = db.session.query(Collection).filter_by(code=collectionid).first()
+@collections_bp.route("/<collectioncode>", methods=["GET"])
+def collection(collectioncode):
+    collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     return render_template("/collections/specimens.html", collection=collection)
 
 
