@@ -4,6 +4,7 @@
     margin-left: auto;
     margin-top: 4rem;
     border: 1px solid var(--grey-200);
+    border-radius: 5px;
 }
 
 .main-container-header {
@@ -12,9 +13,7 @@
     align-items: center;
     padding: 12px 24px;
     gap: 12px;
-
     color: var(--grey-500);
-
     justify-content: space-between;
 }
 
@@ -23,8 +22,6 @@
 }
 
 .main-container-body {
-    background: #D9D9D9;
-    
     background: #FFFFFF;
     /* width: 1215px;
     height: 586px;
@@ -40,6 +37,7 @@
     flex-wrap: wrap;
 
     gap: 30px; */
+    grid-template-columns: repeat(5, 200px) !important;
 }
 
 
@@ -48,7 +46,6 @@
     box-sizing: border-box;
     min-width: 208px;
     height: 239px;
-
     background: #FFFFFF;
     /* Secondary */
 
@@ -73,7 +70,6 @@
     font-weight: 500;
     font-size: 12px;
     line-height: 24px;
-    /* identical to box height, or 200% */
 }
 
 .collection-card{
@@ -88,4 +84,18 @@
     height: 161px;
     border-radius: 8px 8px 0px 0px;
     object-fit: cover;
+}
+
+.list-sort {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0px 5px;
+}
+
+.list-sort img {
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    cursor: pointer;
 }

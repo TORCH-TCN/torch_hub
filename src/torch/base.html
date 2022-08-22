@@ -69,7 +69,7 @@
                   </div>
                 {% endif %}
                 
-                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a> 
               {% else %}
                 <a class="nav-item nav-link" id="login" href="/login">Login</a>
                 <a class="nav-item nav-link" id="signUp" href="/register">Sign Up</a>
@@ -94,6 +94,9 @@
 
           </div>
         </div>
+
+        <div class="line"></div>
+
         <div class="nav">
           <div class="nav-left">
 
@@ -105,6 +108,14 @@
             {% else %}
               <a class="nav-item nav-link" id="collections" href="/collections">All Collections</a>
             {% endif %}
+          </div>
+          <div class="nav-right searchbar">
+            <input class="search-input" type="text" placeholder="Search">
+            <button>
+              <i class="fa fa-search"
+                  style="font-size: 18px;">
+              </i>
+          </button>
           </div>
         </div>
       </div>
