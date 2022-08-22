@@ -123,3 +123,9 @@ def ajax_response(status, msg):
             msg=msg,
         )
     )
+
+# @collections_bp.route("/<collectioncode>/test", methods=["GET"])
+# def collection(collectioncode):
+#     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
+#     # specimen = db.session.query(Specimen).filter(func.lower(Specimen.id) == func.lower(specimenid)).first()
+#     return render_template("/collections/specimen.html", collection=collection)

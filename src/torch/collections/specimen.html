@@ -1,0 +1,79 @@
+{% extends "base.html" %} 
+{% block title %}Specimen{% endblock %} 
+{% block content %}
+
+<div class="main-container">
+    <div class="main-container-header">
+        <div class="left">
+            <!-- <p class="xsmall">All / {{collection.code}} / {{specimen.id}}</p> -->
+            <p class="xsmall">All / {{collection.code}} / test</p>
+        </div>
+    </div>
+    <div>
+
+    </div>
+    <div class="main-container-body">
+        <div class="body-left">
+            <img src="../static/images/BRIT240602.jpg" alt="">
+            <!-- <p>{{specimen.upload_path}}</p>
+            <p>{{specimen.barcode}}</p>
+            <p>{{specimen.create_date}}</p> -->
+            <p>Route: Main/Collection_1/Specimen_1</p>
+            <p>Code: BRIT240602</p>
+            <p>Imaged 24 FEB 2016</p>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="main-container-body p-4">
+            <div class="row">
+                <div class="col-md-3 pb-4">
+                    <div class="collection-card">
+                        <img src="../static/images/BRIT240602.jpg" alt="">
+                        <div class="card-body">
+                            <p>{{specimen.barcode}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="collection-card">
+                        <img src="../static/images/BRIT240602.jpg" alt="">
+                        <div class="card-body">
+                            <h5>BRIT</h5>
+                            <p>01/01/2022</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="collection-card">
+                        <img src="../static/images/BRIT240602.jpg" alt="">
+                        <div class="card-body">
+                            <h5>BRIT</h5>
+                            <p>01/01/2022</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="collection-card">
+                        <img src="../static/images/BRIT240602.jpg" alt="">
+                        <div class="card-body">
+                            <h5>BRIT</h5>
+                            <p>01/01/2022</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="collection-card">
+                        <img src="../static/images/BRIT240602.jpg" alt="">
+                        <div class="card-body">
+                            <h5>BRIT</h5>
+                            <p>01/01/2022</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

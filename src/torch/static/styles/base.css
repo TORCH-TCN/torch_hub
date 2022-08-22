@@ -758,5 +758,11 @@ header{
     margin-right: 12px;
 }
 
+@media (min-width: 1200px) {
+    body .container {
+        max-width: 1215px;
+    }
+}
+
 
 /* End of Settings Page */

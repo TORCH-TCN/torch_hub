@@ -23,24 +23,15 @@
 
 .main-container-body {
     background: #FFFFFF;
-    /* width: 1215px;
-    height: 586px;
-    width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    padding: 28px 25px;
-
-    display: flex;
-    align-items:flex-start;
-    justify-content:flex-start;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    gap: 30px; */
-    grid-template-columns: repeat(5, 200px) !important;
+    min-height: 586px;
 }
 
-
+.row {
+    grid-template-columns: repeat(5, 208px);
+    display: grid;
+    gap: 24px;
+    justify-content: space-between;
+}
 
 .add-collection {
     box-sizing: border-box;
@@ -86,6 +77,21 @@
     object-fit: cover;
 }
 
+.card-body {
+    padding: 15px;
+}
+
+.card-body h5 {
+    margin-bottom: 0px;
+    line-height: 24px;
+    font-size: 16px;
+}
+
+.card-body p {
+    font-size: 14px;
+    color: #9D9DA4;
+}
+
 .list-sort {
     display: flex;
     flex-direction: row;
@@ -98,4 +104,9 @@
     height: 10px;
     margin-left: 5px;
     cursor: pointer;
+}
+
+.vertical-line {
+    height: 100%;
+    border-bottom: 1px solid var(--grey-100);;
 }
