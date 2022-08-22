@@ -5,17 +5,28 @@
 <div class="main-container" x-data="specimens">
     <div class="main-container-header">
         <div class="left">
-            <p class="xsmall">All / {{collection.name}}</p>
+            <p class="xsmall">All / {{collection.code}}</p>
         </div>
         <div class="right">
-            <p class="xsmall">View list</p>
-            <p class="xsmall">Sort</p>
+            <div class="list-sort">
+                <p class="xsmall">View list</p> 
+                <img src="../static//images/down-filled-triangular-arrow.png" alt="Down arrow" >
+            </div>
+            <div class="list-sort">
+                <p class="xsmall">Sort</p> 
+                <img src="../static//images/down-filled-triangular-arrow.png" alt="Down arrow" >
+            </div>
         </div>
     </div>
     <div class="main-container-body p-4">
         <div class="row">
-            
-            <div class="col-md-3 pb-4">
+            <div>
+                <div class="add-collection">
+                    <img src="../static//images/plus.png" alt="Plus icon" >
+                    <p>New specimen</p>
+                </div>
+            </div>
+            <div>
                 <div class="collection-card">
                     <img src="../static/images/BRIT240602.jpg" alt="">
                     <div class="card-body">
@@ -24,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div>
                 <div class="collection-card">
                     <img src="../static/images/BRIT240602.jpg" alt="">
                     <div class="card-body">
@@ -33,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div>
                 <div class="collection-card">
                     <img src="../static/images/BRIT240602.jpg" alt="">
                     <div class="card-body">
@@ -42,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div>
                 <div class="collection-card">
                     <img src="../static/images/BRIT240602.jpg" alt="">
                     <div class="card-body">
@@ -51,7 +62,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div>
                 <div class="collection-card">
                     <img src="../static/images/BRIT240602.jpg" alt="">
                     <div class="card-body">
