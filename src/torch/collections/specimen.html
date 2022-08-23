@@ -13,58 +13,31 @@
     </div>
     <div class="main-container-body">
         <div class="body-left">
-            <img src="../static/images/BRIT240602.jpg" alt="">
+            <img src="{{specimen.upload_path.replace('src\\torch\\','\\')}}" alt="">
             <div class="body-left-text">
-            <!-- <p>{{specimen.upload_path}}</p>
-            <p>{{specimen.barcode}}</p>
-            <p>{{specimen.create_date}}</p> -->
-            <p>Route: Main/Collection_1/Specimen_1</p>
-            <p>Code: BRIT240602</p>
-            <p>Imaged 24 FEB 2016</p>
-            <p>Plants of Texas, Herbarium of Southern Methodist University</p>
-            <p>Ipomoea costellata Torr.</p>
-            <p>Corolla Pale Lavender</p>
-            <p>Culberson Co.: Guaalupe Mountains, Pine Spring canyon back of camp; growing in limestone rocks on slopes</p>
+            
+            <p>Route: {{specimen.upload_path}}</p>
+            <p>Name: {{specimen.name}}</p>
+            <p>Imaged {{specimen.create_date}}</p>
+            <p>Collection: {{collection.name}}</p>
+            
         </div>
         </div>
-        <div class="vertical-line"></div>
+        <!-- <div class="vertical-line"></div> -->
         <div class="body-right">
             <div class="row-specimen">
-                    <div class="collection-card">
-                        <img src="../static/images/BRIT240602.jpg" alt="">
-                        <div class="card-body">
-                            <h5>BRIT</h5>
-                            <p>01/01/2022</p>
+                {% for i in images %}
+                    <div>
+                        <div class="collection-card">
+                            <img src="{{i.url.replace('src\\torch\\','\\')}}" alt="">
+                            <div class="card-body">
+                                <h5>{{i.size}}</h5>
+                                <p>{{i.create_date}}</p>
+                            </div>
                         </div>
                     </div>
-                
-                <div>
-                    <div class="collection-card">
-                        <img src="../static/images/BRIT240602.jpg" alt="">
-                        <div class="card-body">
-                            <h5>BRIT</h5>
-                            <p>01/01/2022</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="collection-card">
-                        <img src="../static/images/BRIT240602.jpg" alt="">
-                        <div class="card-body">
-                            <h5>BRIT</h5>
-                            <p>01/01/2022</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="collection-card">
-                        <img src="../static/images/BRIT240602.jpg" alt="">
-                        <div class="card-body">
-                            <h5>BRIT</h5>
-                            <p>01/01/2022</p>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
+               
             </div>
 
         </div>

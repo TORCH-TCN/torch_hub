@@ -19,19 +19,19 @@ def process_specimen(specimen, config):
 
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "20","errors":[]})
     
-    time.sleep(3)
+    time.sleep(1)
     
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "40","errors":[]})
     
-    time.sleep(3)
+    time.sleep(1)
     
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "60","errors":[]})
     
-    time.sleep(3)
+    time.sleep(1)
     
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "80","errors":[]})
     
-    time.sleep(3)
+    time.sleep(1)
     
     notification.send({"specimenid":specimen.id, "state":"finished", "progress": "100","errors":[]})
 

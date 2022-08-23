@@ -28,7 +28,7 @@
             </div> -->
             <template x-for="s in specimens">
                 <div>
-                    <div class="collection-card" :alt="s.name">
+                    <div class="collection-card" :alt="s.name" x-on:click="openPage(s.id)">
                         <img :src="s.upload_path" :alt="s.name">
                         <div class="card-body">
                             <h5 x-text="s.name" ></h5>

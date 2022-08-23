@@ -17,6 +17,9 @@ document.addEventListener('alpine:init',()=>{
     Alpine.data('specimens',()=>({
         specimens: [],
         notifications: [],
+        openPage(specimenid){
+            window.open(window.location.href + "/" + specimenid,"_self")
+        },
         init(){
             console.log('specimens init');
 

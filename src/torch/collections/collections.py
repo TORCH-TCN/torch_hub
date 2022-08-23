@@ -138,10 +138,9 @@ def ajax_response(status, msg):
 
 @collections_bp.route("/<collectioncode>/<specimenid>", methods=["GET"])
 def specimen(collectioncode, specimenid):
-# def specimen(collectioncode, specimenid, specimenImageId):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
-    # specimen_image = db.session.query(SpecimenImage).filter(SpecimenImage.id == specimenImageId).first()
-    print(specimen)
-    return render_template("/collections/specimen.html", collection=collection, specimen=specimen)
-    # return render_template("/collections/specimen.html", collection=collection, specimen=specimen, specimen_image=specimen_image)
+    images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
+    
+    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images)
+    
