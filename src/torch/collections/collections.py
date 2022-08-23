@@ -38,8 +38,8 @@ class Collection(Base):
                 name=file.filename, upload_path=destination, collection_id=self.id
             )
 
-            db.session.add(specimen)
-            db.session.commit()
+            # db.session.add(specimen)
+            # db.session.commit()
 
             process_specimen(specimen, config)
 
@@ -53,14 +53,14 @@ def get_default_institution():
 
 
 @home_bp.route("/", methods=["GET"])
-@login_required
+# @login_required
 def home():
     print("home collections")
     return redirect("/collections")
 
 
 @collections_bp.route("/", methods=["GET"])
-@login_required
+# @login_required
 def collections():
     institution = get_default_institution()
     collections = (

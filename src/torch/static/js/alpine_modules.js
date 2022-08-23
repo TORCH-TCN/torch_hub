@@ -20,7 +20,7 @@ document.addEventListener('alpine:init',()=>{
         init(){
             console.log('specimens init');
 
-            fetch("/collections/specimens/2", {
+            fetch("/collections/specimens/1", {
                 method: "GET"
               }).then((_res) => {
                 _res.json().then(data=>{
@@ -46,7 +46,7 @@ document.addEventListener('alpine:init',()=>{
                 console.log('notification received')
                 console.log(n)
                 console.log(this.specimens)
-                fetch("/collections/specimens/2", {
+                fetch("/collections/specimens/1", {
                     method: "GET"
                   }).then((_res) => {
                     _res.json().then(data=>{

@@ -11,7 +11,7 @@ def process_specimen(specimen, config):
     notification = Notification(config=config)
     
     #save specimens in different task (?)
-    notification.send({"specimenid":specimen.id, "state":"running", "progress": "10","errors":[]})
+    # notification.send({"specimenid":specimen.id, "state":"running", "progress": "10","errors":[]})
 
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
 
