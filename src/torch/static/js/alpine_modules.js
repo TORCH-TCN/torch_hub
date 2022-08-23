@@ -20,6 +20,15 @@ document.addEventListener('alpine:init',()=>{
         init(){
             console.log('specimens init');
 
+            fetch("/collections/specimens/2", {
+                method: "GET"
+              }).then((_res) => {
+                console.log('specimens');
+                console.log(_res.json().then(data=>{
+                    console.log(data)
+                }));
+              });
+
             var socket = io();
 
             socket.on('connect', function() {
