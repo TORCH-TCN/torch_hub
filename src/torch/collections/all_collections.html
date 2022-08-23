@@ -27,97 +27,20 @@
                 </div>
             </div>
             <div>
+                {% for collection in collections %}
                 <div class="collection-card">
+                    <a href="/collections/{{collection.code}}">
                     <img src="../static/images/BRIT240602.jpg" alt="">
                     <div class="card-body">
-                        <h5>BRIT</h5>
+                        <h5>{{collection.code}}</h5>
                         <p>01/01/2022</p>
                     </div>
+                    </a>
                 </div>
-            </div>
-            <div>
-                <div class="collection-card">
-                    <img src="../static/images/BRIT240602.jpg" alt="">
-                    <div class="card-body">
-                        <h5>BRIT</h5>
-                        <p>01/01/2022</p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="collection-card">
-                    <img src="../static/images/BRIT240602.jpg" alt="">
-                    <div class="card-body">
-                        <h5>BRIT</h5>
-                        <p>01/01/2022</p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="collection-card">
-                    <img src="../static/images/BRIT240602.jpg" alt="">
-                    <div class="card-body">
-                        <h5>BRIT</h5>
-                        <p>01/01/2022</p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="collection-card">
-                    <img src="../static/images/BRIT240602.jpg" alt="">
-                    <div class="card-body">
-                        <h5>BRIT</h5>
-                        <p>01/01/2022</p>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- <div class="add-collection">
-            <img src="../static//images/plus.png" alt="Plus icon" >
-            <p>New collection</p>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="../static/images/BRIT240602.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        <div class="collection-card">
-            <img src="" alt="">
-            <h3>BRIT</h3>
-            <p>01/01/2022</p>
-        </div>
-        <div class="collection-card">
-            <img src="" alt="">
-            <h3>BRIT</h3>
-            <p>01/01/2022</p>
-        </div>
-        <div class="collection-card">
-            <img src="" alt="">
-            <h3>BRIT</h3>
-            <p>01/01/2022</p>
-        </div>
-        <div class="collection-card">
-            <img src="" alt="">
-            <h3>BRIT</h3>
-            <p>01/01/2022</p>
-        </div>
-        <div class="collection-card">
-            <img src="" alt="">
-            <h3>BRIT</h3>
-            <p>01/01/2022</p>
-        </div>
-        <div class="collection-card">
-            <img src="" alt="">
-            <h3>BRIT</h3>
-            <p>01/01/2022</p>
-        </div> -->
+                {% endfor %}
+            </div>                  
+        </div>        
     </div>
-
 </div>
 
 {% endblock %}
