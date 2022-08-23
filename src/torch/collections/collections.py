@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, request, current_
 from flask_security import current_user, login_required
 from sqlalchemy import Column, Integer, String, ForeignKey, func
 from torch import db, Base
-from torch.collections.specimens import Specimen
+from torch.collections.specimens import Specimen, SpecimenImage
 from torch.institutions.institutions import Institution
 from werkzeug.utils import secure_filename
 
@@ -124,8 +124,12 @@ def ajax_response(status, msg):
         )
     )
 
-# @collections_bp.route("/<collectioncode>/test", methods=["GET"])
-# def collection(collectioncode):
-#     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
-#     # specimen = db.session.query(Specimen).filter(func.lower(Specimen.id) == func.lower(specimenid)).first()
-#     return render_template("/collections/specimen.html", collection=collection)
+@collections_bp.route("/<collectioncode>/<specimenid>", methods=["GET"])
+def specimen(collectioncode, specimenid):
+# def specimen(collectioncode, specimenid, specimenImageId):
+    collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
+    specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
+    # specimen_image = db.session.query(SpecimenImage).filter(SpecimenImage.id == specimenImageId).first()
+    print(specimen)
+    return render_template("/collections/specimen.html", collection=collection, specimen=specimen)
+    # return render_template("/collections/specimen.html", collection=collection, specimen=specimen, specimen_image=specimen_image)
