@@ -23,22 +23,29 @@ document.addEventListener('alpine:init',()=>{
             fetch("/collections/specimens/2", {
                 method: "GET"
               }).then((_res) => {
-                console.log('specimens');
-                console.log(_res.json().then(data=>{
+                _res.json().then(data=>{
                     console.log(data)
-                }));
+                    data.forEach(x => {
+                        console.log(x.upload_path);
+                        x.upload_path = x.upload_path.replace("src\\torch\\","../");
+                        console.log(x.upload_path);
+                        x.progress = 10;
+                        x.style = "width: " + x.progress + "%"
+                    });
+                    this.specimens = data;
+                })
               });
 
             var socket = io();
 
             socket.on('connect', function() {
-                // socket.emit('my event', {data: 'I\'m connected!'});
                 console.log('a user connected');
             });
 
             socket.on('notify', function(n){
                 console.log('notification received')
                 console.log(n)
+                console.log(this.specimens)
             })
         }
     }));

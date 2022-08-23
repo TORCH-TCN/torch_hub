@@ -25,12 +25,13 @@ class Collection(Base):
 
     def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
-        target_dir = "{}/{}".format("static/uploads", batch_id)
+        target_dir = os.path.join("src","torch","static","uploads", batch_id)
         os.makedirs(target_dir)
 
         for file in files:
             filename = secure_filename(file.filename)
             destination = os.path.join(target_dir, filename)
+            
             file.save(destination)
 
             specimen = Specimen(

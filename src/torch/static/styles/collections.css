@@ -85,11 +85,32 @@
     margin-bottom: 0px;
     line-height: 24px;
     font-size: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: pre;
 }
 
 .card-body p {
     font-size: 14px;
     color: #9D9DA4;
+}
+
+.progress{
+    height: 8px;
+    margin-top: 8px;
+    background-color: #EAECF0 !important;
+}
+
+.progress-bar.bg-success {
+    background-color: #12B76A !important;
+}
+
+.progress-bar.bg-warning{
+    background-color: #FDB022 !important;
+}
+
+.progress-bar.bg-danger{
+    background-color: #F04438 !important;
 }
 
 .list-sort {
