@@ -152,7 +152,7 @@ nav{
 }
      
 .nav-right button{
-    color: #667085;
+    /* color: #667085; */
     float: right;
     margin-right: 15px;
     font-size: 12px;

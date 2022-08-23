@@ -10,7 +10,6 @@ import prefect
 @task
 def generate_derivatives(specimen: Specimen, config):
 
-    print(prefect.context.get_run_context().task_run.flow_run_id.hex)
     specimen.flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
     derivatives_to_add = {
