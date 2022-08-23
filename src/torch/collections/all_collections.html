@@ -26,8 +26,8 @@
                     <p>New collection</p>
                 </div>
             </div>
-            <div>
-                {% for collection in collections %}
+            {% for collection in collections %}
+            <div>                
                 <div class="collection-card">
                     <a href="/collections/{{collection.code}}">
                     <img src="../static/images/BRIT240602.jpg" alt="">
@@ -36,9 +36,9 @@
                         <p>01/01/2022</p>
                     </div>
                     </a>
-                </div>
-                {% endfor %}
-            </div>                  
+                </div>               
+            </div>     
+            {% endfor %}
         </div>        
     </div>
 </div>
