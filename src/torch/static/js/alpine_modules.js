@@ -29,8 +29,8 @@ document.addEventListener('alpine:init',()=>{
                         console.log(x.upload_path);
                         x.upload_path = x.upload_path.replace("src\\torch\\","../");
                         console.log(x.upload_path);
-                        x.progress = 10;
-                        x.style = "width: " + x.progress + "%"
+                        // x.progress = 10;
+                        // x.style = "width: " + x.progress + "%"
                     });
                     this.specimens = data;
                 })
@@ -42,10 +42,27 @@ document.addEventListener('alpine:init',()=>{
                 console.log('a user connected');
             });
 
-            socket.on('notify', function(n){
+            socket.on('notify', (n) => {
                 console.log('notification received')
                 console.log(n)
                 console.log(this.specimens)
+                fetch("/collections/specimens/2", {
+                    method: "GET"
+                  }).then((_res) => {
+                    _res.json().then(data=>{
+                        console.log(data)
+                        data.forEach(x => {
+                            console.log(x.upload_path);
+                            x.upload_path = x.upload_path.replace("src\\torch\\","../");
+                            console.log(x.upload_path);
+                            if(x.id == n.specimenid){
+                                x.progress = n.progress;
+                                x.style = "width: " + x.progress + "%"
+                            }
+                        });
+                        this.specimens = data;
+                    })
+                  });
             })
         }
     }));

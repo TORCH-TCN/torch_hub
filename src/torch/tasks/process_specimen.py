@@ -10,12 +10,17 @@ import time
 def process_specimen(specimen, config):
     notification = Notification(config=config)
     
-    flow_run_id = prefect.context.get_run_context().flow_run.id.hex
+    #save specimens in different task (?)
+    notification.send({"specimenid":specimen.id, "state":"running", "progress": "10","errors":[]})
 
-    notification.send({"specimenid":specimen.id, "state":"running", "progress": "20","errors":[]})
+    flow_run_id = prefect.context.get_run_context().flow_run.id.hex
 
     images = generate_derivatives(specimen=specimen, config=config)
 
+    notification.send({"specimenid":specimen.id, "state":"running", "progress": "20","errors":[]})
+    
+    time.sleep(3)
+    
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "40","errors":[]})
     
     time.sleep(3)
@@ -25,10 +30,6 @@ def process_specimen(specimen, config):
     time.sleep(3)
     
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "80","errors":[]})
-    
-    time.sleep(3)
-    
-    notification.send({"specimenid":specimen.id, "state":"running", "progress": "100","errors":[]})
     
     time.sleep(3)
     
