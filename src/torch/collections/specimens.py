@@ -22,7 +22,9 @@ class Specimen(Base):
     collection_id = Column(Integer, ForeignKey("collection.id"))
     catalog_number = Column(String(150))
     flow_run_id = Column(String(150))
+    flow_run_state = Column(String(150))
     images = relationship("SpecimenImage")
+
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 

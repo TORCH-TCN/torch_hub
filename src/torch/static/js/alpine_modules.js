@@ -14,30 +14,18 @@ document.addEventListener('alpine:init',()=>{
         },
     }));
 
-    Alpine.data('specimens',()=>({
+    Alpine.data('specimens',(collectionid)=>({
         specimens: [],
         notifications: [],
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
         init(){
-            console.log('specimens init');
+            console.log('specimens init', collectionid);
 
-            fetch("/collections/specimens/1", {
-                method: "GET"
-              }).then((_res) => {
-                _res.json().then(data=>{
-                    console.log(data)
-                    data.forEach(x => {
-                        console.log(x.upload_path);
-                        x.upload_path = x.upload_path.replace("src\\torch\\","../");
-                        console.log(x.upload_path);
-                        // x.progress = 10;
-                        // x.style = "width: " + x.progress + "%"
-                    });
-                    this.specimens = data;
-                })
-              });
+            this.getSpecimens(collectionid).then(data=>{
+                this.specimens = data;
+            })
 
             var socket = io();
 
@@ -67,6 +55,20 @@ document.addEventListener('alpine:init',()=>{
                     })
                   });
             })
+        },
+        getSpecimens(collectionid){
+            return fetch(`/collections/specimens/${collectionid}`, {
+                method: "GET"
+              }).then((_res) => {
+                return _res.json().then(data=>{
+                    
+                    data.forEach(x => {
+                        x.upload_path = x.upload_path.replace("src\\torch\\","../");
+                        x.create_date = (new Date(x.create_date)).toLocaleDateString()
+                    });
+                    return data;
+                })
+              });
         }
     }));
 })

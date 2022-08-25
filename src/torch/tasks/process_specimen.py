@@ -1,25 +1,29 @@
-from prefect import flow, unmapped
+from asyncio import tasks
+from prefect import flow, unmapped,task
 import prefect
 from torch.tasks.generate_derivatives import generate_derivatives
 from torch.tasks.notification_hub import Notification
 from torch.tasks.upload import upload
+import os
 import time
+from prefect.task_runners import SequentialTaskRunner
 
-
-@flow
-def process_specimen(specimen, config):
+@flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
+async def process_specimen(specimen, config):
     notification = Notification(config=config)
     
     #save specimens in different task (?)
     # notification.send({"specimenid":specimen.id, "state":"running", "progress": "10","errors":[]})
 
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
+    #flow_run_state = prefect.context.get_run_context().flow_run.state_name
 
     images = generate_derivatives(specimen=specimen, config=config)
 
+    # for each task check state and save new flow_run_state
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "20","errors":[]})
     
-    time.sleep(1)
+    test_task()
     
     notification.send({"specimenid":specimen.id, "state":"running", "progress": "40","errors":[]})
     
@@ -36,3 +40,12 @@ def process_specimen(specimen, config):
     notification.send({"specimenid":specimen.id, "state":"finished", "progress": "100","errors":[]})
 
     #upload.map(image=images, config=unmapped(config))
+
+
+@task
+def test_task():
+    try:
+        raise ValueError("bad code")
+    except:
+        print("task error")
+

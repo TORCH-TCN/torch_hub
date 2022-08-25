@@ -8,9 +8,10 @@ from torch import db, Base
 from torch.collections.specimens import Specimen, SpecimenImage
 from torch.institutions.institutions import Institution
 from werkzeug.utils import secure_filename
-
+from prefect.client import get_client
+from prefect.orion.schemas.filters import FlowFilter, FlowRunFilter, FlowRunFilterId
 from torch.tasks.process_specimen import process_specimen
-
+import asyncio
 
 class Collection(Base):
     __tablename__ = "collection"
@@ -41,7 +42,7 @@ class Collection(Base):
             # db.session.add(specimen)
             # db.session.commit()
 
-            process_specimen(specimen, config)
+            asyncio.run(process_specimen(specimen, config))
 
 
 home_bp = Blueprint("home", __name__)
@@ -63,9 +64,11 @@ def home():
 # @login_required
 def collections():
     institution = get_default_institution()
+    
     collections = (
         db.session.query(Collection).filter_by(institution_id=institution.id).all()
     )
+    
 
     return render_template(
         "/collections/all_collections.html",
@@ -137,10 +140,22 @@ def ajax_response(status, msg):
     )
 
 @collections_bp.route("/<collectioncode>/<specimenid>", methods=["GET"])
-def specimen(collectioncode, specimenid):
+async def specimen(collectioncode, specimenid):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
     
+    # prefect errors and flows
+    url = get_client().api_url
+
+    async with get_client() as client:
+        response = await client.hello()
+        flow = await client.read_flow_run(specimen.flow_run_id)
+        # filter = FlowRunFilter(id=specimen.flow_run_id)
+        # tasks = await client.read_task_runs(flow_run_filter={id:specimen.flow_run_id})
+        print(response.json())
+
+    
+
     return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images)
     
