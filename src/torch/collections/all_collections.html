@@ -1,46 +1,116 @@
-{% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
 
 <div class="main-container">
-    <div class="main-container-header">
-        <div class="left">
-            <p class="xsmall">All</p>
-        </div>
-        <div class="right">
-            <div class="list-sort">
-                <p class="xsmall">View list</p> 
-                <img src="../static//images/down-filled-triangular-arrow.png" alt="Down arrow" >
-            </div>
-            <div class="list-sort">
-                <p class="xsmall">Sort</p> 
-                <img src="../static//images/down-filled-triangular-arrow.png" alt="Down arrow" >
-            </div>
-        </div>
+  <div class="main-container-header">
+    <div class="left">
+      <p class="xsmall">All</p>
     </div>
-    <div class="main-container-body p-4">
-        <div class="row">
-            <div>
-                <div class="add-collection">
-                    <img src="../static//images/plus.png" alt="Plus icon" >
-                    <p>New collection</p>
+    <div class="right">
+      <div class="list-sort">
+        <p class="xsmall">View list</p>
+        <img
+          src="../static//images/down-filled-triangular-arrow.png"
+          alt="Down arrow"
+        />
+      </div>
+      <div class="list-sort">
+        <p class="xsmall">Sort</p>
+        <img
+          src="../static//images/down-filled-triangular-arrow.png"
+          alt="Down arrow"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="main-container-body p-4">
+    <div class="row">
+      <!-- Modal -->
+      <div
+        x-data="{
+                open: false,
+                accept() {
+                    console.log('accepted')
+                }
+                }"
+      >
+        <button @click="open = true">
+          <div>
+            <div class="add-collection">
+              <img src="../static//images/plus.png" alt="Plus icon" />
+              <p>New collection</p>
+            </div>
+          </div>
+        </button>
+        <template x-teleport="body">
+          <!-- Backdrop -->
+          <div x-show="open" class="modal fade show">
+            <div class="modal-dialog">
+              <!-- Dialog -->
+              <div
+                x-show="open"
+                x-transition
+                @click.outside="open = false"
+                class="modal-content"
+              >
+                <!-- Modal Title -->
+                <div class="modal-header">
+                  <h5 class="modal-title">New Collection</h5>
+                  <button @click="open = false" class="btn-close">X</button>
                 </div>
-            </div>
-            {% for collection in collections %}
-            <div>                
-                <div class="collection-card">
-                    <a href="/collections/{{collection.code}}">
-                    <img src="../static/images/BRIT240602.jpg" alt="">
-                    <div class="card-body">
-                        <h5>{{collection.name}}</h5>
-                        <p>{{collection.code}}</p>
+
+                <!-- Modal Body -->
+                <div class="p-4">
+                  <form
+                    action="/register"
+                    method="POST"
+                    @submit.prevent="submitData"
+                  >
+                    <div class="form-group">
+                      <label for="collection" class="mr-2">Name:</label>
+                      <input
+                        placeholder=""
+                        type="text"
+                        x-model="formData.name"
+                      />
                     </div>
-                    </a>
-                </div>               
-            </div>     
-            {% endfor %}
-        </div>        
+
+                    <div class="form-group">
+                      <label for="code" class="mr-2">Code:</label>
+                      <input
+                        placeholder=""
+                        type="text"
+                        x-model="formData.code"
+                      />
+                    </div>
+
+                    <div class="modal-footer">
+                      <button @click="accept" type="submit">Add Collection</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+        <div class="modal-backdrop fade show" x-show="open"></div>
+      </div>
+
+      {% for collection in collections %}
+      <div>
+        <div class="collection-card">
+          <a href="/collections/{{collection.code}}">
+            <img src="../static/images/BRIT240602.jpg" alt="" />
+            <div class="card-body">
+              <h5>{{collection.name}}</h5>
+              <p>{{collection.code}}</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </div>
 
 {% endblock %}

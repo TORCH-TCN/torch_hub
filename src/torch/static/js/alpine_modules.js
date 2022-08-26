@@ -12,6 +12,37 @@ document.addEventListener('alpine:init',()=>{
 
             //load collections here
         },
+        getData() {
+            return {
+                formData: {
+                    name: "",
+                    code: "",
+                },
+                status: false,
+                loading: false,
+                isError: false,
+                modalHeaderText: "",
+                modalBodyText: "",                
+            }
+        },
+        submitData(){
+            return fetch("/collections", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.formData)
+            })
+            .then((response) => {
+                if(response.status === 201) {
+                    this.modalHeaderText = "Congratulations!!!"
+                    this.modalBodyText = "You have been successfully added a collection!";
+                    this.status = true;
+                } else{
+                    throw new Error ("Collection registration failed");
+                }
+            })
+        },
     }));
 
     Alpine.data('specimens',(collectionid)=>({
@@ -71,4 +102,45 @@ document.addEventListener('alpine:init',()=>{
               });
         }
     }));
+
+    // Alpine.data('searchInput', (collectionName) => ({
+    //     isOpen: false,
+    //     search: "",
+
+    //     get getItems() {
+
+    //         this.getCollections(collectionName).then(data=>{
+    //             this.collections = data;
+    //         })
+
+    //         const filterItems = this.sourceData.filter((item) => {
+                
+    //             return item.name.toLowerCase().startsWith(this.search.toLowerCase())
+    //             //return item.employee_name.toLowerCase().includes(this.search.toLowerCase())
+
+    //         })
+
+            
+    //         if(filterItems.length < this.sourceData.length && filterItems.length > 0) {
+
+    //             this.isOpen = true
+    //             return filterItems
+
+    //         } else {
+
+    //           this.isOpen = false
+
+    //         }
+
+    //     },
+
+    //     cleanSearch(e) {
+    //       alert(e.target.innerText)
+    //       this.search = ""
+    //     },
+    //     closeSearch() {
+    //       this.search = ""
+    //       this.isOpen = false
+    //     },
+    // }))
 })

@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dropdown.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/reports.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/collections.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/modal.css') }}"/>
     
     <script defer src="https://unpkg.com/alpinejs@3.10.3/dist/cdn.min.js"></script>
     <script
@@ -110,6 +111,28 @@
             {% endif %}
           </div>
           <div class="nav-right searchbar">
+
+            <!-- <div x-data="searchInput">
+              <details role="list" :open="isOpen">
+                  <summary aria-haspopup="listbox">
+                    <input class="search-input" type="text" @input="getItems" placeholder="Search" x-model="search">
+                    <button>
+                      <i class="fa fa-search"
+                          style="font-size: 18px;">
+                      </i>
+                  </button>
+                  </summary>
+                  <ul role="listbox" @click.outside="closeSearch">
+                    <template x-for="item in getItems" :key="item.id">
+                      <li>
+                        <a x-text="item.name" @click="cleanSearch"></a>
+                      </li>                  
+                    </template>
+                  </ul>
+              </details>
+          </div> -->
+
+
             <input class="search-input" type="text" placeholder="Search">
             <button>
               <i class="fa fa-search"
