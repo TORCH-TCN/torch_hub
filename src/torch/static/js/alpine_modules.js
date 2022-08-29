@@ -1,8 +1,13 @@
 document.addEventListener('alpine:init',()=>{
     Alpine.data('collections', () => ({
         collections: [],
+        open: false,
+        formData: {
+            name: "",
+            code: "",
+        },
         init() {
-            console.log('init');
+            this.open = false;
             var socket = io();
 
             socket.on('connect', function() {
@@ -11,21 +16,18 @@ document.addEventListener('alpine:init',()=>{
             });
 
             //load collections here
+            this.getCollections();
         },
-        getData() {
-            return {
-                formData: {
-                    name: "",
-                    code: "",
-                },
-                status: false,
-                loading: false,
-                isError: false,
-                modalHeaderText: "",
-                modalBodyText: "",                
-            }
+        getCollections(){
+            fetch(`/collections/search`, {
+                method: "GET"
+              }).then((_res) => {
+                _res.json().then(data=>{
+                    this.collections = data;
+                })
+              });
         },
-        submitData(){
+        submitData(e){
             return fetch("/collections", {
                 method: "POST",
                 headers: {
@@ -34,13 +36,16 @@ document.addEventListener('alpine:init',()=>{
                 body: JSON.stringify(this.formData)
             })
             .then((response) => {
-                if(response.status === 201) {
-                    this.modalHeaderText = "Congratulations!!!"
-                    this.modalBodyText = "You have been successfully added a collection!";
-                    this.status = true;
-                } else{
+                if(response.status === 200) {
+                    this.open = false;
+                    this.getCollections();
+                }else{
                     throw new Error ("Collection registration failed");
                 }
+            }).catch(error=>{
+                console.error(error);
+                alert("Collection registration failed");
+                throw new Error ("Collection registration failed");
             })
         },
     }));
@@ -65,18 +70,14 @@ document.addEventListener('alpine:init',()=>{
             });
 
             socket.on('notify', (n) => {
-                console.log('notification received')
-                console.log(n)
-                console.log(this.specimens)
                 fetch("/collections/specimens/1", {
                     method: "GET"
                   }).then((_res) => {
                     _res.json().then(data=>{
-                        console.log(data)
                         data.forEach(x => {
-                            console.log(x.upload_path);
+                            
                             x.upload_path = x.upload_path.replace("src\\torch\\","../");
-                            console.log(x.upload_path);
+                            // console.log(x.upload_path);
                             if(x.id == n.specimenid){
                                 x.progress = n.progress;
                                 x.style = "width: " + x.progress + "%"

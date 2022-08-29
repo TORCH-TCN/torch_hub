@@ -24,6 +24,9 @@ class Collection(Base):
     institution_id = Column(Integer, ForeignKey("institution.id"))
     flow_id = Column(String(150))
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
         target_dir = os.path.join("src","torch","static","uploads", batch_id)
@@ -65,41 +68,48 @@ def home():
 def collections():
     institution = get_default_institution()
     
+    return render_template(
+        "/collections/all_collections.html",
+        user=current_user,
+        institution=institution
+    )
+
+
+
+@collections_bp.route("/search", methods=["GET"])
+def collections_search():
+    institution = get_default_institution()
+    
     collections = (
         db.session.query(Collection).filter_by(institution_id=institution.id).all()
     )
     
-
-    return render_template(
-        "/collections/all_collections.html",
-        user=current_user,
-        institution=institution,
-        collections=collections,
-    )
+    return json.dumps([ob.as_dict() for ob in collections],indent=4, sort_keys=True, default=str)
 
 
 @collections_bp.route("/", methods=["POST"])
 def collectionspost():
     institution = get_default_institution()
-    collection = request.form.get("collection")
+    
+    jcollection = request.get_json()
+    newname = jcollection['name']
+    newcode = jcollection['code']
 
-    if len(collection) < 1:
+    if len(newname) < 1:
         flash("Name is too short!", category="error")
     else:
         new_collection = Collection(
-            name=collection,
-            code=request.form.get("code"),
+            name=newname,
+            code=newcode,
             institution_id=institution.id,
         )
-        # new_collection.flow_id = process_specimen.register(
-        #     project_name=institution.name
-        # )
+       
         db.session.add(new_collection)
         db.session.commit()
 
-        flash("Collection added!", category="success")
+        # flash("Collection added!", category="success")
 
-    return collections()
+    return jsonify({"collectionid": new_collection.id})
 
 
 @collections_bp.route("/<collectioncode>", methods=["GET"])
@@ -110,7 +120,6 @@ def collection(collectioncode):
 @collections_bp.route("/specimens/<collectionid>", methods=["GET"])
 def collection_specimens(collectionid):
     specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).all() #todo filter by status (?)
-    print(json.dumps([ob.as_dict() for ob in specimens],indent=4, sort_keys=True, default=str))
     
     return json.dumps([ob.as_dict() for ob in specimens],indent=4, sort_keys=True, default=str)
 

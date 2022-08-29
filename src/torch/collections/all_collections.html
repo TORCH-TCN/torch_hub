@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
 
-<div class="main-container">
+<div class="main-container" x-data="collections">
   <div class="main-container-header">
     <div class="left">
       <p class="xsmall">All</p>
@@ -26,15 +26,8 @@
   <div class="main-container-body p-4">
     <div class="row">
       <!-- Modal -->
-      <div
-        x-data="{
-                open: false,
-                accept() {
-                    console.log('accepted')
-                }
-                }"
-      >
-        <button @click="open = true">
+      <div>
+        <button @click="open=true">
           <div>
             <div class="add-collection">
               <img src="../static//images/plus.png" alt="Plus icon" />
@@ -50,9 +43,10 @@
               <div
                 x-show="open"
                 x-transition
-                @click.outside="open = false"
+                
                 class="modal-content"
               >
+              <!-- mousedown.outside="open = false" -->
                 <!-- Modal Title -->
                 <div class="modal-header">
                   <h5 class="modal-title">New Collection</h5>
@@ -61,17 +55,14 @@
 
                 <!-- Modal Body -->
                 <div class="p-4">
-                  <form
-                    action="/register"
-                    method="POST"
-                    @submit.prevent="submitData"
-                  >
+                  
                     <div class="form-group">
                       <label for="collection" class="mr-2">Name:</label>
                       <input
                         placeholder=""
                         type="text"
                         x-model="formData.name"
+                        class="form-control"
                       />
                     </div>
 
@@ -81,13 +72,14 @@
                         placeholder=""
                         type="text"
                         x-model="formData.code"
+                        class="form-control"
                       />
                     </div>
 
                     <div class="modal-footer">
-                      <button @click="accept" type="submit">Add Collection</button>
+                      <button @click="submitData">Add Collection</button>
                     </div>
-                  </form>
+                  
                 </div>
               </div>
             </div>
@@ -96,19 +88,19 @@
         <div class="modal-backdrop fade show" x-show="open"></div>
       </div>
 
-      {% for collection in collections %}
-      <div>
+    
+      <template x-for="c in collections">
         <div class="collection-card">
-          <a href="/collections/{{collection.code}}">
+          <a :href="'/collections/' + c.code">
             <img src="../static/images/BRIT240602.jpg" alt="" />
             <div class="card-body">
-              <h5>{{collection.name}}</h5>
-              <p>{{collection.code}}</p>
+              <h5 x-text="c.name"></h5>
+              <p x-text="c.code"></p>
             </div>
           </a>
         </div>
-      </div>
-      {% endfor %}
+      </template>
+      
     </div>
   </div>
 </div>
