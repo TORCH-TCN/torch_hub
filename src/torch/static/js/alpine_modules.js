@@ -70,22 +70,17 @@ document.addEventListener('alpine:init',()=>{
             });
 
             socket.on('notify', (n) => {
-                fetch("/collections/specimens/1", {
-                    method: "GET"
-                  }).then((_res) => {
-                    _res.json().then(data=>{
-                        data.forEach(x => {
-                            
-                            x.upload_path = x.upload_path.replace("src\\torch\\","../");
-                            // console.log(x.upload_path);
-                            if(x.id == n.specimenid){
-                                x.progress = n.progress;
-                                x.style = "width: " + x.progress + "%"
-                            }
-                        });
-                        this.specimens = data;
-                    })
-                  });
+                this.getSpecimens(collectionid).then(data=>{
+                    data.forEach(x => {
+                        if(x.id == n.specimenid){
+                            x.progress = n.progress;
+                            x.style = "width: " + x.progress + "%"
+                        }
+                    });
+                    this.specimens = data;
+                })
+
+               
             })
         },
         getSpecimens(collectionid){
