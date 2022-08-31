@@ -96,7 +96,29 @@ document.addEventListener('alpine:init',()=>{
                     return data;
                 })
               });
-        }
+        },
+        imageData() {
+            return {
+              previewUrl: "",
+              updatePreview() {
+                var reader,
+                  files = document.getElementById("thumbnail").files;
+          
+                reader = new FileReader();
+          
+                reader.onload = e => {
+                  this.previewUrl = e.target.result;
+                };
+          
+                reader.readAsDataURL(files[0]);
+              },
+              clearPreview() {
+                document.getElementById("thumbnail").value = null;
+                this.previewUrl = "";
+              }
+            };
+        },
+                         
     }));
 
     // Alpine.data('searchInput', (collectionName) => ({

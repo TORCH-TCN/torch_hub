@@ -19,9 +19,9 @@
   left: 30%;
   z-index: 1060;
   display: block;
-  width: 555px;
+  width: 592px;
   margin: 30px auto;
-  top: 15%;
+  top: 20%;
 }
 
 .modal .modal-dialog {
@@ -44,7 +44,7 @@
   background-color: #ffffff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.3rem;
+  border-radius: 20px;
   outline: 0;
 }
 .modal .modal-dialog .modal-content .modal-header {
@@ -77,7 +77,7 @@
 .modal .modal-dialog .modal-content .modal-footer {
   display: flex;
   justify-content: flex-end;
-  padding: 8px 0px;
+  padding: 4px 0px 0px 0px;
 }
 .modal .modal-dialog .modal-content .modal-footer button {
   font-size: 14px;
@@ -86,4 +86,14 @@
   padding: 8px 16px;
   border-radius: 8px;
   box-shadow: var(--shadow-box-xs);
+}
+
+#dropbox {
+  width: 552px;
+  height: 262px;
+  border-radius: 8px;
+}
+
+.text-center {
+    padding: 70px 0px;
 }
