@@ -11,6 +11,11 @@ Dropzone.options.dropbox = {
   paramName: (n) => 'file'
 };
 
+Dropzone.on("complete", function(file) {
+  console.log('uploaded');
+  Dropzone.removeFile(file);
+});
+
 function deleteInstitution(institutionId) {
   if (confirm("Are you sure you want to remove this institution?") == true) {
     fetch("/delete-institution", {

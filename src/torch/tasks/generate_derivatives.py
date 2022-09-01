@@ -9,28 +9,31 @@ import prefect
 
 @task
 def generate_derivatives(specimen: Specimen, config):
+    try:
+        specimen.flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+        #specimen.flow_run_state = prefect.context.get_run_context().flow
 
-    specimen.flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
-    #specimen.flow_run_state = prefect.context.get_run_context().flow
+        derivatives_to_add = {
+            size: config
+            for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
+            if is_missing(specimen.images, size)
+        }
 
-    derivatives_to_add = {
-        size: config
-        for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
-        if is_missing(specimen.images, size)
-    }
+        for derivative in derivatives_to_add.keys():
+            new_derivative = generate_derivative(
+                specimen, derivative, derivatives_to_add[derivative]
+            )
+            specimen.images.append(new_derivative)
 
-    for derivative in derivatives_to_add.keys():
-        new_derivative = generate_derivative(
-            specimen, derivative, derivatives_to_add[derivative]
-        )
-        specimen.images.append(new_derivative)
+        engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
+        with Session(engine) as session:
+            session.add(specimen)
+            session.commit()
 
-    engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
-    with Session(engine) as session:
-        session.add(specimen)
-        session.commit()
-
-        return specimen.images
+            return specimen.images
+    except:
+        #save state to db and error to specimen
+        raise
 
 
 

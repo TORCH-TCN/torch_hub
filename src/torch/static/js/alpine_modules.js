@@ -53,6 +53,7 @@ document.addEventListener('alpine:init',()=>{
     Alpine.data('specimens',(collectionid)=>({
         specimens: [],
         notifications: [],
+        open: false,
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },

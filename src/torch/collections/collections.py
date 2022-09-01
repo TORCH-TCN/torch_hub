@@ -57,14 +57,15 @@ def get_default_institution():
 
 
 @home_bp.route("/", methods=["GET"])
-# @login_required
 def home():
     print("home collections")
     return redirect("/collections")
 
+@collections_bp.route("/settings")
+def collections_settings():
+    return render_template("/collections/settings.html",user=current_user)
 
 @collections_bp.route("/", methods=["GET"])
-# @login_required
 def collections():
     institution = get_default_institution()
     

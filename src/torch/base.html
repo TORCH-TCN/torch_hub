@@ -44,6 +44,7 @@
         <div class="nav">
           <div class="nav-left">
             <a class="nav-item nav-link" id="collections" href="/collections">Collections</a>
+            <a class="nav-item nav-link" id="settings" href="/collections/settings">Settings</a>
           </div>
           <div class="nav-right">
               {% if current_user.is_authenticated %}
@@ -93,52 +94,6 @@
                 </div>
               {% endif %}
 
-          </div>
-        </div>
-
-        <div class="line"></div>
-
-        <div class="nav">
-          <div class="nav-left">
-
-            {% if collection is defined %}
-              <strong class="nav-item">{{collection.code}}</strong>
-              <a class="nav-item nav-link" id="overview" href="/collections/{{collection.code}}">Specimens</a>
-              <a class="nav-item nav-link" id="settings" href="#">Activity</a>
-              <a class="nav-item nav-link" id="workflow" href="#">History</a>
-            {% else %}
-              <a class="nav-item nav-link" id="collections" href="/collections">All Collections</a>
-            {% endif %}
-          </div>
-          <div class="nav-right searchbar">
-
-            <!-- <div x-data="searchInput">
-              <details role="list" :open="isOpen">
-                  <summary aria-haspopup="listbox">
-                    <input class="search-input" type="text" @input="getItems" placeholder="Search" x-model="search">
-                    <button>
-                      <i class="fa fa-search"
-                          style="font-size: 18px;">
-                      </i>
-                  </button>
-                  </summary>
-                  <ul role="listbox" @click.outside="closeSearch">
-                    <template x-for="item in getItems" :key="item.id">
-                      <li>
-                        <a x-text="item.name" @click="cleanSearch"></a>
-                      </li>                  
-                    </template>
-                  </ul>
-              </details>
-          </div> -->
-
-
-            <input class="search-input" type="text" placeholder="Search">
-            <button>
-              <i class="fa fa-search"
-                  style="font-size: 18px;">
-              </i>
-          </button>
           </div>
         </div>
       </div>
