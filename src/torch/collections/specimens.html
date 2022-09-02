@@ -48,7 +48,7 @@ content %}
           <template x-teleport="body">
             <!-- Backdrop -->
             <div x-show="open" class="modal fade show">
-              <div class="modal-dialog">
+              <div class="modal-dialog-specimen">
                 <!-- Dialog -->
                 <div x-show="open" x-transition class="modal-content">
                   <!-- mousedown.outside="open = false" -->
@@ -63,37 +63,18 @@ content %}
   
                     <div class="form-group" x-data="imageData()">
                       <div x-show="previewUrl == ''">
-                          <div id="dropbox" class="mb-4">
-                              
-                          
-                          <p class="text-center uppercase text-bold">
-                            <label for="thumbnail" class="cursor-pointer">
+                      <div class="upload-box">
+                        <form id="dropbox" action="{{ url_for('collections.upload', collectionid=collection.code) }}" class="dropzone">
+                          <div class="dz-message" data-dz-message>
+                            <span>
+                              <img src="../static/images/upload_icon.svg" alt="Upload cloud icon" /><br>
                               Click to upload or drag and drop<br>
-                              SVG, PNG, JPG or GIF
-                            </label>
-                            <input
-                              type="file"
-                              name="thumbnail"
-                              id="thumbnail"
-                              class="hidden"
-                              @change="updatePreview()"
-                            />
-                          </p>
-                      </div>
-                        </div>
-                        <div x-show="previewUrl !== ''">
-                          <img :src="previewUrl" alt="" class="rounded" />
-                          <div class="">
-                            <button type="button" class="" @click="clearPreview()">
-                              change
-                            </button>
+                            PNG or JPG</span>
                           </div>
-                        </div>
-                      </div>
+                        </form>
                     </div>
-  
-                    <div class="modal-footer">
-                      <button @click="submitData">Add Specimen</button>
+                        </div>                       
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -110,6 +91,16 @@ content %}
               :alt="s.name"
               x-on:click="openPage(s.id)"
             >
+            
+            <div x-data="{ open: false }" class="menu-dropdown">
+              <button @click="open = ! open" class="menu-dropbtn" @click.stop>
+                <img src="../static/images/list.png" alt="menu" />
+              </button>
+              <div x-show="open" @click.outside="open = false" class="menu-dropdown-content">
+                <p class="xsmall">Delete</p>
+              </div>
+            </div>
+
               <img
                 :src="s.upload_path"
                 :alt="s.name"

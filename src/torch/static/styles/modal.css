@@ -19,9 +19,9 @@
   left: 30%;
   z-index: 1060;
   display: block;
-  width: 592px;
+  width: 600px;
   margin: 30px auto;
-  top: 20%;
+  top: 10%;
 }
 
 .modal .modal-dialog {
@@ -29,13 +29,20 @@
   width: auto;
   pointer-events: none;
 }
-.modal.fade .modal .modal-dialog {
+
+.modal .modal-dialog .modal-dialog-specimen {
+  position: relative;
+  width: auto;
+  pointer-events: none;
+  width: 592px;
+}
+.modal.fade .modal .modal-dialog .modal-dialog-specimen {
   transition: opacity 0.15s linear;
 }
-.modal.show .modal .modal-dialog {
+.modal.show .modal .modal-dialog .modal-dialog-specimen {
   transition: transform 0.3s ease-out;
 }
-.modal .modal-dialog .modal-content {
+.modal .modal-dialog .modal-dialog-specimen .modal-content {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -47,18 +54,28 @@
   border-radius: 20px;
   outline: 0;
 }
-.modal .modal-dialog .modal-content .modal-header {
+.modal .modal-dialog .modal-dialog-specimen .modal-content .modal-header {
   display: flex;
   align-items: center;
   padding: 1rem 1rem;
   border-bottom: 1px solid #dee2e6;
 }
-.modal .modal-dialog .modal-content .modal-header .modal-title {
+.modal
+  .modal-dialog
+  .modal-dialog-specimen
+  .modal-content
+  .modal-header
+  .modal-title {
   line-height: 1.5;
   color: var(--grey-700);
   font-size: 14px;
 }
-.modal .modal-dialog .modal-content .modal-header .btn-close {
+.modal
+  .modal-dialog
+  .modal-dialog-specimen
+  .modal-content
+  .modal-header
+  .btn-close {
   padding: 0.5rem 0.5rem;
   margin: -0.5rem -0.5rem -0.5rem auto;
   color: #000000;
@@ -70,16 +87,21 @@
   font-weight: bold;
 }
 
-.form-group input[type=text] {
+.form-group input[type="text"] {
   outline: none;
 }
 
-.modal .modal-dialog .modal-content .modal-footer {
+.modal .modal-dialog .modal-dialog-specimen .modal-content .modal-footer {
   display: flex;
   justify-content: flex-end;
   padding: 4px 0px 0px 0px;
 }
-.modal .modal-dialog .modal-content .modal-footer button {
+.modal
+  .modal-dialog
+  .modal-dialog-specimen
+  .modal-content
+  .modal-footer
+  button {
   font-size: 14px;
   background: var(--primary-600);
   color: var(--white);
@@ -95,5 +117,22 @@
 }
 
 .text-center {
-    padding: 70px 0px;
+  padding: 70px 0px;
+}
+
+.dz-started {
+  overflow-y: scroll;
+}
+
+.dz-started::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dz-started::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.dz-started::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
 }

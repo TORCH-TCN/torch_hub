@@ -8,7 +8,7 @@ function upload(files) {
 Dropzone.options.dropbox = {
   uploadMultiple: true,
   parallelUploads: 10,
-  paramName: (n) => 'file'
+  paramName: (n) => 'file',
 };
 
 Dropzone.on("complete", function(file) {
