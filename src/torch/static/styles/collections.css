@@ -1,4 +1,4 @@
-.page-container{
+.page-container {
   margin-top: 4rem;
 }
 .main-container {
@@ -74,6 +74,8 @@
   border-radius: 8px;
   min-width: 208px;
   height: 239px;
+  cursor: pointer;
+  position: relative;
 }
 
 .collection-card img {
@@ -181,5 +183,48 @@
   min-height: 586px;
   padding: 35px;
   margin-right: 30px;
+}
+
+.collection-card .menu-dropdown {
+  height: 46px;
+  position: absolute;
+  right: 52%;
+  width: 2em;
+  z-index: 5;
+  float: right;
+  transform: translateX(324%) translateY(-3%);
+}
+.menu-dropdown img {
+  height: 16px;
+  width: 4px;
+  left: 20px;
+  top: 15px;
+}
+
+.menu-dropbtn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  width: 34.31px;
+  height: 46px;
+}
+.menu-dropdown-content {
+  position: absolute;
+  background-color: var(--grey-500);
+  border-radius: 8px;
+  width: 93px;
+  bottom: 3px;
+  left: 12px;
+  transform: translate3d(11px, 0px, 0px);
+}
+.menu-dropdown-content p {
+  color: #FF7A7A;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.menu-dropdown-content p:hover {
+  background-color: rgba(191, 204, 232, 0.24);
 }
 

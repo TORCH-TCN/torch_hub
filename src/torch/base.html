@@ -77,23 +77,6 @@
                 <a class="nav-item nav-link" id="signUp" href="/register">Sign Up</a>
               {% endif %}
 
-              {% if collection is defined %}
-                <div x-data="{ open: false }">
-                  <button class="nav-button" @click="open = !open">Upload</button>
-                  <div class="overlay" x-show="open" @click="open = false"></div>
-                  <div class="popout-card" :class="open ? 'visible' : ''">
-                      <div class="header">
-                          <h5 class="header-lx">Upload and attach files</h5>
-                          <p class="small">Upload files</p>
-                      </div>
-                      <div class="upload-box">
-                          <form id="dropbox" action="{{ url_for('collections.upload', collectionid=collection.code) }}" class="dropzone">
-                          </form>
-                      </div>
-                  </div>
-                </div>
-              {% endif %}
-
           </div>
         </div>
       </div>

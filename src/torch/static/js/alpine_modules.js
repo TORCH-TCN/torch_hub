@@ -6,6 +6,9 @@ document.addEventListener('alpine:init',()=>{
             name: "",
             code: "",
         },
+        openPage(collectionid){
+            window.open(window.location.href + "/" + collectionid,"_self")
+        },
         init() {
             this.open = false;
             var socket = io();
