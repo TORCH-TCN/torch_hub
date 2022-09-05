@@ -6,10 +6,12 @@ from pyzbar.pyzbar import decode
 import os
 from pathlib import Path
 from PIL import Image
-from prefect import Flow, Parameter, task
+from prefect import Flow, task
 import prefect
 from tqdm import tqdm
 from datetime import datetime
+from torch.collections.specimens import Specimen, SpecimenImage
+from torch.tasks.save_specimen import save_specimen
 
 # File extensions that are scanned and logged
 INPUT_FILE_TYPES = ['.jpg', '.jpeg', '.JPG', '.JPEG', '.tif', '.TIF', '.TIFF', '.tiff']
@@ -196,8 +198,6 @@ def process(
         print('Rename failed:', file_path)
         #renames_failed += 1
 
-
-@task
 def walk(source,verbose,default_prefix,jpeg_rename,prepend_code,no_rename):
     analysis_start_time = datetime.now()
     
@@ -320,16 +320,22 @@ def walk(source,verbose,default_prefix,jpeg_rename,prepend_code,no_rename):
     if files_analyzed > 0:
         print('Time per file:', (analysis_end_time - analysis_start_time) / files_analyzed)
 
+@task
+def herbar(specimen:Specimen, config):
+    flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
-with Flow("herbar-flow") as herbar_flow:
-    #todo connect to database and create log table
-    
-    # Start scanning input directory
-    #todo check parallel option to walk
-    walk(source=Parameter("path", required=False),
-        verbose = Parameter("verbose"),
-        default_prefix = Parameter("default_prefix"),
-        jpeg_rename = Parameter("jpeg_rename"),
-        prepend_code = Parameter("code"),
-        no_rename = Parameter("no_rename"))
+    #file_path_string = os.path.join(root, specimen.upload_path)
+    file_path = Path(specimen.upload_path)
+
+    if file_path.suffix in INPUT_FILE_TYPES:
+        # Get barcodes
+        barcodes = get_barcodes(file_path)
+
+        if barcodes:
+            print('barcodes')
+            specimen.barcode = get_default_barcode(barcodes)
+            save_specimen(specimen,config,flow_run_id)
+        else:
+            save_specimen(specimen,config,flow_run_id,'Failed')
+            raise ValueError("No barcodes found")
     

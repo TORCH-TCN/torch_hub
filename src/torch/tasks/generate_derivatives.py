@@ -1,18 +1,18 @@
 from pathlib import Path
 from prefect import task
 from PIL import Image
-
 from torch.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import prefect
 
+from torch.tasks.save_specimen import save_specimen
+
 @task
 def generate_derivatives(specimen: Specimen, config):
     try:
-        specimen.flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
-        #specimen.flow_run_state = prefect.context.get_run_context().flow
-
+        flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+        
         derivatives_to_add = {
             size: config
             for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
@@ -25,14 +25,10 @@ def generate_derivatives(specimen: Specimen, config):
             )
             specimen.images.append(new_derivative)
 
-        engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
-        with Session(engine) as session:
-            session.add(specimen)
-            session.commit()
-
-            return specimen.images
+        save_specimen(specimen,config,flow_run_id)
     except:
         #save state to db and error to specimen
+        save_specimen(specimen,config,flow_run_id,'Failed')
         raise
 
 
