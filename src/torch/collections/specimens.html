@@ -61,8 +61,8 @@ content %}
                   <!-- Modal Body -->
                   <div class="p-4">
   
-                    <div class="form-group" x-data="imageData()">
-                      <div x-show="previewUrl == ''">
+                    <div class="form-group">
+                      
                       <div class="upload-box">
                         <form id="dropbox" action="{{ url_for('collections.upload', collectionid=collection.code) }}" class="dropzone">
                           <div class="dz-message" data-dz-message>
@@ -72,9 +72,8 @@ content %}
                             PNG or JPG</span>
                           </div>
                         </form>
-                    </div>
-                        </div>                       
                       </div>
+                        
                     </div>
                   </div>
                 </div>

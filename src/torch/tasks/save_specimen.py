@@ -15,4 +15,4 @@ def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None)
         session.add(specimen)
         
         session.commit()
-        session.expunge(specimen)
+        #session.expunge(specimen)

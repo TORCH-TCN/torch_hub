@@ -32,7 +32,6 @@ def generate_derivatives(specimen: Specimen, config):
         raise
 
 
-
 def is_missing(images, size):
     return not any(image.size == size for image in images)
 

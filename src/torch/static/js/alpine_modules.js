@@ -6,8 +6,8 @@ document.addEventListener('alpine:init',()=>{
             name: "",
             code: "",
         },
-        openPage(collectionid){
-            window.open(window.location.href + "/" + collectionid,"_self")
+        openPage(collectioncode){
+            window.open(window.location.href + "/" + collectioncode,"_self")
         },
         init() {
             this.open = false;
@@ -101,27 +101,7 @@ document.addEventListener('alpine:init',()=>{
                 })
               });
         },
-        imageData() {
-            return {
-              previewUrl: "",
-              updatePreview() {
-                var reader,
-                  files = document.getElementById("thumbnail").files;
-          
-                reader = new FileReader();
-          
-                reader.onload = e => {
-                  this.previewUrl = e.target.result;
-                };
-          
-                reader.readAsDataURL(files[0]);
-              },
-              clearPreview() {
-                document.getElementById("thumbnail").value = null;
-                this.previewUrl = "";
-              }
-            };
-        },
+        
                          
     }));
 

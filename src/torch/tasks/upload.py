@@ -11,9 +11,9 @@ from sqlalchemy.orm import Session
 
 @task
 def upload(config, image: SpecimenImage):
-    logger = prefect.context.get("logger")
+    #logger = prefect.context.get("logger")
     upload_type = config["UPLOAD"]["TYPE"]
-    logger.info(f"Uploading {image.url} via {upload_type}...")
+    #logger.info(f"Uploading {image.url} via {upload_type}...")
 
     match upload_type:
         case "sftp":

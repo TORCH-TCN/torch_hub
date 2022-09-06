@@ -162,41 +162,22 @@ def rename(file_path=None, new_stem=None, no_rename=None):
                 print("Unexpected error:", e)
                 raise
 
-def process(
-    file_path=None, new_stem=None,
-    uuid=None,
-    derived_from_file=None, derived_from_uuid=None,
-    barcode=None,
-    barcodes=None,
-    image_event_id=None,
-    prepend_code=None,
-    no_rename=None
-        ):
+def process(specimen,config,flow_run_id,file_path=None, new_stem=None, prepend_code=None, no_rename=None):
     
     #todo remove or try to update values with prefect context(?)
-    #global renames_failed, renames_attempted, files_processed
     
-    #files_processed += 1 
-    # Get file creation time
-    file_creation_time = datetime.fromtimestamp(creation_date(file_path))
-    # generate MD5 hash
-    file_hash = md5hash(file_path)
-    datetime_analyzed = datetime.now()
-
-    #rename_status, new_path = rename(file_path=file_path, new_stem=new_stem)
     if prepend_code:
         new_stem = prepend_code + new_stem
     rename_result = rename(file_path=file_path, new_stem=new_stem, no_rename=no_rename)
-    #renames_attempted += 1
-    status_details = rename_result['details']
-    #print('rename_result:', rename_result)
-    #if rename_status:
+    
     if rename_result['success']:
         new_path = rename_result['new_path']
+        save_specimen(specimen,config,flow_run_id)
         print('rename success', new_path)
     else:
         print('Rename failed:', file_path)
-        #renames_failed += 1
+        ValueError("Rename failed:" + file_path)
+      
 
 def walk(source,verbose,default_prefix,jpeg_rename,prepend_code,no_rename):
     analysis_start_time = datetime.now()
@@ -322,20 +303,68 @@ def walk(source,verbose,default_prefix,jpeg_rename,prepend_code,no_rename):
 
 @task
 def herbar(specimen:Specimen, config):
-    flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+    try:
 
-    #file_path_string = os.path.join(root, specimen.upload_path)
-    file_path = Path(specimen.upload_path)
+        flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
-    if file_path.suffix in INPUT_FILE_TYPES:
-        # Get barcodes
-        barcodes = get_barcodes(file_path)
+        #file_path_string = os.path.join(root, specimen.upload_path)
+        file_path = Path(specimen.upload_path)
 
-        if barcodes:
-            print('barcodes')
-            specimen.barcode = get_default_barcode(barcodes)
-            save_specimen(specimen,config,flow_run_id)
-        else:
-            save_specimen(specimen,config,flow_run_id,'Failed')
-            raise ValueError("No barcodes found")
+        if file_path.suffix in INPUT_FILE_TYPES:
+            # Get barcodes
+            barcodes = get_barcodes(file_path)
+
+            if barcodes:
+                print('barcodes')
+                specimen.barcode = get_default_barcode(barcodes)
+                save_specimen(specimen,config,flow_run_id)
+
+                file_stem = file_path.stem
+                # find archive files matching stem
+                arch_file_path = None
+
+                image_event_id = str(uuid.uuid4())
+                arch_file_uuid = str(uuid.uuid4())
+                derivative_file_uuid = str(uuid.uuid4())
+
+                #todo migrate config to db
+                default_prefix = config["DEFAULT_PREFIX"]
+                jpeg_rename = config["JPEG_RENAME"]
+                
+                # assume first barcode
+                # TODO check barcode pattern
+                # Get first barcode value for file name
+                #barcode = barcodes[0]['data']
+                barcode = get_default_barcode(barcodes=barcodes, default_prefix=default_prefix)
+                # Handle multiple barcodes
+                if default_prefix:
+                    # if a default prefix is designated, don't capture multiple barcodes
+                    multi_string = ''
+                else:
+                    if len(barcodes) > 1:
+                        #print(barcodes)
+                        barcode_values = [b['data'] for b in barcodes]
+                        multi_string = '_BARCODES[' + ','.join(barcode_values) + ']'
+                        print('ALERT - multiple barcodes found. Using default barcode of', len(barcodes), ':', barcode)
+                    else:
+                        # only one barcode, use empty multi value
+                        multi_string = ''
+                # process JPEG
+                #print('multi_string:', multi_string, type(multi_string))
+                #print('barcode:', barcode, type(barcode))
+                if jpeg_rename:
+                    # append JPEG string
+                    jpeg_stem = barcode + multi_string  + '_' + jpeg_rename
+                else:
+                    jpeg_stem = barcode + multi_string
+                    #pass
+                # TODO add derived from uuid
+                archival_stem = barcode + multi_string
+                process(specimen, config, flow_run_id, file_path=file_path, new_stem=jpeg_stem)
+            else:
+                save_specimen(specimen,config,flow_run_id,'Failed')
+                raise ValueError("No barcodes found")
+    except:
+        save_specimen(specimen,config,flow_run_id,'Failed')
+        raise ValueError("Error processing herbar task")
     
