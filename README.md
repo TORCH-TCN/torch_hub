@@ -17,6 +17,8 @@ pip install -r requirements.txt
 ## Configuration
 
 The current version needs a config.json file inside the `src/torch` folder with the following format
+(this will be migrated to the database)
+
 ```json
 { 
     "COLLECTION": {
