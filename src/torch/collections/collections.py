@@ -41,6 +41,9 @@ class Collection(Base):
             specimen = Specimen(
                 name=file.filename, upload_path=destination, collection_id=self.id
             )
+
+            db.session.add(specimen)
+            db.session.commit()
               
             asyncio.run(process_specimen(specimen, config))
 

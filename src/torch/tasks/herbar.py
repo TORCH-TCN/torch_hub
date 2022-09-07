@@ -164,149 +164,26 @@ def rename(file_path=None, new_stem=None, no_rename=None):
 
 def process(specimen,config,flow_run_id,file_path=None, new_stem=None, prepend_code=None, no_rename=None):
     
-    #todo remove or try to update values with prefect context(?)
-    
     if prepend_code:
         new_stem = prepend_code + new_stem
     rename_result = rename(file_path=file_path, new_stem=new_stem, no_rename=no_rename)
     
     if rename_result['success']:
         new_path = rename_result['new_path']
-        save_specimen(specimen,config,flow_run_id)
+        
         print('rename success', new_path)
+
+        return new_path
     else:
         print('Rename failed:', file_path)
         ValueError("Rename failed:" + file_path)
       
-
-def walk(source,verbose,default_prefix,jpeg_rename,prepend_code,no_rename):
-    analysis_start_time = datetime.now()
-    
-    files_analyzed = 0
-    files_processed = 0
-    renames_attempted = 0
-    renames_failed = 0
-    missing_barcodes = 0
-
-    path = os.path.realpath(source)
-    print('scanning:', path)
-    
-    for root, dirs, files in os.walk(path):
-        for file in tqdm(files, ascii=True, desc='renaming images'):
-            files_analyzed += 1
-            #print('increment file count:', file)
-            file_path_string = os.path.join(root, file)
-            file_path = Path(file_path_string)
-            if file_path.suffix in INPUT_FILE_TYPES:
-                # Get barcodes
-                barcodes = get_barcodes(file_path=file_path)
-                if barcodes:
-                    file_stem = file_path.stem
-                    # find archive files matching stem
-                    arch_file_path = None
-
-                    for archive_extension in ARCHIVE_FILE_TYPES:
-                        potential_arch_file_name = file_stem + archive_extension
-                        potential_arch_file_path_string = os.path.join(file_path.parent, potential_arch_file_name)
-                        potential_arch_file_path = Path(potential_arch_file_path_string)
-                        # test if archive file exists
-                        # TODO change filename comparison to be case-sensitive
-                        if potential_arch_file_path.exists():
-                            arch_file_path = potential_arch_file_path
-                            # stop looking for archive file, go with first found
-                            break
-                    image_event_id = str(uuid.uuid4())
-                    arch_file_uuid = str(uuid.uuid4())
-                    derivative_file_uuid = str(uuid.uuid4())
-
-                    # assume first barcode
-                    # TODO check barcode pattern
-                    # Get first barcode value for file name
-                    #barcode = barcodes[0]['data']
-                    barcode = get_default_barcode(barcodes=barcodes, default_prefix=default_prefix)
-                    # Handle multiple barcodes
-                    if default_prefix:
-                        # if a default prefix is designated, don't capture multiple barcodes
-                        multi_string = ''
-                    else:
-                        if len(barcodes) > 1:
-                            #print(barcodes)
-                            barcode_values = [b['data'] for b in barcodes]
-                            multi_string = '_BARCODES[' + ','.join(barcode_values) + ']'
-                            print('ALERT - multiple barcodes found. Using default barcode of', len(barcodes), ':', barcode)
-                        else:
-                            # only one barcode, use empty multi value
-                            multi_string = ''
-                    # process JPEG
-                    #print('multi_string:', multi_string, type(multi_string))
-                    #print('barcode:', barcode, type(barcode))
-                    if jpeg_rename:
-                        # append JPEG string
-                        jpeg_stem = barcode + multi_string  + '_' + jpeg_rename
-                    else:
-                        jpeg_stem = barcode + multi_string
-                        #pass
-                    # TODO add derived from uuid
-                    archival_stem = barcode + multi_string
-                    process(
-                        file_path=file_path,
-                        new_stem=jpeg_stem,
-                        uuid=derivative_file_uuid,
-                        derived_from_uuid=arch_file_uuid,
-                        derived_from_file=arch_file_path,
-                        barcode=barcode,
-                        barcodes=barcodes,
-                        image_event_id=image_event_id,
-                        prepend_code=prepend_code,
-                        no_rename=no_rename)
-                    if arch_file_path:
-                        # process archival
-                        process(
-                            file_path=arch_file_path,
-                            new_stem=archival_stem,
-                            uuid=arch_file_uuid,
-                            derived_from_uuid=None,
-                            derived_from_file=None,
-                            barcode=barcode,
-                            barcodes=barcodes,
-                            image_event_id=image_event_id,
-                            prepend_code=prepend_code,
-                            no_rename=no_rename)
-                    else:
-                        print('archival file not found for:', file_path)
-                        #files_processed += 1 # not actually processed, but incremented for stats
-                        datetime_analyzed = datetime.now()
-                else:
-                    # no barcodes found
-                    missing_barcodes += 1
-                    files_processed += 1 # not actually processed, but incremented for stats
-                    datetime_analyzed = datetime.now()
-                  
-    
-    analysis_end_time = datetime.now()
-
-    print('Started:', analysis_start_time)
-    print('Completed:', analysis_end_time)
-    # files_analyzed is the total number of files encountered in directory which is scanned
-    print('Files analyzed:', files_analyzed)
-    # files_processed is number of files which match the expected extensions for image files
-    print('Files processed:', files_processed)
-    print('Renames attempted:', renames_attempted)
-    if renames_attempted > 0:
-        print('Renames failed:', renames_failed, '({:.1%})'.format(renames_failed/renames_attempted))
-        print('Missing barcodes:', missing_barcodes, '({:.1%})'.format(missing_barcodes/files_analyzed))
-    else:
-        print('Input directory not found or contains no images matching search pattern.')
-    print('Duration:', analysis_end_time - analysis_start_time)
-    if files_analyzed > 0:
-        print('Time per file:', (analysis_end_time - analysis_start_time) / files_analyzed)
 
 @task
 def herbar(specimen:Specimen, config):
     try:
 
         flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
-
         #file_path_string = os.path.join(root, specimen.upload_path)
         file_path = Path(specimen.upload_path)
 
@@ -360,7 +237,12 @@ def herbar(specimen:Specimen, config):
                     #pass
                 # TODO add derived from uuid
                 archival_stem = barcode + multi_string
-                process(specimen, config, flow_run_id, file_path=file_path, new_stem=jpeg_stem)
+                new_path = process(specimen, config, flow_run_id, file_path=file_path, new_stem=jpeg_stem)
+
+                old_path_name = Path(specimen.upload_path).name
+                specimen.upload_path = specimen.upload_path.replace(old_path_name, new_path.name)
+                
+                save_specimen(specimen,config,flow_run_id)
             else:
                 save_specimen(specimen,config,flow_run_id,'Failed')
                 raise ValueError("No barcodes found")

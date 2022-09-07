@@ -10,26 +10,37 @@ from torch.tasks.save_specimen import save_specimen
 
 @task
 def generate_derivatives(specimen: Specimen, config):
-    try:
-        flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
-        
-        derivatives_to_add = {
-            size: config
-            for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
-            if is_missing(specimen.images, size)
-        }
 
-        for derivative in derivatives_to_add.keys():
-            new_derivative = generate_derivative(
-                specimen, derivative, derivatives_to_add[derivative]
-            )
-            specimen.images.append(new_derivative)
+    engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
+    
+    with Session(engine) as session:
 
-        save_specimen(specimen,config,flow_run_id)
-    except:
-        #save state to db and error to specimen
-        save_specimen(specimen,config,flow_run_id,'Failed')
-        raise
+        try:
+            local_specimen = session.merge(specimen) #thread-safe
+            flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+            
+            derivatives_to_add = {
+                size: config
+                for size, config in config["GENERATE_DERIVATIVES"]["SIZES"].items()
+                if is_missing(local_specimen.images, size)
+            }
+
+            for derivative in derivatives_to_add.keys():
+                new_derivative = generate_derivative(
+                    local_specimen, derivative, derivatives_to_add[derivative]
+                )
+                local_specimen.images.append(new_derivative)
+
+            session.commit()
+
+            save_specimen(local_specimen,config,flow_run_id)
+        except:
+            session.commit()
+            #save state to db and error to specimen
+            save_specimen(specimen,config,flow_run_id,'Failed')
+            raise
+        finally:
+            session.close()
 
 
 def is_missing(images, size):

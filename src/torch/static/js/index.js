@@ -5,16 +5,24 @@ function upload(files) {
   });
 }
 
-Dropzone.options.dropbox = {
+let myDropzone = Dropzone.options.dropbox = {
   uploadMultiple: true,
   parallelUploads: 10,
   paramName: (n) => 'file',
+  init: function() {
+    this.on("addedfile", file => {
+      console.log("A file has been added");
+    });
+    this.on("complete", file => {
+      console.log('uploaded');
+      this.removeFile(file);
+    });
+    this.on("successmultiple", () => {
+      console.log('successmultiple');
+    });
+  }
 };
 
-Dropzone.on("complete", function(file) {
-  console.log('uploaded');
-  Dropzone.removeFile(file);
-});
 
 function deleteInstitution(institutionId) {
   if (confirm("Are you sure you want to remove this institution?") == true) {

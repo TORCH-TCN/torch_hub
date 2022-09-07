@@ -1,20 +1,19 @@
 import os
 import boto3
 import pysftp
-from prefect import prefect, task
+from prefect import get_run_logger, task
 from botocore.exceptions import ClientError
 from botocore.config import Config
 from torch.collections.specimens import SpecimenImage
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from torch.tasks.save_specimen import save_specimen_image
 
 
 @task
 def upload(config, image: SpecimenImage):
-    #logger = prefect.context.get("logger")
+    logger = get_run_logger()
     upload_type = config["UPLOAD"]["TYPE"]
-    #logger.info(f"Uploading {image.url} via {upload_type}...")
-
+    logger.info(f"Uploading {image.url} via {upload_type}...")
+    
     match upload_type:
         case "sftp":
             image.url = upload_via_sftp(config["UPLOAD"], image.url)
@@ -25,12 +24,6 @@ def upload(config, image: SpecimenImage):
                 f"Upload type {upload_type} is not yet implemented."
             )
 
-    engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
-    with Session(engine) as session:
-        session.add(image)
-        session.commit()
-
-    return image
 
 
 def upload_via_sftp(config, path):
