@@ -1,19 +1,8 @@
 # TORCH Hub
 
-This repository is currently a reference implementation of a Prefect-based architecture with 1 flow and 3 tasks.
+This repository has a flask app that triggers and manages a prefect workflow
 
-When you run this reference implementation:
 
-- all files in the directory will be read 
-- each file will be uploaded to the location specified in the config
-- a log file `newfiles.txt` will be added to the same directory with a full list of the new URLs for all uploaded files
-
-This demonstrates a full working end-to-end Prefect workflow for a group of files.
-
-In addition, two execution flows have been implemented:
-
-- Local, Linear, & Synchronous: Processes files one by one in sequence (no -p argument provided)
-- Parallel and Multithreaded: Processes files in parallel using a built-in Dask Executor (-p argument provided)
 ## Requirements
 
 Requires Python 3.10*
@@ -22,20 +11,81 @@ Requires Python 3.10*
 
 All dependencies are listed in requirements.txt:
 ```bash
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
+## Configuration
+
+The current version needs a config.json file inside the `src/torch` folder with the following format
+```json
+{ 
+    "COLLECTION": {
+        "NAME": "",
+        "PREFIX": "",
+        "CATALOG_NUMBER_REGEX": "",
+        "PROJECT_IDS": [],
+        "DEFAULT_PREFIX": null,
+        "BARCODE_PREFIX": ""
+    },
+    "UPLOAD": {
+        "TYPE": "sftp",
+        "HOST": "",
+        "PATH": "",
+        "USERNAME": "",
+        "PASSWORD": ""
+    },
+    "GENERATE_DERIVATIVES": {
+        "REGEX": "",
+        "SIZES": {
+            "FULL": {
+                "OUTPUT_PATH": ""
+            },
+            "MED": {
+                "WIDTH": 900,
+                "OUTPUT_PATH": ""
+            },
+            "THUMB": {
+                "WIDTH": 390,
+                "OUTPUT_PATH": ""
+            }
+        },
+        "JPG_RENAME_STRING": ""
+    },
+    "SECRET_KEY": "",
+    "SQLALCHEMY_DATABASE_URI": "sqlite:///torch-hub.db",
+    "SQLALCHEMY_DATABASE_URI_PREFECT": "sqlite:///src/torch/torch-hub.db",
+    "SECURITY_REGISTERABLE": true,
+    "SECURITY_PASSWORD_SALT": "",
+    "SECURITY_SEND_REGISTER_EMAIL": false,
+    "SECURITY_RECOVERABLE": true,
+    "SECURITY_CHANGEABLE": true,
+    "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+    "MAIL_SERVER": "",
+    "MAIL_USERNAME": "",
+    "MAIL_PASSWORD": "",
+    "MAIL_DEFAULT_SENDER": "",
+    "MAIL_PORT": 587,
+    "MAIL_USE_SSL": true,
+    "MAIL_USE_TLS": true,
+    "APP_URL": "http://localhost:5000",
+    "DEFAULT_PREFIX": "",
+    "JPEG_RENAME":""
+}
+```
 ## How to run
 
-Once the dependencies are installed, run the workflow as follows:
-
+Once the dependencies are installed, run the app as follows:
+Navigate to the `src` folder and run
 ```bash
-    python3 torch.py -d c:\users\me\FilesToProcess -c .\config\example-config.json -p
+python3 torch.py
 ```
+or you can also run at Visual Studio Code, make sure the `launch.json` file is at the same directory as the `torch.py`, open the `torch.py` and select the `Run and Debug` menu
 
-Arguments to the application are as follows:
+## Prefect server
 
-- `-d` (or `--directory`): The directory name to process
-- `-c` (or `--config`): The JSON config file to use 
-- `-p` (or `--parallel`): Process files in parallel using a built-in Dask Executor
-- `-h` (or `--help`): See documentation for this app
+Observe your flow runs in the Prefect UI
+Fire up the Prefect UI locally by entering this command in your terminal:
+```bash
+prefect orion start
+```
+Follow the link in your terminal to see the dashboard.
