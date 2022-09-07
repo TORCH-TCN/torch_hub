@@ -130,3 +130,5 @@ dmypy.json
 .vscode
 dask-worker-space
 config.json
+torch-hub.db
+uploads

@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+    <h1 align="center">Institutions</h1>
+    <ul class="list-group list-group-flush" id="institutions">
+      {% for institution in institutions %}
+      <li class="list-group-item">
+        {{ institution.name }}
+        <button type="button" class="close" onClick="deleteInstitution({{ institution.id }})">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    <form method="POST">
+      <input type="text" name="institution" id="institution" class="form-control" />
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Institution</button>
+      </div>
+    </form>
+    {% endblock %}
