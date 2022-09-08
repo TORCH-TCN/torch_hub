@@ -151,8 +151,8 @@ nav{
     outline: none;
 }
      
-.nav-right button{
-    /* color: #667085; */
+.right button{
+    color: #667085;
     float: right;
     margin-right: 15px;
     font-size: 12px;
