@@ -1,11 +1,13 @@
 document.addEventListener('alpine:init',()=>{
     Alpine.data('collections', () => ({
         collections: [],
+        filteredCollections: [],
         open: false,
         formData: {
             name: "",
             code: "",
         },
+        search: "",
         openPage(collectioncode){
             window.open(window.location.href + "/" + collectioncode,"_self")
         },
@@ -27,6 +29,7 @@ document.addEventListener('alpine:init',()=>{
               }).then((_res) => {
                 _res.json().then(data=>{
                     this.collections = data;
+                    this.filteredCollections = data;
                 })
               });
         },
@@ -50,6 +53,19 @@ document.addEventListener('alpine:init',()=>{
                 alert("Collection registration failed");
                 throw new Error ("Collection registration failed");
             })
+        },
+        searchCollection() {
+            if (this.search === "") {
+                this.filteredCollections = this.collections;
+            }
+            this.filteredCollections = this.collections.filter((item) => {
+                return (item.name
+                  .toLowerCase()
+                  .includes(this.search.toLowerCase()) || 
+                  item.code
+                  .toLowerCase()
+                  .includes(this.search.toLowerCase()));
+            });         
         },
     }));
 
@@ -104,45 +120,4 @@ document.addEventListener('alpine:init',()=>{
         
                          
     }));
-
-    // Alpine.data('searchInput', (collectionName) => ({
-    //     isOpen: false,
-    //     search: "",
-
-    //     get getItems() {
-
-    //         this.getCollections(collectionName).then(data=>{
-    //             this.collections = data;
-    //         })
-
-    //         const filterItems = this.sourceData.filter((item) => {
-                
-    //             return item.name.toLowerCase().startsWith(this.search.toLowerCase())
-    //             //return item.employee_name.toLowerCase().includes(this.search.toLowerCase())
-
-    //         })
-
-            
-    //         if(filterItems.length < this.sourceData.length && filterItems.length > 0) {
-
-    //             this.isOpen = true
-    //             return filterItems
-
-    //         } else {
-
-    //           this.isOpen = false
-
-    //         }
-
-    //     },
-
-    //     cleanSearch(e) {
-    //       alert(e.target.innerText)
-    //       this.search = ""
-    //     },
-    //     closeSearch() {
-    //       this.search = ""
-    //       this.isOpen = false
-    //     },
-    // }))
 })
