@@ -13,7 +13,7 @@
     </div>
     <div class="main-container-body">
         <div class="body-left">
-            <img src="{{specimen.upload_path.replace('src\\torch\\','\\')}}" alt="">
+            <img src="{{specimen.upload_path.replace('torch\\','\\')}}" alt="">
             <div class="body-left-text">
             
             <p><b>Route:</b> {{specimen.upload_path}}</p>
@@ -29,7 +29,7 @@
                 {% for i in images %}
                     <div>
                         <div class="collection-card">
-                            <img src="{{i.url.replace('src\\torch\\','\\')}}" alt="">
+                            <img src="{{i.url.replace('torch\\','\\')}}" alt="">
                             <div class="card-body">
                                 <h5>{{i.size}}</h5>
                                 <p>{{i.create_date}}</p>

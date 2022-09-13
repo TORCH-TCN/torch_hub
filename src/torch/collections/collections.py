@@ -1,4 +1,5 @@
 import json
+from operator import or_
 import os
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify
@@ -29,7 +30,7 @@ class Collection(Base):
 
     def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
-        target_dir = os.path.join("src","torch","static","uploads", batch_id)
+        target_dir = os.path.join("torch","static","uploads", batch_id)
         os.makedirs(target_dir)
 
         for file in files:
@@ -120,9 +121,14 @@ def collection(collectioncode):
 
 @collections_bp.route("/specimens/<collectionid>", methods=["GET"])
 def collection_specimens(collectionid):
-    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).all() #todo filter by status (?)
+    searchString = request.args.get('searchString')
+    onlyError = request.args.get('onlyError')
+
+    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid) 
+    if searchString != None : 
+        specimens = specimens.filter(or_(Specimen.name.contains(searchString), Specimen.barcode.contains(searchString))) #todo filter by status (?)
     
-    return json.dumps([ob.as_dict() for ob in specimens],indent=4, sort_keys=True, default=str)
+    return json.dumps([ob.as_dict() for ob in specimens.all()],indent=4, sort_keys=True, default=str)
 
 
 
@@ -150,20 +156,20 @@ def ajax_response(status, msg):
     )
 
 @collections_bp.route("/<collectioncode>/<specimenid>", methods=["GET"])
-async def specimen(collectioncode, specimenid):
+def specimen(collectioncode, specimenid):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
-    
+
     # prefect errors and flows
     url = get_client().api_url
 
-    async with get_client() as client:
-        response = await client.hello()
-        flow = await client.read_flow_run(specimen.flow_run_id)
-        # filter = FlowRunFilter(id=specimen.flow_run_id)
-        # tasks = await client.read_task_runs(flow_run_filter={id:specimen.flow_run_id})
-        print(response.json())
+    # async with get_client() as client:
+    #     response = await client.hello()
+    #     flow = await client.read_flow_run(specimen.flow_run_id)
+    #     # filter = FlowRunFilter(id=specimen.flow_run_id)
+    #     # tasks = await client.read_task_runs(flow_run_filter={id:specimen.flow_run_id})
+    #     print(response.json())
 
     
 
