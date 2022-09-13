@@ -1,10 +1,19 @@
 {% extends "base.html" %} {% block title %}Specimens{% endblock %} {% block
 content %}
 
-<div class="page-container">
-  <h5 class="mb-4">{{collection.name}}</h5>
-
-  <div class="main-container" x-data="specimens({{collection.id}})">
+<div x-data="specimens({{collection.id}})" class="page-container">
+  <div class="page-container-header">
+    <div class="left">      
+      <h5 class="mb-0">{{collection.name}}</h5>
+    </div>
+    <div class="right searchbar">
+      <input class="search-input" type="text" placeholder="Search" x-model="search" @keyup="searchSpecimen()" />
+      <button x-on:click="searchSpecimen()">
+        <i class="fa fa-search" style="font-size: 18px"> </i>
+      </button>
+    </div>
+  </div>
+  <div class="main-container">
     <div class="main-container-header">
       <div class="left">
         <p class="xsmall">All / {{collection.code}}</p>
