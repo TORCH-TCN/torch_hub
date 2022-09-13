@@ -240,3 +240,27 @@
 .menu-dropdown-content p:hover {
   background-color: rgba(191, 204, 232, 0.24);
 }
+
+.collections-sidelist{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.collections-sidelist li{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #667085;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.collections-sidelist li.selected-collection{
+  background: #F4EBFF;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #42307D;
+}

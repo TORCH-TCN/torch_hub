@@ -2,13 +2,29 @@
 {% block title %}Settings{% endblock %} 
 {% block content %}
 
-<section class="settings-page">
+<section class="settings-page" x-data="collections">
     <header>
         <h6>Settings</h6>
         <p class="small">Adjust settings for collection.</p>
     </header>
     
-    
+    <div class="row">
+        <div class="col">
+            <ul class="collections-sidelist">
+                <template x-for="(c,index) in collections" :key="index">
+                    <li x-text="c.code" :class="{'selected-collection': selectedCollection.id == c.id}" x-on:click="selectCollection(c)"></li>
+                </template>
+            </ul>
+        </div>
+        <div class="col">
+            <div class="form-container">
+                <template x-if="selectedCollection != null">
+                    <h2 x-text="selectedCollection.name"></h2>
+                </template>
+                
+            </div>
+        </div>
+    </div>
 </section>
 
 

@@ -8,6 +8,7 @@ document.addEventListener('alpine:init',()=>{
             code: "",
         },
         search: "",
+        selectedCollection: null,
         openPage(collectioncode){
             window.open(window.location.href + "/" + collectioncode,"_self")
         },
@@ -16,11 +17,9 @@ document.addEventListener('alpine:init',()=>{
             var socket = io();
 
             socket.on('connect', function() {
-                // socket.emit('my event', {data: 'I\'m connected!'});
                 console.log('a user connected');
             });
 
-            //load collections here
             this.getCollections();
         },
         getCollections(){
@@ -28,8 +27,10 @@ document.addEventListener('alpine:init',()=>{
                 method: "GET"
               }).then((_res) => {
                 _res.json().then(data=>{
+                    this.selectedCollection = data[0];
                     this.collections = data;
                     this.filteredCollections = data;
+                    
                 })
               });
         },
@@ -67,6 +68,12 @@ document.addEventListener('alpine:init',()=>{
                   .includes(this.search.toLowerCase()));
             });         
         },
+        selectCollection(collection){
+            this.selectedCollection = collection
+        },
+        saveCollectionSettings(collection){
+
+        }
     }));
 
     Alpine.data('specimens',(collectionid)=>({
@@ -120,4 +127,5 @@ document.addEventListener('alpine:init',()=>{
         
                          
     }));
+
 })
