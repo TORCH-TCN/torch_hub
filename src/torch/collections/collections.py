@@ -21,6 +21,8 @@ class Collection(Base):
     catalog_number_regex = Column(String(150))
     web_base = Column(String(150))
     url_base = Column(String(150))
+    default_prefix = Column(String(15))
+    barcode_prefix = Column(String(15))
     institution_id = Column(Integer, ForeignKey("institution.id"))
     flow_id = Column(String(150))
 
@@ -94,21 +96,24 @@ def collectionspost():
     
     jcollection = request.get_json()
     newname = jcollection['name']
-    newcode = jcollection['code']
 
     if len(newname) < 1:
         flash("Name is too short!", category="error")
     else:
         new_collection = Collection(
+            id = jcollection.get('id',None),
             name=newname,
-            code=newcode,
+            code=jcollection.get('code',None),
             institution_id=institution.id,
+            flow_id = jcollection.get('flow_id',None),
+            catalog_number_regex = jcollection.get('catalog_number_regex',None),
+            default_prefix = jcollection.get('default_prefix',None),
+            barcode_prefix = jcollection.get('barcode_prefix',None),
         )
-       
-        db.session.add(new_collection)
+        
+        local_collection = db.session.merge(new_collection)
+        db.session.add(local_collection)
         db.session.commit()
-
-        # flash("Collection added!", category="success")
 
     return jsonify({"collectionid": new_collection.id})
 

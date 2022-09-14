@@ -7,22 +7,63 @@
         <h6>Settings</h6>
         <p class="small">Adjust settings for collection.</p>
     </header>
-    
+    <template class="row" x-if="collectionSaved">
+        <div class="col-sm-12 p-0">
+            <div class="alert alert-success alter-dismissable fade show" role="alert">
+                Collection saved!
+                <button type="button" class="close" data-dismiss="alert" x-on:click="collectionSaved = false">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+        </div>
+        
+    </template>
     <div class="row">
-        <div class="col">
+        <div class="col-sm-2">
             <ul class="collections-sidelist">
                 <template x-for="(c,index) in collections" :key="index">
                     <li x-text="c.code" :class="{'selected-collection': selectedCollection.id == c.id}" x-on:click="selectCollection(c)"></li>
                 </template>
             </ul>
         </div>
-        <div class="col">
-            <div class="form-container">
-                <template x-if="selectedCollection != null">
+        <div class="col-sm-10">
+            
+            <template x-if="selectedCollection != null">
+                <div class="form-container">
                     <h2 x-text="selectedCollection.name"></h2>
-                </template>
+
+                    <form>
+                        <div class="form-group">
+                            <label for="inputName">Name*</label>
+                            <input id="inputName" type="text" class="form-control" x-model="selectedCollection.name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputCode">Code*</label>
+                            <input id="inputCode" type="text" class="form-control" x-model="selectedCollection.code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputRegex">Regex</label>
+                            <input id="inputRegex" type="text" class="form-control" x-model="selectedCollection.catalog_number_regex">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputFlowID">Flow ID</label>
+                            <input id="inputFlowID" type="text" class="form-control" x-model="selectedCollection.flow_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDefaultPrefix">Default Prefix</label>
+                            <input id="inputDefaultPrefix" type="text" class="form-control" x-model="selectedCollection.default_prefix">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputBarcodePrefix">Barcode Prefix</label>
+                            <input id="inputBarcodePrefix" type="text" class="form-control" x-model="selectedCollection.barcode_prefix">
+                        </div>
+                        <button type="button" class="btn btn-primary" x-on:click="saveCollectionSettings()">Save Changes</button>
+                    </form>
+                </div>
                 
-            </div>
+            </template>
+                
+            
         </div>
     </div>
 </section>

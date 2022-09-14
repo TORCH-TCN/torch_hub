@@ -9,6 +9,7 @@ document.addEventListener('alpine:init',()=>{
         },
         search: "",
         selectedCollection: null,
+        collectionSaved: false,
         openPage(collectioncode){
             window.open(window.location.href + "/" + collectioncode,"_self")
         },
@@ -71,8 +72,21 @@ document.addEventListener('alpine:init',()=>{
         selectCollection(collection){
             this.selectedCollection = collection
         },
-        saveCollectionSettings(collection){
-
+        saveCollectionSettings(){
+            console.log('saveCollectionSettings',this.selectedCollection);
+            
+            fetch(`/collections`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.selectedCollection)
+              }).then((_res) => {
+                _res.json().then(data=>{
+                   console.log('saveCollectionSettings',data);
+                   this.collectionSaved = true;
+                })
+              });
         }
     }));
 
