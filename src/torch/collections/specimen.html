@@ -1,47 +1,53 @@
-{% extends "base.html" %} 
-{% block title %}Specimen{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% block title %}Specimen{% endblock %} {% block
+content %}
 
-<div class="main-container">
+<div class="page-container">
+  <!-- <div class="back-page">
+    <button @click="history.back()">
+      <img src="../static//images/arrow-left.svg" alt="Left arrow" />
+      <p class="xsmall">Back</p>
+    </button>
+  </div> -->
+  <div class="page-container-header">
+    <div class="left">
+      <h5 class="mb-0">All / {{collection.code}} / {{specimen.name}}</h5>
+    </div>
+  </div>
+  <div class="main-container">
     <div class="main-container-header">
-        <div class="left">
-            <p class="xsmall">All / {{collection.code}} / {{specimen.name}}</p>
-        </div>
+      <div class="left">
+        <p class="xsmall">All / {{collection.code}} / {{specimen.name}}</p>
+      </div>
     </div>
-    <div>
-
-    </div>
+    <div></div>
     <div class="main-container-body">
-        <div class="body-left">
-            <img src="{{specimen.upload_path.replace('torch\\','\\')}}" alt="">
-            <div class="body-left-text">
-            
-            <p><b>Route:</b> {{specimen.upload_path}}</p>
-            <p><b>Name:</b> {{specimen.name}}</p>
-            <p><b>Imaged</b> {{specimen.create_date}}</p>
-            <p><b>Collection:</b> {{collection.name}}</p>
-            
+      <div class="body-left">
+        <img src="{{specimen.upload_path.replace('torch\\','\\')}}" alt="" />
+        <div class="body-left-text">
+          <p><b>Route:</b> {{specimen.upload_path}}</p>
+          <p><b>Name:</b> {{specimen.name}}</p>
+          <p><b>Imaged</b> {{specimen.create_date}}</p>
+          <p><b>Collection:</b> {{collection.name}}</p>
         </div>
-        </div>
-        <!-- <div class="vertical-line"></div> -->
-        <div class="body-right">
-            <div class="row-specimen">
-                {% for i in images %}
-                    <div>
-                        <div class="collection-card">
-                            <img src="{{i.url.replace('torch\\','\\')}}" alt="">
-                            <div class="card-body">
-                                <h5>{{i.size}}</h5>
-                                <p>{{i.create_date}}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-               
+      </div>
+      <!-- <div class="vertical-line"></div> -->
+      <div class="body-right">
+        <div class="row-specimen">
+          {% for i in images %}
+          <div>
+            <div class="collection-card">
+              <img src="{{i.url.replace('torch\\','\\')}}" alt="" />
+              <div class="card-body">
+                <h5>{{i.size}}</h5>
+                <p>{{i.create_date}}</p>
+              </div>
             </div>
-
+          </div>
+          {% endfor %}
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}
