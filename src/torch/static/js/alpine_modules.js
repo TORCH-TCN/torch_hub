@@ -8,6 +8,8 @@ document.addEventListener('alpine:init',()=>{
             code: "",
         },
         search: "",
+        selectedCollection: null,
+        collectionSaved: false,
         openPage(collectioncode){
             window.open(window.location.href + "/" + collectioncode,"_self")
         },
@@ -16,20 +18,20 @@ document.addEventListener('alpine:init',()=>{
             var socket = io();
 
             socket.on('connect', function() {
-                // socket.emit('my event', {data: 'I\'m connected!'});
                 console.log('a user connected');
             });
 
-            //load collections here
             this.getCollections();
         },
         getCollections(){
             fetch(`/collections/search`, {
                 method: "GET"
               }).then((_res) => {
-                _res.json().then(data => {
+                _res.json().then(data=>{
+                    this.selectedCollection = data[0];
                     this.collections = data;
                     this.filteredCollections = data;
+                    
                 })
               });
         },
@@ -67,6 +69,25 @@ document.addEventListener('alpine:init',()=>{
                   .includes(this.search.toLowerCase()));
             });         
         },
+        selectCollection(collection){
+            this.selectedCollection = collection
+        },
+        saveCollectionSettings(){
+            console.log('saveCollectionSettings',this.selectedCollection);
+            
+            fetch(`/collections`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.selectedCollection)
+              }).then((_res) => {
+                _res.json().then(data=>{
+                   console.log('saveCollectionSettings',data);
+                   this.collectionSaved = true;
+                })
+              });
+        }
     }));
 
     Alpine.data('specimens',(collectionid)=>({
@@ -130,4 +151,5 @@ document.addEventListener('alpine:init',()=>{
             }) 
         },                         
     }));
+
 })
