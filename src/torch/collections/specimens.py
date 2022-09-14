@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from sqlalchemy import (
     Integer,
     String,
@@ -50,3 +51,11 @@ class SpecimenImage(Base):
     
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def web_url(self):
+        base_path = Path("torch") # Hardcoded for now but perhaps needs to be added to a config file or is a property of a Flask app?
+        # Get realtive path from base path
+        web_path = Path(self.url).relative_to(base_path)
+        # Make path start at root so it will be an absolute path in HTML
+        web_path = Path('/').joinpath(web_path)
+        return web_path

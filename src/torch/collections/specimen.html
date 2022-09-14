@@ -37,10 +37,11 @@ content %}
           {% for i in images %}
           <div>
             <div class="collection-card">
-              <img src="{{i.url.replace('torch/','/')}}" alt="" />
+              <img src="{{i.web_url()}}" alt="" />
               <div class="card-body">
                 <h5>{{i.size}}</h5>
                 <p>{{i.create_date}}</p>
+                <p>web_url - {{i.web_url()}}</p>
               </div>
             </div>
           </div>
