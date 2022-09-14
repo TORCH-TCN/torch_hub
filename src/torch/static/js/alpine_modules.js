@@ -92,8 +92,10 @@ document.addEventListener('alpine:init',()=>{
 
     Alpine.data('specimens',(collectionid)=>({
         specimens: [],
+        filteredSpecimens: [],
         notifications: [],
         open: false,
+        search: "",
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
@@ -102,6 +104,7 @@ document.addEventListener('alpine:init',()=>{
 
             this.getSpecimens(collectionid).then(data=>{
                 this.specimens = data;
+                this.filteredSpecimens = data;
             })
 
             var socket = io();
@@ -131,15 +134,22 @@ document.addEventListener('alpine:init',()=>{
                 return _res.json().then(data=>{
                     
                     data.forEach(x => {
-                        x.upload_path = x.upload_path.replace("src\\torch\\","../");
+                        x.upload_path = x.upload_path.replace("torch\\","../");
                         x.create_date = (new Date(x.create_date)).toLocaleDateString()
                     });
                     return data;
                 })
               });
         },
-        
-                         
+        searchSpecimen() {
+            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}`, {
+                method: "GET"
+            }).then((_res) => {                
+                _res.json().then(data => {
+                    this.specimens = data;                  
+                })
+            }) 
+        },                         
     }));
 
 })
