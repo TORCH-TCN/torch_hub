@@ -35,15 +35,20 @@ document.addEventListener('alpine:init',()=>{
                 })
               });
         },
+        openModal() {
+            this.formData.name = "";
+            this.formData.code = "";
+            this.open = true;
+        },
         submitData(e){
-            return fetch("/collections", {
+            fetch("/collections", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(this.formData)
             })
-            .then((response) => {
+            .then((response) => {               
                 if(response.status === 200) {
                     this.open = false;
                     this.getCollections();

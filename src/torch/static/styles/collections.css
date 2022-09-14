@@ -271,3 +271,17 @@
   border-radius: 8px;
   padding: 32px 24px;
 }
+
+#dropbox {
+  border: 2px dashed #9D9DA4;
+}
+
+.back-page button {
+  height: 20px;
+  width: 48px;
+  gap: 5px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  vertical-align: middle;
+}

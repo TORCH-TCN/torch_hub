@@ -2,12 +2,24 @@
 content %}
 
 <div x-data="specimens({{collection.id}})" class="page-container">
+  <div class="back-page">
+    <button @click="history.back()">
+      <img src="../static//images/arrow-left.svg" alt="Left arrow" />
+      <p class="xsmall">Back</p>
+    </button>
+  </div>
   <div class="page-container-header">
-    <div class="left">      
+    <div class="left">
       <h5 class="mb-0">{{collection.name}}</h5>
     </div>
     <div class="right searchbar">
-      <input class="search-input" type="text" placeholder="Search" x-model="search" @keyup="searchSpecimen()" />
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search"
+        x-model="search"
+        @keyup="searchSpecimen()"
+      />
       <button x-on:click="searchSpecimen()">
         <i class="fa fa-search" style="font-size: 18px"> </i>
       </button>
@@ -37,8 +49,6 @@ content %}
     </div>
     <div class="main-container-body p-4">
       <div class="row-collection">
-
-  
         <!-- Modal -->
         <div>
           <button @click="open=true">
@@ -61,23 +71,31 @@ content %}
                     <h5 class="modal-title"></h5>
                     <button @click="open = false" class="btn-close">X</button>
                   </div>
-  
+
                   <!-- Modal Body -->
                   <div class="p-4">
-  
                     <div class="form-group">
-                      
                       <div class="upload-box">
-                        <form id="dropbox" action="{{ url_for('collections.upload', collectionid=collection.code) }}" class="dropzone">
+                        <form
+                          id="dropbox"
+                          action="{{ url_for('collections.upload', collectionid=collection.code) }}"
+                          class="dropzone"
+                        >
                           <div class="dz-message" data-dz-message>
-                            <span>
-                              <img src="../static/images/upload_icon.svg" alt="Upload cloud icon" /><br>
-                              Click to upload or drag and drop<br>
-                            PNG or JPG</span>
+                            <span style="color: #667085">
+                              <img
+                                src="../static/images/upload_icon.svg"
+                                alt="Upload cloud icon"
+                              /><br />
+                              <span style="color: #6941c6"
+                                >Click to upload</span
+                              >
+                              or drag and drop<br />
+                              PNG or JPG</span
+                            >
                           </div>
                         </form>
                       </div>
-                        
                     </div>
                   </div>
                 </div>
@@ -86,7 +104,7 @@ content %}
           </template>
           <div class="modal-backdrop fade show" x-show="open"></div>
         </div>
-  
+
         <template x-for="s in specimens">
           <div>
             <div
@@ -94,15 +112,18 @@ content %}
               :alt="s.name"
               x-on:click="openPage(s.id)"
             >
-            
-            <div x-data="{ open: false }" class="menu-dropdown">
-              <button @click="open = ! open" class="menu-dropbtn" @click.stop>
-                <img src="../static/images/list.png" alt="menu" />
-              </button>
-              <div x-show="open" @click.outside="open = false" class="menu-dropdown-content">
-                <p class="xsmall">Delete</p>
+              <div x-data="{ open: false }" class="menu-dropdown">
+                <button @click="open = ! open" class="menu-dropbtn" @click.stop>
+                  <img src="../static/images/list.png" alt="menu" />
+                </button>
+                <div
+                  x-show="open"
+                  @click.outside="open = false"
+                  class="menu-dropdown-content"
+                >
+                  <p class="xsmall">Delete</p>
+                </div>
               </div>
-            </div>
 
               <img
                 :src="s.upload_path"
@@ -143,10 +164,8 @@ content %}
           </div>
         </template>
       </div>
+    </div>
   </div>
-  
+
+  {% endblock %}
 </div>
-
-
-
-{% endblock %}
