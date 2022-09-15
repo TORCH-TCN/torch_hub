@@ -101,15 +101,18 @@ document.addEventListener('alpine:init',()=>{
         notifications: [],
         open: false,
         search: "",
+        loading: false,
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
         init(){
             console.log('specimens init', collectionid);
 
+            this.loading = true;
             this.getSpecimens(collectionid).then(data=>{
                 this.specimens = data;
                 this.filteredSpecimens = data;
+                this.loading = false;
             })
 
             var socket = io();
@@ -119,6 +122,7 @@ document.addEventListener('alpine:init',()=>{
             });
 
             socket.on('notify', (n) => {
+                this.loading = true;
                 this.getSpecimens(collectionid).then(data=>{
                     data.forEach(x => {
                         if(x.id == n.specimenid){
@@ -127,12 +131,13 @@ document.addEventListener('alpine:init',()=>{
                         }
                     });
                     this.specimens = data;
+                    this.loading = false;
                 })
 
                
             })
         },
-        getSpecimens(collectionid){
+        getSpecimens(collectionid){            
             return fetch(`/collections/specimens/${collectionid}`, {
                 method: "GET"
               }).then((_res) => {
@@ -147,11 +152,13 @@ document.addEventListener('alpine:init',()=>{
               });
         },
         searchSpecimen() {
+            this.loading = true;
             fetch(`/collections/specimens/${collectionid}?searchString=${this.search}`, {
                 method: "GET"
             }).then((_res) => {                
                 _res.json().then(data => {
-                    this.specimens = data;                  
+                    this.specimens = data;    
+                    this.loading = false;              
                 })
             }) 
         },                         

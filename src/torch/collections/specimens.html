@@ -48,6 +48,14 @@ content %}
       </div> -->
     </div>
     <div class="main-container-body p-4">
+      <template x-if="loading">
+        <div class="spinner-element">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        </div>
+      </template>
+      <template x-if="!loading">
       <div class="row-collection">
         <!-- Modal -->
         <div>
@@ -164,6 +172,7 @@ content %}
           </div>
         </template>
       </div>
+      </template>
     </div>
   </div>
 
