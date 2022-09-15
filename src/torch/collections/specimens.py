@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+
 from sqlalchemy import (
     Integer,
     String,
@@ -56,6 +57,6 @@ class SpecimenImage(Base):
         base_path = Path("torch") # Hardcoded for now but perhaps needs to be added to a config file or is a property of a Flask app?
         # Get realtive path from base path
         web_path = Path(self.url).relative_to(base_path)
-        # Make path start at root so it will be an absolute path in HTML
-        web_path = Path('/').joinpath(web_path)
+        # Make path in URL format, adding leading slash to make it absolute path
+        web_path = "/" + "/".join(web_path.parts)
         return web_path
