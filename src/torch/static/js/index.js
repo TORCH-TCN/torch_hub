@@ -19,10 +19,11 @@ let myDropzone = Dropzone.options.dropbox = {
     });
     this.on("successmultiple", () => {
       console.log('successmultiple');
+      var closeModal = new CustomEvent('close-modal');
+      window.dispatchEvent(closeModal);
     });
   }
 };
-
 
 function deleteInstitution(institutionId) {
   if (confirm("Are you sure you want to remove this institution?") == true) {
