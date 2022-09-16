@@ -37,7 +37,7 @@ def generate_derivatives(specimen: Specimen, config):
         except:
             session.commit()
             #save state to db and error to specimen
-            save_specimen(specimen,config,flow_run_id,'Failed')
+            save_specimen(specimen,config,flow_run_id,'Failed','generate_derivatives')
             raise
         finally:
             session.close()

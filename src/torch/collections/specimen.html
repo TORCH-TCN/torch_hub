@@ -2,15 +2,15 @@
 content %}
 
 <div class="page-container">
-  <!-- <div class="back-page">
-    <button @click="history.back()">
-      <img src="../static//images/arrow-left.svg" alt="Left arrow" />
-      <p class="xsmall">Back</p>
-    </button>
-  </div> -->
+  <div class="back-page">
+    <a href="/collections/{{collection.code}}" class="back-link">
+      <img src="../../static//images/arrow-left.svg" alt="Left arrow" />
+      Back
+    </a>
+  </div>
   <div class="page-container-header">
     <div class="left">
-      <h5 class="mb-0">All / {{collection.code}} / {{specimen.name}}</h5>
+      <h5 class="mb-0">{{specimen.name}}</h5>
     </div>
   </div>
   <div class="main-container">
@@ -19,33 +19,57 @@ content %}
         <p class="xsmall">All / {{collection.code}} / {{specimen.name}}</p>
       </div>
     </div>
-    <div></div>
-    <div class="main-container-body">
-      <div class="body-left">
-        <img src="{{specimen.upload_path.replace('torch\\','\\')}}" alt="" />
-        <div class="body-left-text">
-          <p><b>Route:</b> {{specimen.upload_path}}</p>
-          <p><b>Name:</b> {{specimen.name}}</p>
-          <p><b>Imaged</b> {{specimen.create_date}}</p>
-          <p><b>Collection:</b> {{collection.name}}</p>
-        </div>
-      </div>
-      <!-- <div class="vertical-line"></div> -->
-      <div class="body-right">
-        <div class="row-specimen">
-          {% for i in images %}
-          <div>
-            <div class="collection-card">
-              <img src="{{i.url.replace('torch\\','\\')}}" alt="" />
-              <div class="card-body">
-                <h5>{{i.size}}</h5>
-                <p>{{i.create_date}}</p>
-              </div>
+    <div class="main-container-body p-4">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="row mb-2">
+            <div class="col">
+              <p>Uploaded</p>
             </div>
           </div>
-          {% endfor %}
+          
+          <img class="specimen-image" src="{{specimen.upload_path.replace('torch\\','\\')}}" alt=""/>
+          <div class="body-left-text">
+            <p><b>Route:</b> {{specimen.upload_path}}</p>
+            <p><b>Name:</b> {{specimen.name}}</p>
+            <p><b>Imaged</b> {{specimen.create_date}}</p>
+            <p><b>Collection:</b> {{collection.name}}</p>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="row mb-2">
+            <div class="col">
+              <p>Generated</p>
+            </div>
+            <div class="col text-right">
+              <a href="{{prefect_url}}" target="_blank">Show Prefect Log</a>
+            </div>
+          </div>
+          <div class="row">
+            {% if specimen.flow_run_state == 'Failed' %}
+              <div class="col-md-12">
+                <div class="alert alert-danger specimen-alert" role="alert">
+                  The workflow has failed for the task <i>{{specimen.failed_task}}</i> <a href="{{prefect_url}}" target="_blank" class="alert-link">click here to see the Prefect Log</a>. 
+                </div>
+              </div>
+            {% endif %}
+            
+            
+            {% for i in images %}
+              <div class="col-sm-4">
+                <div class="collection-card">
+                  <img src="{{i.url.replace('torch\\','\\')}}" alt="" />
+                  <div class="card-body">
+                    <h5>{{i.size}}</h5>
+                    <p>{{i.create_date}}</p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
         </div>
       </div>
+     
     </div>
   </div>
 </div>

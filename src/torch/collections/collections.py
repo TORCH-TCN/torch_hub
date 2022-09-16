@@ -165,7 +165,7 @@ def specimen(collectioncode, specimenid):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
-
+    prefect_url = current_app.config["PREFECT_ORION_URL"] + "flow-run/" + specimen.flow_run_id
     # prefect errors and flows
     url = get_client().api_url
 
@@ -176,7 +176,5 @@ def specimen(collectioncode, specimenid):
     #     # tasks = await client.read_task_runs(flow_run_filter={id:specimen.flow_run_id})
     #     print(response.json())
 
-    
-
-    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images)
+    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)
     
