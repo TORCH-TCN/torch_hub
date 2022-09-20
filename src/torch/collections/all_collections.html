@@ -18,22 +18,6 @@
       <div class="left">
         <p class="xsmall">All</p>
       </div>
-      <!-- <div class="right">
-        <div class="list-sort">
-          <p class="xsmall">View list</p>
-          <img
-            src="../static//images/down-filled-triangular-arrow.png"
-            alt="Down arrow"
-          />
-        </div>
-        <div class="list-sort">
-          <p class="xsmall">Sort</p>
-          <img
-            src="../static//images/down-filled-triangular-arrow.png"
-            alt="Down arrow"
-          />
-        </div>
-      </div> -->
     </div>
     <div class="main-container-body p-4">
       <div class="row-collection">
@@ -42,28 +26,28 @@
           <button @click="openModal()">
             <div>
               <div class="add-collection">
-                <img src="../static//images/plus.png" alt="Plus icon" />
+                <img src="../static/images/plus_icon.svg" alt="Plus icon" />
                 <p>New collection</p>
               </div>
             </div>
           </button>
           <template x-teleport="body">
-            <!-- Backdrop -->
-            <div x-show="open" class="modal fade show">
+            
+            <div x-show="open" class="modal fade show" >
               <div class="modal-dialog">
-                <!-- Dialog -->
-                <div x-show="open" x-transition class="modal-content">
-                  <!-- mousedown.outside="open = false" -->
-                  <!-- Modal Title -->
+                
+                <div x-show="open" x-transition class="modal-content" @mousedown.outside="open = false">
+                  
                   <div class="modal-header">
                     <h5 class="modal-title">New Collection</h5>
-                    <button @click="open = false" class="btn-close">X</button>
+                    <button @click="open = false" class="btn-close">
+                      <img src="../static/images/close_icon.svg" />
+                    </button>
                   </div>
 
-                  <!-- Modal Body -->
                   <div class="p-4">
                     <div class="form-group">
-                      <label for="collection" class="mr-2">Name:</label>
+                      <label for="collection" class="mr-2">Name</label>
                       <input
                         placeholder=""
                         type="text"
@@ -72,7 +56,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label for="code" class="mr-2">Code:</label>
+                      <label for="code" class="mr-2">Code</label>
                       <input
                         placeholder=""
                         type="text"
@@ -82,7 +66,7 @@
                     </div>
 
                     <div class="modal-footer">
-                      <button @click="submitData" class="btn btn-primary">
+                      <button @click="submitData" class="btn btn-primary btn-block">
                         Add Collection
                       </button>
                     </div>
@@ -100,14 +84,14 @@
             :alt="c.name"
             x-on:click="openPage(c.code)"
           >
-            <!-- <div x-data="{ open: false }" class="menu-dropdown">
+            <div x-data="{ open: false }" class="menu-dropdown">
               <button @click="open = ! open" class="menu-dropbtn" @click.stop>
                 <img src="../static/images/list.png" alt="menu" />
               </button>
-              <div x-show="open" @click.outside="open = false" class="menu-dropdown-content">
-                <p class="xsmall">Delete</p>
+              <div x-show="open" @click.outside="open = false" class="menu-dropdown-content" @click.stop>
+                <p @click="deleteCollection(c.id)" class="xsmall">Delete</p>
               </div>
-            </div> -->
+            </div>
 
             <img src="../static/images/default.jpg" alt="" />
             <div class="card-body">

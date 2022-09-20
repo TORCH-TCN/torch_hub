@@ -177,4 +177,19 @@ def specimen(collectioncode, specimenid):
     #     print(response.json())
 
     return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)
-    
+
+
+@collections_bp.route("/<id>", methods=["DELETE"])
+def delete(id):
+    collection = db.session.query(Collection).get(id)
+
+    if collection:
+        specimens = db.session.query(Specimen).filter(Specimen.collection_id == id).all()
+        print(specimens)
+        if len(specimens) > 0:
+            return jsonify({"status":"error","statusText":"Impossible to delete a collection with specimens."})
+        
+        db.session.delete(collection)
+        db.session.commit()
+
+    return jsonify({"status":"ok"})

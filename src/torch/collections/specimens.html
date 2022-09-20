@@ -1,5 +1,6 @@
-{% extends "base.html" %} {% block title %}Specimens{% endblock %} {% block
-content %}
+{% extends "base.html" %} 
+{% block title %}Specimens{% endblock %} 
+{% block content %}
 
 <div x-data="specimens({{collection.id}})" class="page-container" @close-modal.window="open = false"
   @increment-counter.window="updateCounter(1)" @decrement-counter.window="updateCounter(-1)">
@@ -128,5 +129,6 @@ content %}
       </template>
     </div>
   </div>
-  {% endblock %}
 </div>
+
+{% endblock %}
