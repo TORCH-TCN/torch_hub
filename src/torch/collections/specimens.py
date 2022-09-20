@@ -26,6 +26,7 @@ class Specimen(Base):
     flow_run_id = Column(String(150))
     flow_run_state = Column(String(150))
     failed_task = Column(String(150))
+    deleted = Column(Integer, default=0)
     images = relationship("SpecimenImage")
 
 
