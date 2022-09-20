@@ -5,6 +5,8 @@ content %}
   x-data="specimens({{collection.id}})"
   class="page-container"
   @close-modal.window="open = false"
+  @increment-counter.window="updateCounter(1)"
+  @decrement-counter.window="updateCounter(-1)"
 >
   <div class="back-page">
     <button @click="history.back()">
@@ -95,6 +97,17 @@ content %}
                     </form>
                   </div>
                 </div>
+
+                <div class="modal-footer specimen-footer" style="display:none" id="uploadingMessageContainer">
+                  <div class="upload-message">
+                    <span x-html="uploadingMessage"></span> 
+                    <template x-if="fileCounter > 1">
+                      <span x-html="'&nbsp;and other ' + (fileCounter - 1) + ' files...'" ></span>
+                    </template>
+                    
+                  </div>
+                </div>
+                
               </div>
             </div>
           </div>
@@ -105,7 +118,7 @@ content %}
         <div class="row-collection">
           <!-- Modal -->
           <div>
-            <button @click="open=true">
+            <button @click="openModal">
               <div>
                 <div class="add-collection">
                   <img src="../static//images/plus.png" alt="Plus icon" />

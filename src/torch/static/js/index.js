@@ -12,15 +12,24 @@ let myDropzone = Dropzone.options.dropbox = {
   init: function() {
     this.on("addedfile", file => {
       console.log("A file has been added");
+      var element = document.getElementById("fileName");
+      if (element) {
+        element.innerHTML = file.name;
+        document.getElementById("uploadingMessageContainer").style.display="";
+      }
+      var incrementCounter = new CustomEvent('increment-counter');
+      window.dispatchEvent(incrementCounter);
     });
     this.on("complete", file => {
       console.log('uploaded');
       this.removeFile(file);
+      var decrementCounter = new CustomEvent('decrement-counter');
+      window.dispatchEvent(decrementCounter);
     });
     this.on("successmultiple", () => {
       console.log('successmultiple');
-      var closeModal = new CustomEvent('close-modal');
-      window.dispatchEvent(closeModal);
+      // var closeModal = new CustomEvent('close-modal');
+      // window.dispatchEvent(closeModal);
     });
   }
 };

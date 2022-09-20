@@ -102,6 +102,8 @@ document.addEventListener('alpine:init',()=>{
         open: false,
         search: "",
         loading: false,
+        fileCounter: 0,
+        uploadingMessage: "Uploading <span id='fileName'></span>",
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
@@ -137,6 +139,11 @@ document.addEventListener('alpine:init',()=>{
                
             })
         },
+        openModal() {
+            this.fileCounter = 0;
+            document.getElementById("uploadingMessageContainer").style.display="none";
+            this.open = true;
+        },
         getSpecimens(collectionid){            
             return fetch(`/collections/specimens/${collectionid}`, {
                 method: "GET"
@@ -161,7 +168,10 @@ document.addEventListener('alpine:init',()=>{
                     this.loading = false;              
                 })
             }) 
-        },                         
+        },  
+        updateCounter(e) {
+            this.fileCounter = (this.fileCounter + e);
+        }                       
     }));
 
 })
