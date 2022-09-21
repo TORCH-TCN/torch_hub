@@ -129,7 +129,7 @@ def collection_specimens(collectionid):
     searchString = request.args.get('searchString')
     onlyError = request.args.get('onlyError')
 
-    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid) 
+    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0)
     if searchString != None : 
         specimens = specimens.filter(or_(Specimen.name.contains(searchString), Specimen.barcode.contains(searchString))) #todo filter by status (?)
     
@@ -190,6 +190,16 @@ def delete(id):
             return jsonify({"status":"error","statusText":"Impossible to delete a collection with specimens."})
         
         db.session.delete(collection)
+        db.session.commit()
+
+    return jsonify({"status":"ok"})
+
+@collections_bp.route("specimen/<id>", methods=["DELETE"])
+def delete_specimen(id):
+    specimen = db.session.query(Specimen).get(id)
+
+    if specimen:        
+        specimen.deleted = 1
         db.session.commit()
 
     return jsonify({"status":"ok"})

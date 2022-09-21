@@ -40,7 +40,7 @@
         <div x-show="open" class="modal fade show">
           <div class="modal-dialog-specimen">
             <!-- Dialog -->
-            <div x-show="open" x-transition class="modal-content">
+            <div x-show="open" x-transition class="modal-content" @mousedown.outside="open = false">
               <!-- mousedown.outside="open = false" -->
               <!-- Modal Title -->
               <div class="modal-header specimen">
@@ -102,8 +102,8 @@
                   <button @click="open = ! open" class="menu-dropbtn" @click.stop>
                     <img src="../static/images/list.png" alt="menu" />
                   </button>
-                  <div x-show="open" @click.outside="open = false" class="menu-dropdown-content">
-                    <p class="xsmall">Delete</p>
+                  <div x-show="open" @click.outside="open = false" class="menu-dropdown-content" @click.stop>
+                    <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
                   </div>
                 </div>
 

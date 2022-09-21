@@ -195,6 +195,29 @@ document.addEventListener('alpine:init',()=>{
         },  
         updateCounter(e) {
             this.fileCounter = (this.fileCounter + e);
+        },
+        deleteSpecimen(id){
+            
+            if (confirm("Are you sure you want to remove this specimen?") == true) {
+                
+                fetch(`specimen/${id}`, {
+                  method: "DELETE"
+                }).then((_res) => {
+                    if(_res.status == 200)
+                        _res.json().then(data=>{
+                            
+                            if (data.status == 'ok')
+                                this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);
+                            else
+                                alert(data.statusText)  
+                        })
+                    else
+                        alert(_res.statusText)  
+                }).catch(error=>{
+                    console.log(error);
+                    alert('Failed to remove the specimen');
+                });
+              }
         }                       
     }));
 
