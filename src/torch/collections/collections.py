@@ -129,7 +129,7 @@ def collection_specimens(collectionid):
     searchString = request.args.get('searchString')
     onlyError = request.args.get('onlyError')
 
-    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid) 
+    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0)
     if searchString != None : 
         specimens = specimens.filter(or_(Specimen.name.contains(searchString), Specimen.barcode.contains(searchString))) #todo filter by status (?)
     
@@ -165,7 +165,7 @@ def specimen(collectioncode, specimenid):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
-
+    prefect_url = current_app.config["PREFECT_ORION_URL"] + "flow-run/" + specimen.flow_run_id
     # prefect errors and flows
     url = get_client().api_url
 
@@ -176,7 +176,30 @@ def specimen(collectioncode, specimenid):
     #     # tasks = await client.read_task_runs(flow_run_filter={id:specimen.flow_run_id})
     #     print(response.json())
 
-    
+    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)
 
-    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images)
-    
+
+@collections_bp.route("/<id>", methods=["DELETE"])
+def delete(id):
+    collection = db.session.query(Collection).get(id)
+
+    if collection:
+        specimens = db.session.query(Specimen).filter(Specimen.collection_id == id).all()
+        print(specimens)
+        if len(specimens) > 0:
+            return jsonify({"status":"error","statusText":"Impossible to delete a collection with specimens."})
+        
+        db.session.delete(collection)
+        db.session.commit()
+
+    return jsonify({"status":"ok"})
+
+@collections_bp.route("specimen/<id>", methods=["DELETE"])
+def delete_specimen(id):
+    specimen = db.session.query(Specimen).get(id)
+
+    if specimen:        
+        specimen.deleted = 1
+        db.session.commit()
+
+    return jsonify({"status":"ok"})

@@ -58,7 +58,7 @@
   display: flex;
   align-items: center;
   padding: 1rem 1rem;
-  border-bottom: 1px solid #dee2e6;
+  
 }
 
 .specimen {
@@ -164,4 +164,32 @@
 .specimen-footer {
   padding: 0;
   border-top: none;
+}
+
+
+.modal-title{
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--grey-900);
+}
+
+.modal-header{
+  border-bottom: none;
+}
+
+.modal-dialog label{
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--grey-700);
+}
+
+.modal-footer{
+  border-top: none;
+  padding: 0;
+}
+
+.modal-footer .btn{
+  margin:0;
 }

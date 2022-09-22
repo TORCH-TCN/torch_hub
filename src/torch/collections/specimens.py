@@ -17,7 +17,7 @@ from sqlalchemy.orm import relationship
 class Specimen(Base):
     __tablename__ = "specimen"
     id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
+    name = Column(String(150))
     create_date = Column(DateTime(timezone=True), default=func.now())
     upload_path = Column(Text)
     barcode = Column(String(20))
@@ -25,6 +25,8 @@ class Specimen(Base):
     catalog_number = Column(String(150))
     flow_run_id = Column(String(150))
     flow_run_state = Column(String(150))
+    failed_task = Column(String(150))
+    deleted = Column(Integer, default=0)
     images = relationship("SpecimenImage")
 
 
