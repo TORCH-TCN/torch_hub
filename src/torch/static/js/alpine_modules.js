@@ -125,6 +125,7 @@ document.addEventListener('alpine:init',()=>{
         notifications: [],
         open: false,
         search: "",
+        onlyErrorToggle: false,
         loading: false,
         fileCounter: 0,
         uploadingMessage: "Uploading <span id='fileName'></span>",
@@ -133,13 +134,8 @@ document.addEventListener('alpine:init',()=>{
         },
         init(){
             console.log('specimens init', collectionid);
-
-            this.loading = true;
-            this.getSpecimens(collectionid).then(data=>{
-                this.specimens = data;
-                this.filteredSpecimens = data;
-                this.loading = false;
-            })
+            
+            this.searchSpecimen();           
 
             var socket = io();
 
@@ -147,47 +143,38 @@ document.addEventListener('alpine:init',()=>{
                 console.log('a user connected');
             });
 
-            socket.on('notify', (n) => {
-                this.loading = true;
-                this.getSpecimens(collectionid).then(data=>{
-                    data.forEach(x => {
-                        if(x.id == n.specimenid){
-                            x.progress = n.progress;
-                            x.style = "width: " + x.progress + "%"
-                        }
-                    });
-                    this.specimens = data;
-                    this.loading = false;
-                })
-
-               
+            socket.on('notify', (s) => {
+                this.updateSpecimenCard(s); //todo update s paramenter back
             })
+        },
+        updateSpecimenCard(s){
+            var sIndex = this.specimens.map(x=>x.id).indexOf(s.id);
+                
+            if (sIndex > -1){
+                this.specimens[sIndex].progress = s.progress;
+                this.specimens[sIndex].style = "width: " + s.progress + "%";
+            }
+            else{
+                s.upload_path = s.upload_path.replace("torch\\","../");
+                this.specimens.push(s);
+                this.updateSpecimenCard(s);
+            }
         },
         openModal() {
             this.fileCounter = 0;
             document.getElementById("uploadingMessageContainer").style.display="none";
             this.open = true;
         },
-        getSpecimens(collectionid){            
-            return fetch(`/collections/specimens/${collectionid}`, {
+        searchSpecimen() {
+            this.loading = true;
+            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}&onlyError=${this.onlyErrorToggle}`, {
                 method: "GET"
-              }).then((_res) => {
-                return _res.json().then(data=>{
-                    
+            }).then((_res) => {                
+                _res.json().then(data => {
                     data.forEach(x => {
                         x.upload_path = x.upload_path.replace("torch\\","../");
                         x.create_date = (new Date(x.create_date)).toLocaleDateString()
                     });
-                    return data;
-                })
-              });
-        },
-        searchSpecimen() {
-            this.loading = true;
-            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}`, {
-                method: "GET"
-            }).then((_res) => {                
-                _res.json().then(data => {
                     this.specimens = data;    
                     this.loading = false;              
                 })
@@ -218,7 +205,10 @@ document.addEventListener('alpine:init',()=>{
                     alert('Failed to remove the specimen');
                 });
               }
+        },
+        showOnlyError() {
+            this.onlyErrorToggle = !this.onlyErrorToggle;
+            this.searchSpecimen();
         }                       
     }));
-
 })
