@@ -22,14 +22,14 @@ async def process_specimen(specimen, config):
         logger.info(f"Saving {specimen.name} to database...")
         save_specimen(specimen, config, flow_run_id, flow_run_state)
         id = specimen.id
-        n.send(sdata(id,50))
+        n.send(sdata(specimen,50))
 
         # logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
         # herbar(specimen,config)
         # n.send(sdata(id,20))
 
         logger.info("Simulating error for testing purposes")
-        test_task(specimen,config)
+        # test_task(specimen,config)
         
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
         generate_derivatives(specimen, config)
@@ -39,16 +39,16 @@ async def process_specimen(specimen, config):
         save_specimen(specimen, config, flow_run_id, "Completed")
         #upload.map(image=specimen.images, config=unmapped(config))
         #save_specimen(specimen, config, flow_run_id, flow_run_state) #todo solve db locked issue
-        n.send(sdata(id, 100, "Completed"))
+        n.send(sdata(specimen, 100, "Completed"))
     except:
         logger.error(f"Error running process_specimen flow")
-        n.send(sdata(specimen.id, 100, "Failed"))
+        n.send(sdata(specimen, 100, "Failed"))
         
 
-def sdata(id,progress,state = None,errors = None):
+def sdata(specimen,progress,state = None,errors = None):
     state = state if state != None else "Running"
     errors = errors if errors != None else []
-    return {"specimenid":id, "state":state, "progress": progress,"errors":errors}
+    return {"id":specimen.id, "name": specimen.name, "upload_path": specimen.upload_path, "flow_run_state":state, "progress": progress,"errors":errors}
 
 
 @task(name="test_task_error")

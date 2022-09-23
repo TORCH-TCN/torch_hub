@@ -1,9 +1,13 @@
-{% extends "base.html" %} 
-{% block title %}Specimens{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% block title %}Specimens{% endblock %} {% block
+content %}
 
-<div x-data="specimens({{collection.id}})" class="page-container" @close-modal.window="open = false"
-  @increment-counter.window="updateCounter(1)" @decrement-counter.window="updateCounter(-1)">
+<div
+  x-data="specimens({{collection.id}})"
+  class="page-container"
+  @close-modal.window="open = false"
+  @increment-counter.window="updateCounter(1)"
+  @decrement-counter.window="updateCounter(-1)"
+>
   <div class="back-page">
     <a href="/collections" class="back-link">
       <img src="../../static//images/arrow-left.svg" alt="Left arrow" />
@@ -15,7 +19,13 @@
       <h5 class="mb-0">{{collection.name}}</h5>
     </div>
     <div class="right searchbar">
-      <input class="search-input" type="text" placeholder="Search" x-model="search" @keyup="searchSpecimen()" />
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search"
+        x-model="search"
+        @keyup="searchSpecimen()"
+      />
       <button x-on:click="searchSpecimen()">
         <i class="fa fa-search" style="font-size: 18px"> </i>
       </button>
@@ -25,6 +35,15 @@
     <div class="main-container-header">
       <div class="left">
         <p class="xsmall">All / {{collection.code}}</p>
+      </div>
+      <div class="right">
+        <div class="list-sort">
+          <label class="switch">
+            <input type="checkbox" x-model="onlyErrorToggle" @click="showOnlyError" />
+            <span class="slider round"></span>
+          </label>
+          <p class="xsmall">Show only errors</p>
+        </div>
       </div>
     </div>
     <div class="main-container-body p-4">
@@ -40,7 +59,12 @@
         <div x-show="open" class="modal fade show">
           <div class="modal-dialog-specimen">
             <!-- Dialog -->
-            <div x-show="open" x-transition class="modal-content" @mousedown.outside="open = false">
+            <div
+              x-show="open"
+              x-transition
+              class="modal-content"
+              @mousedown.outside="open = false"
+            >
               <!-- mousedown.outside="open = false" -->
               <!-- Modal Title -->
               <div class="modal-header specimen">
@@ -52,29 +76,40 @@
               <div class="p-4">
                 <div class="form-group">
                   <div class="upload-box">
-                    <form id="dropbox" action="{{ url_for('collections.upload', collectionid=collection.code) }}"
-                      class="dropzone">
+                    <form
+                      id="dropbox"
+                      action="{{ url_for('collections.upload', collectionid=collection.code) }}"
+                      class="dropzone"
+                    >
                       <div class="dz-message" data-dz-message>
                         <span style="color: #667085">
-                          <img src="../static/images/upload_icon.svg" alt="Upload cloud icon" /><br />
+                          <img
+                            src="../static/images/upload_icon.svg"
+                            alt="Upload cloud icon"
+                          /><br />
                           <span style="color: #6941c6">Click to upload</span>
                           or drag and drop<br />
-                          PNG or JPG</span>
+                          PNG or JPG</span
+                        >
                       </div>
                     </form>
                   </div>
                 </div>
 
-                <div class="modal-footer specimen-footer" style="display:none" id="uploadingMessageContainer">
+                <div
+                  class="modal-footer specimen-footer"
+                  style="display: none"
+                  id="uploadingMessageContainer"
+                >
                   <div class="upload-message">
                     <span x-html="uploadingMessage"></span>
                     <template x-if="fileCounter > 1">
-                      <span x-html="'&nbsp;and other ' + (fileCounter - 1) + ' files...'"></span>
+                      <span
+                        x-html="'&nbsp;and other ' + (fileCounter - 1) + ' files...'"
+                      ></span>
                     </template>
-
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -97,30 +132,65 @@
 
           <template x-for="s in specimens">
             <div>
-              <div class="collection-card" :alt="s.name" x-on:click="openPage(s.id)">
+              <div
+                class="collection-card"
+                :alt="s.name"
+                x-on:click="openPage(s.id)"
+              >
                 <div x-data="{ open: false }" class="menu-dropdown">
-                  <button @click="open = ! open" class="menu-dropbtn" @click.stop>
+                  <button
+                    @click="open = ! open"
+                    class="menu-dropbtn"
+                    @click.stop
+                  >
                     <img src="../static/images/list.png" alt="menu" />
                   </button>
-                  <div x-show="open" @click.outside="open = false" class="menu-dropdown-content" @click.stop>
+                  <div
+                    x-show="open"
+                    @click.outside="open = false"
+                    class="menu-dropdown-content"
+                    @click.stop
+                  >
                     <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
                   </div>
                 </div>
 
-                <img :src="s.upload_path" :alt="s.name" x-show="s.flow_run_state != 'Failed'" />
-                <img src="../static/images/error.png" :alt="s.name" x-show="s.flow_run_state == 'Failed'" />
+                <img
+                  :src="s.upload_path"
+                  :alt="s.name"
+                  x-show="s.flow_run_state != 'Failed'"
+                />
+                <img
+                  src="../static/images/error.png"
+                  :alt="s.name"
+                  x-show="s.flow_run_state == 'Failed'"
+                />
                 <div class="card-body">
                   <h5 x-text="s.name"></h5>
-                  <p x-text="s.create_date"
-                    x-show="(!s.progress || s.progress == 100) && s.flow_run_state == 'Completed'"></p>
-                  <div class="progress" x-show="s.progress && s.flow_run_state == 'Running'">
-                    <div class="progress-bar bg-success" role="progressbar" :style="s.style" :aria-valuenow="s.progress"
-                      aria-valuemin="0" aria-valuemax="100"></div>
+                  <p
+                    x-text="s.create_date"
+                    x-show="(!s.progress || s.progress == 100) && s.flow_run_state == 'Completed'"
+                  ></p>
+                  <div
+                    class="progress"
+                    x-show="s.progress && s.flow_run_state == 'Running'"
+                  >
+                    <div
+                      class="progress-bar bg-success"
+                      role="progressbar"
+                      :style="s.style"
+                      :aria-valuenow="s.progress"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
                     <!-- <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                                   <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> -->
                   </div>
-                  <p class="text-danger" x-show="s.flow_run_state == 'Failed'" x-text="'Error | ' + s.failed_task">
-                  </p>
+                  <p
+                    class="text-danger"
+                    x-show="s.flow_run_state == 'Failed'"
+                    x-text="'Error | ' + s.failed_task"
+                  ></p>
                 </div>
               </div>
             </div>

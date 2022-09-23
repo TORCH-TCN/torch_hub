@@ -133,6 +133,9 @@ def collection_specimens(collectionid):
     if searchString != None : 
         specimens = specimens.filter(or_(Specimen.name.contains(searchString), Specimen.barcode.contains(searchString))) #todo filter by status (?)
     
+    if onlyError == 'true' :
+        specimens = specimens.filter(func.lower(Specimen.flow_run_state) == 'failed')
+
     return json.dumps([ob.as_dict() for ob in specimens.all()],indent=4, sort_keys=True, default=str)
 
 

@@ -40,4 +40,4 @@ if __name__ == "__main__":
 
     check_default_institution(app)
     app.run(debug=True)
-    #socketio.run(app)
+    # socketio.run(app)
