@@ -154,6 +154,9 @@
 .card-body p {
   font-size: 14px;
   color: #9d9da4;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
 }
 
 .progress {
