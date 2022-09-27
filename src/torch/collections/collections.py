@@ -12,7 +12,6 @@ from werkzeug.utils import secure_filename
 from prefect.client import get_client
 from prefect.orion.schemas.filters import FlowFilter, FlowRunFilter, FlowRunFilterId
 from torch.tasks.process_specimen import process_specimen
-import asyncio
 
 class Collection(Base):
     __tablename__ = "collection"
@@ -58,7 +57,7 @@ home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
 def notify_specimen_update(specimen,state):
-    socketio.emit('notify',{"id":specimen.id, "name": specimen.name, "upload_path": specimen.web_url(), "create_date": str(specimen.create_date), "flow_run_state":state})
+    socketio.emit('notify',{"id":specimen.id, "name": specimen.name, "cardimg": getSpecimenCardImage(specimen), "create_date": str(specimen.create_date), "flow_run_state":state})
 
 def get_default_institution():
     return db.session.query(Institution).first()
@@ -101,6 +100,10 @@ def collections_search():
     
     return json.dumps(collectionsdict,indent=4, sort_keys=True, default=str)
 
+
+def getCollectionCardImage(collection):
+    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
+    return img.web_url() if img != None else "../static/images/default.jpg"
 
 def getCollectionCardImage(collection):
     img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
