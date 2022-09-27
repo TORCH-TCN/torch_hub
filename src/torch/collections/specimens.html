@@ -62,14 +62,16 @@ content %}
             <div
               x-show="open"
               x-transition
-              class="modal-content"
+              class="modal-content specimen-modal"
               @mousedown.outside="open = false"
             >
-              <!-- mousedown.outside="open = false" -->
               <!-- Modal Title -->
               <div class="modal-header specimen">
                 <h5 class="modal-title"></h5>
-                <button @click="open = false" class="btn-close">X</button>
+                
+                <button @click="open = false" class="btn-close">
+                  <img src="../static/images/close_icon.svg" />
+                </button>
               </div>
 
               <!-- Modal Body -->
@@ -82,33 +84,24 @@ content %}
                       class="dropzone"
                     >
                       <div class="dz-message" data-dz-message>
-                        <span style="color: #667085">
                           <img
                             src="../static/images/upload_icon.svg"
                             alt="Upload cloud icon"
-                          /><br />
-                          <span style="color: #6941c6">Click to upload</span>
-                          or drag and drop<br />
-                          PNG or JPG</span
-                        >
+                          />
+                          <p><span>Click to upload</span> or drag and drop</p>
+                          <p>PNG or JPG</p>
                       </div>
                     </form>
                   </div>
                 </div>
 
-                <div
-                  class="modal-footer specimen-footer"
-                  style="display: none"
-                  id="uploadingMessageContainer"
-                >
-                  <div class="upload-message">
-                    <span x-html="uploadingMessage"></span>
-                    <template x-if="fileCounter > 1">
-                      <span
-                        x-html="'&nbsp;and other ' + (fileCounter - 1) + ' files...'"
-                      ></span>
-                    </template>
-                  </div>
+                <div class="modal-footer specimen-footer" id="uploadingMessageContainer">
+                  <span x-html="uploadingMessage" style="margin-right:0"></span>
+                  <template x-if="fileCounter > 1">
+                    <span
+                      x-html="'and other ' + (fileCounter - 1) + ' file(s)...'"
+                    ></span>
+                  </template>
                 </div>
               </div>
             </div>
@@ -156,7 +149,7 @@ content %}
                 </div>
 
                 <img
-                  :src="s.upload_path"
+                  :src="s.cardimg"
                   :alt="s.name"
                   x-show="s.flow_run_state != 'Failed'"
                 />

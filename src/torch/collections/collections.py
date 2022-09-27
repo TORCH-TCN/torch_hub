@@ -92,9 +92,19 @@ def collections_search():
     collections = (
         db.session.query(Collection).filter_by(institution_id=institution.id).all()
     )
-    
-    return json.dumps([ob.as_dict() for ob in collections],indent=4, sort_keys=True, default=str)
 
+    collectionsdict = []
+    for c in collections:
+        cd = c.as_dict()
+        cd["cardimg"] = getCollectionCardImage(c)
+        collectionsdict.append(cd)
+    
+    return json.dumps(collectionsdict,indent=4, sort_keys=True, default=str)
+
+
+def getCollectionCardImage(collection):
+    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
+    return img.web_url() if img != None else "../static/images/default.jpg"
 
 @collections_bp.route("/", methods=["POST"])
 def collectionspost():
@@ -141,12 +151,19 @@ def collection_specimens(collectionid):
     if onlyError == 'true' :
         specimens = specimens.filter(func.lower(Specimen.flow_run_state) == 'failed')
 
-    for s in specimens:
-        s.upload_path = s.web_url()
+   
+    specimensdict = []
+    for s in specimens.all():
+        sd = s.as_dict()
+        sd["cardimg"] = getSpecimenCardImage(s)
+        specimensdict.append(sd)
 
-    return json.dumps([ob.as_dict() for ob in specimens.all()],indent=4, sort_keys=True, default=str)
+    return json.dumps(specimensdict,indent=4, sort_keys=True, default=str)
 
 
+def getSpecimenCardImage(specimen):
+    img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimen.id).filter(SpecimenImage.size == 'THUMB').first()
+    return img.web_url() if img != None else specimen.web_url()
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
 def upload(collectionid):
