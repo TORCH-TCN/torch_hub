@@ -134,13 +134,17 @@
   color: var(--gray-500);
 }
 
+
 #dropbox {
   width: 552px;
   height: 262px;
   border-radius: 8px;
-  display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.dropzone .dz-message {
+  margin: 4em 0 !important;
 }
 
 .dz-message img{
