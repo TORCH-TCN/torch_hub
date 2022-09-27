@@ -62,14 +62,16 @@ content %}
             <div
               x-show="open"
               x-transition
-              class="modal-content"
+              class="modal-content specimen-modal"
               @mousedown.outside="open = false"
             >
-              <!-- mousedown.outside="open = false" -->
               <!-- Modal Title -->
               <div class="modal-header specimen">
                 <h5 class="modal-title"></h5>
-                <button @click="open = false" class="btn-close">X</button>
+                
+                <button @click="open = false" class="btn-close">
+                  <img src="../static/images/close_icon.svg" />
+                </button>
               </div>
 
               <!-- Modal Body -->
@@ -82,33 +84,24 @@ content %}
                       class="dropzone"
                     >
                       <div class="dz-message" data-dz-message>
-                        <span style="color: #667085">
                           <img
                             src="../static/images/upload_icon.svg"
                             alt="Upload cloud icon"
-                          /><br />
-                          <span style="color: #6941c6">Click to upload</span>
-                          or drag and drop<br />
-                          PNG or JPG</span
-                        >
+                          />
+                          <p><span>Click to upload</span> or drag and drop</p>
+                          <p>PNG or JPG</p>
                       </div>
                     </form>
                   </div>
                 </div>
 
-                <div
-                  class="modal-footer specimen-footer"
-                  style="display: none"
-                  id="uploadingMessageContainer"
-                >
-                  <div class="upload-message">
-                    <span x-html="uploadingMessage"></span>
-                    <template x-if="fileCounter > 1">
-                      <span
-                        x-html="'&nbsp;and other ' + (fileCounter - 1) + ' files...'"
-                      ></span>
-                    </template>
-                  </div>
+                <div class="modal-footer specimen-footer" id="uploadingMessageContainer">
+                  <span x-html="uploadingMessage" style="margin-right:0"></span>
+                  <template x-if="fileCounter > 1">
+                    <span
+                      x-html="'and other ' + (fileCounter - 1) + ' file(s)...'"
+                    ></span>
+                  </template>
                 </div>
               </div>
             </div>
@@ -156,7 +149,7 @@ content %}
                 </div>
 
                 <img
-                  :src="s.upload_path"
+                  :src="s.cardimg"
                   :alt="s.name"
                   x-show="s.flow_run_state != 'Failed'"
                 />
@@ -167,30 +160,18 @@ content %}
                 />
                 <div class="card-body">
                   <h5 x-text="s.name"></h5>
-                  <p
-                    x-text="s.create_date"
-                    x-show="(!s.progress || s.progress == 100) && s.flow_run_state == 'Completed'"
-                  ></p>
-                  <div
-                    class="progress"
-                    x-show="s.progress && s.flow_run_state == 'Running'"
-                  >
-                    <div
-                      class="progress-bar bg-success"
-                      role="progressbar"
-                      :style="s.style"
-                      :aria-valuenow="s.progress"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                    <!-- <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                  <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> -->
-                  </div>
-                  <p
-                    class="text-danger"
-                    x-show="s.flow_run_state == 'Failed'"
-                    x-text="'Error | ' + s.failed_task"
-                  ></p>
+                  <template x-if="s.flow_run_state == 'Completed'">
+                    <p x-text="s.create_date"></p>
+                  </template>
+                  <template x-if="s.flow_run_state == 'Running'">
+                    <div class="d-flex align-items-center">
+                      <div class="spinner-border spinner-border-sm ml-auto text-secondary" role="status" aria-hidden="true"></div>
+                    </div>
+                  </template>
+                  <template x-if="s.flow_run_state == 'Failed'">
+                    <p class="text-danger" x-text="'Error | ' + s.failed_task"></p>
+                  </template>
+                  
                 </div>
               </div>
             </div>

@@ -7,7 +7,7 @@ function upload(files) {
 
 let myDropzone = Dropzone.options.dropbox = {
   uploadMultiple: true,
-  parallelUploads: 10,
+  parallelUploads: 1,
   paramName: (n) => 'file',
   init: function() {
     this.on("addedfile", file => {

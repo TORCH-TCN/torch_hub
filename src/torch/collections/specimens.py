@@ -12,7 +12,7 @@ from sqlalchemy import (
 from torch import Base
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-
+from flask import current_app
 
 class Specimen(Base):
     __tablename__ = "specimen"
@@ -37,6 +37,12 @@ class Specimen(Base):
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
+    def web_url(self):
+        base_path = Path(current_app.config['BASE_DIR'])
+        web_path = Path(self.upload_path).relative_to(base_path)
+        web_path = "/" + "/".join(web_path.parts)
+        return web_path
+
 
 class SpecimenImage(Base):
     __tablename__ = "specimenimage"
@@ -56,9 +62,7 @@ class SpecimenImage(Base):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def web_url(self):
-        base_path = Path("torch") # Hardcoded for now but perhaps needs to be added to a config file or is a property of a Flask app?
-        # Get realtive path from base path
+        base_path = Path(current_app.config['BASE_DIR']) 
         web_path = Path(self.url).relative_to(base_path)
-        # Make path in URL format, adding leading slash to make it absolute path
         web_path = "/" + "/".join(web_path.parts)
         return web_path
