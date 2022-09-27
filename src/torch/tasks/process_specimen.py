@@ -11,9 +11,8 @@ from prefect.task_runners import SequentialTaskRunner
 from multiprocessing import Process
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
-async def process_specimen(specimen, config):
+def process_specimen(specimen, config):
     
-    n = Notification(config=config)
     logger = get_run_logger()
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
     flow_run_state = prefect.context.get_run_context().flow_run.state_name
@@ -21,28 +20,15 @@ async def process_specimen(specimen, config):
     try:
         logger.info(f"Saving {specimen.name} to database...")
         save_specimen(specimen, config, flow_run_id, flow_run_state)
-        id = specimen.id
-        n.send(sdata(specimen,50))
-
-        # logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
-        # herbar(specimen,config)
-        # n.send(sdata(id,20))
-
-        logger.info("Simulating error for testing purposes")
-        # test_task(specimen,config)
+        logger.info(f"{specimen.name} saved...")
         
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
         generate_derivatives(specimen, config)
-        #n.send(sdata(id,40))
         
-        logger.info(f"Running upload {specimen.name} (id:{specimen.id})...")
         save_specimen(specimen, config, flow_run_id, "Completed")
-        #upload.map(image=specimen.images, config=unmapped(config))
-        #save_specimen(specimen, config, flow_run_id, flow_run_state) #todo solve db locked issue
-        n.send(sdata(specimen, 100, "Completed"))
     except:
         logger.error(f"Error running process_specimen flow")
-        n.send(sdata(specimen, 100, "Failed"))
+        #n.send(sdata(specimen, 100, "Failed"))
         
 
 def sdata(specimen,progress,state = None,errors = None):

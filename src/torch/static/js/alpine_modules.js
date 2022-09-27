@@ -144,18 +144,17 @@ document.addEventListener('alpine:init',()=>{
             });
 
             socket.on('notify', (s) => {
-                this.updateSpecimenCard(s); //todo update s paramenter back
+                this.updateSpecimenCard(s);
             })
+
         },
         updateSpecimenCard(s){
             var sIndex = this.specimens.map(x=>x.id).indexOf(s.id);
                 
             if (sIndex > -1){
-                this.specimens[sIndex].progress = s.progress;
-                this.specimens[sIndex].style = "width: " + s.progress + "%";
+                this.specimens[sIndex].flow_run_state = s.flow_run_state;
             }
             else{
-                s.upload_path = s.upload_path.replace("torch\\","../");
                 this.specimens.push(s);
                 this.updateSpecimenCard(s);
             }
@@ -182,6 +181,9 @@ document.addEventListener('alpine:init',()=>{
         },  
         updateCounter(e) {
             this.fileCounter = (this.fileCounter + e);
+            if(this.fileCounter == 0){
+                this.open = false;
+            }
         },
         deleteSpecimen(id){
             

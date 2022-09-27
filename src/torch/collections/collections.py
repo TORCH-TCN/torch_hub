@@ -5,7 +5,7 @@ from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify
 from flask_security import current_user, login_required
 from sqlalchemy import Column, Integer, String, ForeignKey, func
-from torch import db, Base
+from torch import db, Base, socketio
 from torch.collections.specimens import Specimen, SpecimenImage
 from torch.institutions.institutions import Institution
 from werkzeug.utils import secure_filename
@@ -32,13 +32,13 @@ class Collection(Base):
 
     def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
-        target_dir = os.path.join("torch","static","uploads", batch_id)
+        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.name, batch_id)
         os.makedirs(target_dir)
-
+        
         for file in files:
             filename = secure_filename(file.filename)
             destination = os.path.join(target_dir, filename)
-            
+                        
             file.save(destination)
 
             specimen = Specimen(
@@ -47,13 +47,18 @@ class Collection(Base):
 
             db.session.add(specimen)
             db.session.commit()
-              
-            asyncio.run(process_specimen(specimen, config))
+            notify_specimen_update(specimen,"Running")
+            
+            result = process_specimen(specimen, config)
+            notify_specimen_update(specimen,"Completed")
+            
 
 
 home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
+def notify_specimen_update(specimen,state):
+    socketio.emit('notify',{"id":specimen.id, "name": specimen.name, "upload_path": specimen.web_url(), "create_date": str(specimen.create_date), "flow_run_state":state})
 
 def get_default_institution():
     return db.session.query(Institution).first()
@@ -87,9 +92,19 @@ def collections_search():
     collections = (
         db.session.query(Collection).filter_by(institution_id=institution.id).all()
     )
-    
-    return json.dumps([ob.as_dict() for ob in collections],indent=4, sort_keys=True, default=str)
 
+    collectionsdict = []
+    for c in collections:
+        cd = c.as_dict()
+        cd["cardimg"] = getCollectionCardImage(c)
+        collectionsdict.append(cd)
+    
+    return json.dumps(collectionsdict,indent=4, sort_keys=True, default=str)
+
+
+def getCollectionCardImage(collection):
+    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
+    return img.web_url() if img != None else "../static/images/default.jpg"
 
 @collections_bp.route("/", methods=["POST"])
 def collectionspost():
@@ -136,9 +151,19 @@ def collection_specimens(collectionid):
     if onlyError == 'true' :
         specimens = specimens.filter(func.lower(Specimen.flow_run_state) == 'failed')
 
-    return json.dumps([ob.as_dict() for ob in specimens.all()],indent=4, sort_keys=True, default=str)
+   
+    specimensdict = []
+    for s in specimens.all():
+        sd = s.as_dict()
+        sd["cardimg"] = getSpecimenCardImage(s)
+        specimensdict.append(sd)
+
+    return json.dumps(specimensdict,indent=4, sort_keys=True, default=str)
 
 
+def getSpecimenCardImage(specimen):
+    img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimen.id).filter(SpecimenImage.size == 'THUMB').first()
+    return img.web_url() if img != None else specimen.web_url()
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
 def upload(collectionid):
@@ -168,9 +193,11 @@ def specimen(collectioncode, specimenid):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
-    prefect_url = current_app.config["PREFECT_ORION_URL"] + "flow-run/" + specimen.flow_run_id
+    
+    orion_url = current_app.config["PREFECT_ORION_URL"] if current_app.config["PREFECT_ORION_URL"] != None else "http://127.0.0.1:4200/"
+    prefect_url = orion_url  + "flow-run/" + specimen.flow_run_id
     # prefect errors and flows
-    url = get_client().api_url
+    #url = get_client().api_url
 
     # async with get_client() as client:
     #     response = await client.hello()

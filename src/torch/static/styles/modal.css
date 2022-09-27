@@ -116,10 +116,47 @@
   box-shadow: var(--shadow-box-xs);
 }
 
+.specimen-modal{
+  background: var(--grey-50);
+  border-radius: 20px;
+}
+
+.specimen-footer {
+  padding: 0;
+  border-top: none;
+  justify-content: flex-start;
+}
+
+.specimen-footer span{
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--gray-500);
+}
+
 #dropbox {
   width: 552px;
   height: 262px;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dz-message img{
+  margin-bottom: 12px;
+}
+
+.dz-message span{  
+  color: var(--primary-700);
+  font-weight: 500;
+}
+
+.dz-message{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gray-500);
 }
 
 .text-center {
@@ -161,10 +198,7 @@
   line-height: 185%;
 }
 
-.specimen-footer {
-  padding: 0;
-  border-top: none;
-}
+
 
 
 .modal-title{

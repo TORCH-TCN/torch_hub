@@ -28,9 +28,9 @@ content %}
             </div>
           </div>
           
-          <img class="specimen-image" src="{{specimen.upload_path.replace('torch/','/')}}" alt=""/>
+          <img class="specimen-image" src="{{specimen.web_url()}}" alt=""/>
           <div class="body-left-text">
-            <p><b>Route:</b> {{specimen.upload_path}}</p>
+            <p><b>Route:</b> <a href="{{specimen.web_url()}}" target="_blank">{{specimen.web_url()}}</a></p>
             <p><b>Name:</b> {{specimen.name}}</p>
             <p><b>Imaged</b> {{specimen.create_date}}</p>
             <p><b>Collection:</b> {{collection.name}}</p>

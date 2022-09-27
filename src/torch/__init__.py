@@ -1,4 +1,5 @@
 import json
+import os
 from flask import Flask
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,8 +16,13 @@ socketio = SocketIO()
 
 def create_app():
     app = Flask(__name__, template_folder=".")
-
+    
     app.config.from_file("config.json", load=json.load)
+
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    
+    app.config['BASE_DIR'] = basedir
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'torch-hub.db')
 
     db.init_app(app)
     socketio.init_app(app)
