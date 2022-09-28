@@ -153,6 +153,7 @@ document.addEventListener('alpine:init',()=>{
                 
             if (sIndex > -1){
                 this.specimens[sIndex].flow_run_state = s.flow_run_state;
+                this.specimens[sIndex].failed_task = s.failed_task;
             }
             else{
                 this.specimens.push(s);

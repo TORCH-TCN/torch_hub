@@ -47,9 +47,8 @@ class Collection(Base):
             db.session.add(specimen)
             db.session.commit()
             notify_specimen_update(specimen,"Running")
-            
-            result = process_specimen(specimen, config)
-            notify_specimen_update(specimen,"Completed")
+            state = process_specimen(specimen, config, return_state=True)
+            notify_specimen_update(specimen,state.name)
             
 
 
@@ -57,7 +56,8 @@ home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
 def notify_specimen_update(specimen,state):
-    socketio.emit('notify',{"id":specimen.id, "name": specimen.name, "cardimg": getSpecimenCardImage(specimen), "create_date": str(specimen.create_date), "flow_run_state":state})
+    db.session.refresh(specimen)
+    socketio.emit('notify',{"id":specimen.id, "name": specimen.name, "cardimg": getSpecimenCardImage(specimen), "create_date": str(specimen.create_date), "flow_run_state":state, "failed_task": specimen.failed_task})
 
 def get_default_institution():
     return db.session.query(Institution).first()
