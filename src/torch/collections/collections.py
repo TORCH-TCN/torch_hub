@@ -137,8 +137,8 @@ def collection(collectioncode):
 
 @collections_bp.route("/specimens/<collectionid>", methods=["GET"])
 def collection_specimens(collectionid):
-    searchString = request.args.get('searchString')
-    onlyError = request.args.get('onlyError')
+    searchString = request.args.get('search_string')
+    onlyError = request.args.get('only_error')
     collection = db.session.query(Collection).get(collectionid)
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 14, type=int)
@@ -161,8 +161,14 @@ def collection_specimens(collectionid):
         sd["cardimg"] = s.card_image()
         specimensdict.append(sd)
 
-    return {'specimens': json.dumps(specimensdict,indent=4, sort_keys=True, default=str), 'totalSpecimens': totalSpecimens}
+    return {'specimens': json.dumps(specimensdict,indent=4, sort_keys=True, default=str), 'totalSpecimens': totalSpecimens, 'collection': json.dumps(collection.as_dict(),indent=4, sort_keys=True, default=str)}
 
+@collections_bp.route("/specimen/retry/<specimenid>", methods=["POST"])
+def retry(specimenid):
+    specimen = db.session.query(Specimen).get(specimenid)
+    collection = db.session.query(Collection).get(specimen.collection_id)
+    run_workflow(collection,specimen,config=current_app.config)
+    return ajax_response(True,specimenid)
 
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
