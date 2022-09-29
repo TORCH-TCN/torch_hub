@@ -167,11 +167,8 @@ def collection_specimens(collectionid):
         sd["cardimg"] = getSpecimenCardImage(s)
         specimensdict.append(sd)
 
-    # return {pagination=pagination, specimensList: json.dumps([ob.as_dict() for ob in specimens.all()], indent=4, sort_keys=True, default=str)}
-
     return {'specimens': json.dumps(specimensdict,indent=4, sort_keys=True, default=str), 'totalSpecimens': totalSpecimens}
 
-    # return json.dumps(specimensdict,indent=4, sort_keys=True, default=str)
 
 
 def getSpecimenCardImage(specimen):

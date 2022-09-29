@@ -175,7 +175,6 @@ document.addEventListener('alpine:init',()=>{
             }).then((_res) => {                
                 _res.json().then(data => {
                    specimensList = JSON.parse(data.specimens)
-                        console.log('data foreach', data)
                         specimensList.forEach(x => {
                             x.upload_path = x.upload_path.replace("torch\\","../");
                             x.create_date = (new Date(x.create_date)).toLocaleDateString()
