@@ -128,6 +128,9 @@ document.addEventListener('alpine:init',()=>{
         onlyErrorToggle: false,
         loading: false,
         fileCounter: 0,
+        totalSpecimens: 0,
+        pageNumber: 1,
+        per_page: 14,
         uploadingMessage: "Uploading <span id='fileName'></span>",
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
@@ -166,16 +169,21 @@ document.addEventListener('alpine:init',()=>{
         },
         searchSpecimen() {
             this.loading = true;
-            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}&onlyError=${this.onlyErrorToggle}`, {
+            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}&onlyError=${this.onlyErrorToggle}&page=${this.pageNumber}&per_page=${this.per_page}`, {
+            // fetch(`/collections/specimens/${collectionid}?searchString=${this.search}&onlyError=${this.onlyErrorToggle}`, {
                 method: "GET"
             }).then((_res) => {                
                 _res.json().then(data => {
-                    data.forEach(x => {
-                        x.upload_path = x.upload_path.replace("torch\\","../");
-                        x.create_date = (new Date(x.create_date)).toLocaleDateString()
-                    });
-                    this.specimens = data;    
-                    this.loading = false;              
+                   specimensList = JSON.parse(data.specimens)
+                        console.log('data foreach', data)
+                        specimensList.forEach(x => {
+                            x.upload_path = x.upload_path.replace("torch\\","../");
+                            x.create_date = (new Date(x.create_date)).toLocaleDateString()
+                        });
+                        this.specimens = specimensList;  
+                        this.totalSpecimens = data.totalSpecimens;  
+                        this.loading = false;            
+                                         
                 })
             }) 
         },  
@@ -211,6 +219,29 @@ document.addEventListener('alpine:init',()=>{
         showOnlyError() {
             this.onlyErrorToggle = !this.onlyErrorToggle;
             this.searchSpecimen();
-        }                       
+        },
+        pageCount() {
+            return Math.ceil(this.totalSpecimens / this.per_page);
+        },         
+        pages() {
+            return Array.from({
+              length: Math.ceil(this.totalSpecimens / this.per_page),
+            });
+        },      
+        viewPage(index) {
+            this.pageNumber = index;
+            this.searchSpecimen();
+        },    
+        //Next Page
+        nextPage() {
+            this.pageNumber++;
+            this.searchSpecimen();
+        },
+
+          //Previous Page
+        prevPage() {
+            this.pageNumber--;
+            this.searchSpecimen();
+        },    
     }));
 })
