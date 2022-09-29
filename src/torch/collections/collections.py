@@ -4,7 +4,7 @@ import os
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify
 from flask_security import current_user, login_required
-from sqlalchemy import Column, Integer, String, ForeignKey, func
+from sqlalchemy import Column, Integer, String, ForeignKey, func, desc
 from torch import db, Base
 from torch.collections.specimens import Specimen, SpecimenImage
 from torch.collections.workflow import run_workflow
@@ -140,21 +140,29 @@ def collection_specimens(collectionid):
     searchString = request.args.get('searchString')
     onlyError = request.args.get('onlyError')
     collection = db.session.query(Collection).get(collectionid)
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 14, type=int)
+
     specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0)
+
     if searchString != None : 
         specimens = specimens.filter(or_(Specimen.name.contains(searchString), Specimen.barcode.contains(searchString))) #todo filter by status (?)
     
     if onlyError == 'true' :
         specimens = specimens.filter(func.lower(Specimen.flow_run_state) == 'failed')
 
-   
+    totalSpecimens = specimens.count()
+
+    specimens = specimens.order_by(Specimen.id.desc()).paginate(page, per_page=per_page)
+
     specimensdict = []
-    for s in specimens.all():
+    for s in specimens.items:
         sd = s.as_dict()
         sd["cardimg"] = s.card_image()
         specimensdict.append(sd)
 
-    return json.dumps(specimensdict,indent=4, sort_keys=True, default=str)
+    return {'specimens': json.dumps(specimensdict,indent=4, sort_keys=True, default=str), 'totalSpecimens': totalSpecimens}
+
 
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
