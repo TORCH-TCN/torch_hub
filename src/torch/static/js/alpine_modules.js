@@ -158,7 +158,9 @@ document.addEventListener('alpine:init',()=>{
                 this.specimens[sIndex].flow_run_state = s.flow_run_state;
             }
             else{
-                this.specimens.push(s);
+                if(this.specimens.length == this.per_page) this.specimens.pop();
+                
+                this.specimens.unshift(s);
                 this.updateSpecimenCard(s);
             }
         },
