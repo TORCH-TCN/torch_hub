@@ -5,13 +5,12 @@ from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify
 from flask_security import current_user, login_required
 from sqlalchemy import Column, Integer, String, ForeignKey, func
-from torch import db, Base, socketio
+from torch import db, Base
 from torch.collections.specimens import Specimen, SpecimenImage
+from torch.collections.workflow import run_workflow
 from torch.institutions.institutions import Institution
 from werkzeug.utils import secure_filename
-from prefect.client import get_client
-from prefect.orion.schemas.filters import FlowFilter, FlowRunFilter, FlowRunFilterId
-from torch.tasks.process_specimen import process_specimen
+
 
 class Collection(Base):
     __tablename__ = "collection"
@@ -25,6 +24,7 @@ class Collection(Base):
     barcode_prefix = Column(String(15))
     institution_id = Column(Integer, ForeignKey("institution.id"))
     flow_id = Column(String(150))
+    workflow = Column(String(150))
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -46,18 +46,14 @@ class Collection(Base):
 
             db.session.add(specimen)
             db.session.commit()
-            notify_specimen_update(specimen,"Running")
-            state = process_specimen(specimen, config, return_state=True)
-            notify_specimen_update(specimen,state.name)
             
-
+            run_workflow(self,specimen,config)
+            
+        
 
 home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
 
-def notify_specimen_update(specimen,state):
-    db.session.refresh(specimen)
-    socketio.emit('notify',{"id":specimen.id, "name": specimen.name, "cardimg": getSpecimenCardImage(specimen), "create_date": str(specimen.create_date), "flow_run_state":state, "failed_task": specimen.failed_task})
 
 def get_default_institution():
     return db.session.query(Institution).first()
@@ -83,7 +79,6 @@ def collections():
     )
 
 
-
 @collections_bp.route("/search", methods=["GET"])
 def collections_search():
     institution = get_default_institution()
@@ -105,9 +100,6 @@ def getCollectionCardImage(collection):
     img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
     return img.web_url() if img != None else "../static/images/default.jpg"
 
-def getCollectionCardImage(collection):
-    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
-    return img.web_url() if img != None else "../static/images/default.jpg"
 
 @collections_bp.route("/", methods=["POST"])
 def collectionspost():
@@ -128,6 +120,7 @@ def collectionspost():
             catalog_number_regex = jcollection.get('catalog_number_regex',None),
             default_prefix = jcollection.get('default_prefix',None),
             barcode_prefix = jcollection.get('barcode_prefix',None),
+            workflow = 'process_specimen' #todo select with workflow options
         )
         
         local_collection = db.session.merge(new_collection)
@@ -146,7 +139,7 @@ def collection(collectioncode):
 def collection_specimens(collectionid):
     searchString = request.args.get('searchString')
     onlyError = request.args.get('onlyError')
-
+    collection = db.session.query(Collection).get(collectionid)
     specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0)
     if searchString != None : 
         specimens = specimens.filter(or_(Specimen.name.contains(searchString), Specimen.barcode.contains(searchString))) #todo filter by status (?)
@@ -158,15 +151,11 @@ def collection_specimens(collectionid):
     specimensdict = []
     for s in specimens.all():
         sd = s.as_dict()
-        sd["cardimg"] = getSpecimenCardImage(s)
+        sd["cardimg"] = s.card_image()
         specimensdict.append(sd)
 
     return json.dumps(specimensdict,indent=4, sort_keys=True, default=str)
 
-
-def getSpecimenCardImage(specimen):
-    img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimen.id).filter(SpecimenImage.size == 'THUMB').first()
-    return img.web_url() if img != None else specimen.web_url()
 
 @collections_bp.route("/<collectionid>", methods=["POST"])
 def upload(collectionid):
@@ -199,16 +188,7 @@ def specimen(collectioncode, specimenid):
     
     orion_url = current_app.config["PREFECT_ORION_URL"] if current_app.config["PREFECT_ORION_URL"] != None else "http://127.0.0.1:4200/"
     prefect_url = orion_url  + "flow-run/" + specimen.flow_run_id
-    # prefect errors and flows
-    #url = get_client().api_url
-
-    # async with get_client() as client:
-    #     response = await client.hello()
-    #     flow = await client.read_flow_run(specimen.flow_run_id)
-    #     # filter = FlowRunFilter(id=specimen.flow_run_id)
-    #     # tasks = await client.read_task_runs(flow_run_filter={id:specimen.flow_run_id})
-    #     print(response.json())
-
+   
     return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)
 
 

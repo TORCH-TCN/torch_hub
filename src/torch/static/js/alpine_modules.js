@@ -129,6 +129,7 @@ document.addEventListener('alpine:init',()=>{
         loading: false,
         fileCounter: 0,
         uploadingMessage: "Uploading <span id='fileName'></span>",
+        collection: {},
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
@@ -161,9 +162,14 @@ document.addEventListener('alpine:init',()=>{
             }
         },
         openModal() {
-            this.fileCounter = 0;
-            document.getElementById("uploadingMessageContainer").style.display="none";
-            this.open = true;
+            if (this.collection.workflow != null){
+                this.fileCounter = 0;
+                document.getElementById("uploadingMessageContainer").style.display="none";
+                this.open = true;
+            }
+            else{
+                alert("You need to select a workflow for this collection. Go to the settings page.")
+            }
         },
         searchSpecimen() {
             this.loading = true;

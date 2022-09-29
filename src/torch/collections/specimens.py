@@ -9,7 +9,7 @@ from sqlalchemy import (
     ForeignKey,
     Text,
 )
-from torch import Base
+from torch import Base, db
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask import current_app
@@ -42,6 +42,10 @@ class Specimen(Base):
         web_path = Path(self.upload_path).relative_to(base_path)
         web_path = "/" + "/".join(web_path.parts)
         return web_path
+    
+    def card_image(self):
+        img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == self.id).filter(SpecimenImage.size == 'THUMB').first()
+        return img.web_url() if img != None else self.web_url()
 
 
 class SpecimenImage(Base):
