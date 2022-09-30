@@ -160,12 +160,16 @@ document.addEventListener('alpine:init',()=>{
                 this.specimens[sIndex].failed_task = s.failed_task;
             }
             else{
-                this.specimens.push(s);
+                if(this.specimens.length == this.per_page) this.specimens.pop();
+                
+                this.specimens.unshift(s);
                 this.updateSpecimenCard(s);
             }
         },
         openModal() {
+            
             if (this.collection.workflow != null){
+                this.viewPage(1);
                 this.fileCounter = 0;
                 document.getElementById("uploadingMessageContainer").style.display="none";
                 this.open = true;

@@ -372,3 +372,42 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.pagination {
+  width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;    
+  align-items: center;
+  vertical-align: bottom;
+}
+
+.bg-page {
+  background-color: #7F56D9;
+  color: white;
+  font-weight: 700;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+
+.svg-pagination {
+  width: 24px;
+  height: 24px;
+  stroke: currentcolor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page-number {
+  padding-left: 1rem!important;
+  padding-right: 1rem!important;
+  padding-bottom: 0.5rem!important;
+  padding-top: 0.5rem!important;
+  border-radius: 0.25rem!important;
+}
