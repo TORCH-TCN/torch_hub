@@ -196,25 +196,19 @@ content %}
       </template>
 
       <div
-      class="w-full md:w-1/2 mx-auto py-6 flex justify-between items-center"
+      class="pagination"
       x-show="pageCount() > 1"
     >
       <!--First Button-->
       <button
         x-on:click="viewPage(1)"
         :disabled="pageNumber==1"
-        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber==1 }"
+        :class="{ 'disabled' : pageNumber==1 }"
       >
         <svg
-          class="h-8 w-8 text-indigo-600"
-          width="24"
-          height="24"
+          class="svg-pagination"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
         >
           <polygon points="19 20 9 12 19 4 19 20"></polygon>
           <line x1="5" y1="19" x2="5" y2="5"></line>
@@ -225,18 +219,12 @@ content %}
       <button
         x-on:click="prevPage"
         :disabled="pageNumber==1"
-        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber==1 }"
+        :class="{ 'disabled' : pageNumber==1 }"
       >
         <svg
-          class="h-8 w-8 text-indigo-600"
-          width="24"
-          height="24"
+          class="svg-pagination"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
         >
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
@@ -245,8 +233,8 @@ content %}
       <!-- Display page numbers -->
       <template x-for="(page,index) in pages()" :key="index">
         <button
-          class="px-3 py-2 rounded"
-          :class="{ 'bg-primary text-white font-bold' : index+1 === pageNumber }"
+          class="page-number"
+          :class="{ 'bg-page' : index+1 === pageNumber }"
           type="button"
           x-on:click="viewPage(index+1)"
         >
@@ -258,18 +246,12 @@ content %}
       <button
         x-on:click="nextPage"
         :disabled="pageNumber >= pageCount()"
-        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber >= pageCount() }"
+        :class="{ 'disabled' : pageNumber >= pageCount() }"
       >
         <svg
-          class="h-8 w-8 text-indigo-600"
-          width="24"
-          height="24"
+          class="svg-pagination"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
         >
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
@@ -279,18 +261,12 @@ content %}
       <button
         x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
         :disabled="pageNumber >= pageCount()"
-        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber >= pageCount() }"
+        :class="{ 'disabled' : pageNumber >= pageCount() }"
       >
         <svg
-          class="h-8 w-8 text-indigo-600"
-          width="24"
-          height="24"
+          class="svg-pagination"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
         >
           <polygon points="5 4 15 12 5 20 5 4"></polygon>
           <line x1="19" y1="5" x2="19" y2="19"></line>
