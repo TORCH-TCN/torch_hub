@@ -169,7 +169,8 @@ document.addEventListener('alpine:init',()=>{
         openModal() {
             
             if (this.collection.workflow != null){
-                this.viewPage(1);
+                if(this.pageNumber != 1) this.viewPage(1);
+                
                 this.fileCounter = 0;
                 document.getElementById("uploadingMessageContainer").style.display="none";
                 this.open = true;

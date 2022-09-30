@@ -208,7 +208,6 @@ content %}
       class="pagination"
       x-show="pageCount() > 1"
     >
-      <!--First Button-->
       <button
         x-on:click="viewPage(1)"
         :disabled="pageNumber==1"
@@ -224,7 +223,6 @@ content %}
         </svg>
       </button>
 
-      <!--Previous Button-->
       <button
         x-on:click="prevPage"
         :disabled="pageNumber==1"
@@ -239,7 +237,6 @@ content %}
         </svg>
       </button>
 
-      <!-- Display page numbers -->
       <template x-for="(page,index) in pages()" :key="index">
         <button
           class="page-number"
@@ -251,7 +248,7 @@ content %}
         </button>
       </template>
 
-      <!--Next Button-->
+      
       <button
         x-on:click="nextPage"
         :disabled="pageNumber >= pageCount()"
@@ -266,7 +263,6 @@ content %}
         </svg>
       </button>
 
-      <!--Last Button-->
       <button
         x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
         :disabled="pageNumber >= pageCount()"
