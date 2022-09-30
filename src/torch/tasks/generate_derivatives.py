@@ -11,13 +11,13 @@ from torch.tasks.save_specimen import save_specimen
 @task
 def generate_derivatives(specimen: Specimen, config):
 
-    engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
-    
+    engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
+    flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+
     with Session(engine) as session:
 
         try:
             local_specimen = session.merge(specimen) #thread-safe
-            flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
             
             derivatives_to_add = {
                 size: config
@@ -37,7 +37,7 @@ def generate_derivatives(specimen: Specimen, config):
         except:
             session.commit()
             #save state to db and error to specimen
-            save_specimen(specimen,config,flow_run_id,'Failed')
+            save_specimen(specimen,config,flow_run_id,'Failed','generate_derivatives')
             raise
         finally:
             session.close()

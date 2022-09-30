@@ -92,6 +92,30 @@ document.addEventListener('alpine:init',()=>{
                    this.collectionSaved = true;
                 })
               });
+        },
+        deleteCollection(id){
+            
+            if (confirm("Are you sure you want to remove this collection?") == true) {
+                
+                fetch(`${id}`, {
+                  method: "DELETE",
+                  body: JSON.stringify({ collectionId: id }),
+                }).then((_res) => {
+                    if(_res.status == 200)
+                        _res.json().then(data=>{
+                            
+                            if (data.status == 'ok')
+                                this.collections.splice(this.collections.map(x=>x.id).indexOf(id),1);
+                            else
+                                alert(data.statusText)  
+                        })
+                    else
+                        alert(_res.statusText)  
+                }).catch(error=>{
+                    console.log(error);
+                    alert('Failed to remove the collection');
+                });
+              }
         }
     }));
 
@@ -101,16 +125,21 @@ document.addEventListener('alpine:init',()=>{
         notifications: [],
         open: false,
         search: "",
+        onlyErrorToggle: false,
+        loading: false,
+        fileCounter: 0,
+        totalSpecimens: 0,
+        pageNumber: 1,
+        per_page: 14,
+        uploadingMessage: "Uploading <span id='fileName'></span>",
+        collection: {},
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
         init(){
             console.log('specimens init', collectionid);
-
-            this.getSpecimens(collectionid).then(data=>{
-                this.specimens = data;
-                this.filteredSpecimens = data;
-            })
+            
+            this.searchSpecimen();           
 
             var socket = io();
 
@@ -118,43 +147,125 @@ document.addEventListener('alpine:init',()=>{
                 console.log('a user connected');
             });
 
-            socket.on('notify', (n) => {
-                this.getSpecimens(collectionid).then(data=>{
-                    data.forEach(x => {
-                        if(x.id == n.specimenid){
-                            x.progress = n.progress;
-                            x.style = "width: " + x.progress + "%"
-                        }
-                    });
-                    this.specimens = data;
-                })
-
-               
+            socket.on('notify', (s) => {
+                this.updateSpecimenCard(s);
             })
+
         },
-        getSpecimens(collectionid){
-            return fetch(`/collections/specimens/${collectionid}`, {
-                method: "GET"
-              }).then((_res) => {
-                return _res.json().then(data=>{
-                    
-                    data.forEach(x => {
-                        x.upload_path = x.upload_path.replace("torch\\","../");
-                        x.create_date = (new Date(x.create_date)).toLocaleDateString()
-                    });
-                    return data;
-                })
-              });
+        updateSpecimenCard(s){
+            var sIndex = this.specimens.map(x=>x.id).indexOf(s.id);
+                
+            if (sIndex > -1){
+                this.specimens[sIndex].flow_run_state = s.flow_run_state;
+                this.specimens[sIndex].failed_task = s.failed_task;
+            }
+            else{
+                this.specimens.push(s);
+                this.updateSpecimenCard(s);
+            }
+        },
+        openModal() {
+            if (this.collection.workflow != null){
+                this.fileCounter = 0;
+                document.getElementById("uploadingMessageContainer").style.display="none";
+                this.open = true;
+            }
+            else{
+                alert("You need to select a workflow for this collection. Go to the settings page.")
+            }
         },
         searchSpecimen() {
-            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}`, {
+            this.loading = true;
+            fetch(`/collections/specimens/${collectionid}?search_string=${this.search}&only_error=${this.onlyErrorToggle}&page=${this.pageNumber}&per_page=${this.per_page}`, {
                 method: "GET"
             }).then((_res) => {                
                 _res.json().then(data => {
-                    this.specimens = data;                  
+                   
+                    this.specimens = data.specimens ? JSON.parse(data.specimens) : [];  
+                    this.collection = data.collection ? JSON.parse(data.collection) : {}
+                    this.totalSpecimens = data.totalSpecimens;  
+                    this.loading = false;            
+                                         
                 })
             }) 
-        },                         
-    }));
+        },  
+        updateCounter(e) {
+            this.fileCounter = (this.fileCounter + e);
+            if(this.fileCounter == 0){
+                this.open = false;
+            }
+        },
+        deleteSpecimen(id){
+            
+            if (confirm("Are you sure you want to remove this specimen?") == true) {
+                
+                fetch(`specimen/${id}`, {
+                  method: "DELETE"
+                }).then((_res) => {
+                    if(_res.status == 200)
+                        _res.json().then(data=>{
+                            
+                            if (data.status == 'ok')
+                                this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);
+                            else
+                                alert(data.statusText)  
+                        })
+                    else
+                        alert(_res.statusText)  
+                }).catch(error=>{
+                    console.log(error);
+                    alert('Failed to remove the specimen');
+                });
+              }
+        },
+        showOnlyError() {
+            this.onlyErrorToggle = !this.onlyErrorToggle;
+            this.searchSpecimen();
+        },
+        pageCount() {
+            return Math.ceil(this.totalSpecimens / this.per_page);
+        },         
+        pages() {
+            return Array.from({
+              length: Math.ceil(this.totalSpecimens / this.per_page),
+            });
+        },      
+        viewPage(index) {
+            this.pageNumber = index;
+            this.searchSpecimen();
+        },    
+        nextPage() {
+            this.pageNumber++;
+            this.searchSpecimen();
+        },
+        prevPage() {
+            this.pageNumber--;
+            this.searchSpecimen();
+        },
+        retry(specimen){
+            
+            failed_task = specimen.failed_task;
+            specimen.failed_task = "Retrying...";
+            specimen.flow_run_state = "Retrying"
 
+            fetch(`specimen/retry/${specimen.id}`, {
+                method: "POST"
+              }).then((_res) => {
+                  if(_res.status == 200)
+                      _res.json().then(data=>{
+                          console.log('result',data);
+                      })
+                  else{
+                    specimen.failed_task = failed_task;
+                    specimen.flow_run_state = "Failed"
+                    alert(_res.statusText)
+                  }
+                      
+              }).catch(error=>{
+                  specimen.failed_task = failed_task;
+                  specimen.flow_run_state = "Failed"
+                  alert('Something wrong happened');
+              });
+        }  
+    }));
 })

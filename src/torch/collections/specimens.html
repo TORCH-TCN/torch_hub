@@ -1,12 +1,18 @@
 {% extends "base.html" %} {% block title %}Specimens{% endblock %} {% block
 content %}
 
-<div x-data="specimens({{collection.id}})" class="page-container">
+<div
+  x-data="specimens({{collection.id}})"
+  class="page-container"
+  @close-modal.window="open = false"
+  @increment-counter.window="updateCounter(1)"
+  @decrement-counter.window="updateCounter(-1)"
+>
   <div class="back-page">
-    <button @click="history.back()">
-      <img src="../static//images/arrow-left.svg" alt="Left arrow" />
-      <p class="xsmall">Back</p>
-    </button>
+    <a href="/collections" class="back-link">
+      <img src="../../static//images/arrow-left.svg" alt="Left arrow" />
+      Back
+    </a>
   </div>
   <div class="page-container-header">
     <div class="left">
@@ -30,142 +36,279 @@ content %}
       <div class="left">
         <p class="xsmall">All / {{collection.code}}</p>
       </div>
-      <!-- <div class="right">
+      <div class="right">
         <div class="list-sort">
-          <p class="xsmall">View list</p>
-          <img
-            src="../static//images/down-filled-triangular-arrow.png"
-            alt="Down arrow"
-          />
+          <label class="switch">
+            <input
+              type="checkbox"
+              x-model="onlyErrorToggle"
+              @click="showOnlyError"
+            />
+            <span class="slider round"></span>
+          </label>
+          <p class="xsmall">Show only errors</p>
         </div>
-        <div class="list-sort">
-          <p class="xsmall">Sort</p>
-          <img
-            src="../static//images/down-filled-triangular-arrow.png"
-            alt="Down arrow"
-          />
-        </div>
-      </div> -->
+      </div>
     </div>
     <div class="main-container-body p-4">
-      <div class="row-collection">
-        <!-- Modal -->
-        <div>
-          <button @click="open=true">
-            <div>
-              <div class="add-collection">
-                <img src="../static//images/plus.png" alt="Plus icon" />
-                <p>New specimen</p>
+      <template x-if="loading">
+        <div class="spinner-element">
+          <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </template>
+      <template x-teleport="body">
+        <!-- Backdrop -->
+        <div x-show="open" class="modal fade show">
+          <div class="modal-dialog-specimen">
+            <!-- Dialog -->
+            <div
+              x-show="open"
+              x-transition
+              class="modal-content specimen-modal"
+              @mousedown.outside="open = false"
+            >
+              <!-- Modal Title -->
+              <div class="modal-header specimen">
+                <h5 class="modal-title"></h5>
+
+                <button @click="open = false" class="btn-close">
+                  <img src="../static/images/close_icon.svg" />
+                </button>
+              </div>
+
+              <!-- Modal Body -->
+              <div class="p-4">
+                <div class="form-group">
+                  <div class="upload-box">
+                    <form
+                      id="dropbox"
+                      action="{{ url_for('collections.upload', collectionid=collection.code) }}"
+                      class="dropzone"
+                    >
+                      <div class="dz-message" data-dz-message>
+                        <img
+                          src="../static/images/upload_icon.svg"
+                          alt="Upload cloud icon"
+                        />
+                        <p><span>Click to upload</span> or drag and drop</p>
+                        <p>PNG or JPG</p>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <div
+                  class="modal-footer specimen-footer"
+                  id="uploadingMessageContainer"
+                >
+                  <span
+                    x-html="uploadingMessage"
+                    style="margin-right: 0"
+                  ></span>
+                  <template x-if="fileCounter > 1">
+                    <span
+                      x-html="'and other ' + (fileCounter - 1) + ' file(s)...'"
+                    ></span>
+                  </template>
+                </div>
               </div>
             </div>
-          </button>
-          <template x-teleport="body">
-            <!-- Backdrop -->
-            <div x-show="open" class="modal fade show">
-              <div class="modal-dialog-specimen">
-                <!-- Dialog -->
-                <div x-show="open" x-transition class="modal-content">
-                  <!-- mousedown.outside="open = false" -->
-                  <!-- Modal Title -->
-                  <div class="modal-header specimen">
-                    <h5 class="modal-title"></h5>
-                    <button @click="open = false" class="btn-close">X</button>
-                  </div>
+          </div>
+        </div>
+      </template>
+      <div class="modal-backdrop fade show" x-show="open"></div>
+      <template x-if="!loading">
+        <div class="row-collection">
+          <!-- Modal -->
+          <div>
+            <button @click="openModal">
+              <div>
+                <div class="add-collection">
+                  <img src="../static//images/plus.png" alt="Plus icon" />
+                  <p>New specimen</p>
+                </div>
+              </div>
+            </button>
+          </div>
 
-                  <!-- Modal Body -->
-                  <div class="p-4">
-                    <div class="form-group">
-                      <div class="upload-box">
-                        <form
-                          id="dropbox"
-                          action="{{ url_for('collections.upload', collectionid=collection.code) }}"
-                          class="dropzone"
-                        >
-                          <div class="dz-message" data-dz-message>
-                            <span style="color: #667085">
-                              <img
-                                src="../static/images/upload_icon.svg"
-                                alt="Upload cloud icon"
-                              /><br />
-                              <span style="color: #6941c6"
-                                >Click to upload</span
-                              >
-                              or drag and drop<br />
-                              PNG or JPG</span
-                            >
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+          <template x-for="s in specimens">
+            <div>
+              <div
+                class="collection-card"
+                :alt="s.name"
+                x-on:click="openPage(s.id)"
+              >
+                <div x-data="{ open: false }" class="menu-dropdown">
+                  <button
+                    @click="open = ! open"
+                    class="menu-dropbtn"
+                    @click.stop
+                  >
+                    <img src="../static/images/list.png" alt="menu" />
+                  </button>
+                  <div
+                    x-show="open"
+                    @click.outside="open = false"
+                    class="menu-dropdown-content"
+                    @click.stop
+                  >
+                    <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
                   </div>
+                </div>
+
+                <img
+                  :src="s.cardimg"
+                  :alt="s.name"
+                  x-show="s.flow_run_state != 'Failed'"
+                />
+                <img
+                  src="../static/images/error.png"
+                  :alt="s.name"
+                  x-show="s.flow_run_state == 'Failed'"
+                />
+                <div class="card-body">
+                  <h5 x-text="s.name"></h5>
+                  <template x-if="s.flow_run_state == 'Completed'">
+                    <p x-text="s.create_date"></p>
+                  </template>
+                  <template x-if="s.flow_run_state == 'Running'">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="spinner-border spinner-border-sm ml-auto text-secondary"
+                        role="status"
+                        aria-hidden="true"
+                      ></div>
+                    </div>
+                  </template>
+                  <template x-if="s.flow_run_state == 'Failed' || s.flow_run_state == 'Retrying'">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                      <span
+                        class="text-danger"
+                        x-text="'Error | ' + s.failed_task"
+                      ></span>
+                      <img x-show="s.flow_run_state == 'Failed'" @click="retry(s)" @click.stop src="../static/images/retry_icon.svg" alt="retry icon" class="retry-icon">
+                      <div x-show="s.flow_run_state == 'Retrying'"
+                        class="spinner-border spinner-border-sm ml-auto text-secondary"
+                        role="status"
+                        aria-hidden="true"
+                      ></div>
+                    </div>
+                    
+                  </template>
                 </div>
               </div>
             </div>
           </template>
-          <div class="modal-backdrop fade show" x-show="open"></div>
         </div>
+      </template>
 
-        <template x-for="s in specimens">
-          <div>
-            <div
-              class="collection-card"
-              :alt="s.name"
-              x-on:click="openPage(s.id)"
-            >
-              <div x-data="{ open: false }" class="menu-dropdown">
-                <button @click="open = ! open" class="menu-dropbtn" @click.stop>
-                  <img src="../static/images/list.png" alt="menu" />
-                </button>
-                <div
-                  x-show="open"
-                  @click.outside="open = false"
-                  class="menu-dropdown-content"
-                >
-                  <p class="xsmall">Delete</p>
-                </div>
-              </div>
+      <div
+      class="w-full md:w-1/2 mx-auto py-6 flex justify-between items-center"
+      x-show="pageCount() > 1"
+    >
+      <!--First Button-->
+      <button
+        x-on:click="viewPage(1)"
+        :disabled="pageNumber==1"
+        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber==1 }"
+      >
+        <svg
+          class="h-8 w-8 text-indigo-600"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="19 20 9 12 19 4 19 20"></polygon>
+          <line x1="5" y1="19" x2="5" y2="5"></line>
+        </svg>
+      </button>
 
-              <img
-                :src="s.upload_path"
-                :alt="s.name"
-                x-show="s.flow_run_state != 'Failed'"
-              />
-              <img
-                src="../static/images/error.png"
-                :alt="s.name"
-                x-show="s.flow_run_state == 'Failed'"
-              />
-              <div class="card-body">
-                <h5 x-text="s.name"></h5>
-                <p
-                  x-text="s.create_date"
-                  x-show="(!s.progress || s.progress == 100) && s.flow_run_state == 'Completed'"
-                ></p>
-                <div
-                  class="progress"
-                  x-show="s.progress && s.flow_run_state == 'Running'"
-                >
-                  <div
-                    class="progress-bar bg-success"
-                    role="progressbar"
-                    :style="s.style"
-                    :aria-valuenow="s.progress"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  ></div>
-                  <!-- <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                  <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> -->
-                </div>
-                <p class="text-danger" x-show="s.flow_run_state == 'Failed'">
-                  Error
-                </p>
-              </div>
-            </div>
-          </div>
-        </template>
-      </div>
+      <!--Previous Button-->
+      <button
+        x-on:click="prevPage"
+        :disabled="pageNumber==1"
+        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber==1 }"
+      >
+        <svg
+          class="h-8 w-8 text-indigo-600"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Display page numbers -->
+      <template x-for="(page,index) in pages()" :key="index">
+        <button
+          class="px-3 py-2 rounded"
+          :class="{ 'bg-primary text-white font-bold' : index+1 === pageNumber }"
+          type="button"
+          x-on:click="viewPage(index+1)"
+        >
+          <span x-text="index+1"></span>
+        </button>
+      </template>
+
+      <!--Next Button-->
+      <button
+        x-on:click="nextPage"
+        :disabled="pageNumber >= pageCount()"
+        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber >= pageCount() }"
+      >
+        <svg
+          class="h-8 w-8 text-indigo-600"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <!--Last Button-->
+      <button
+        x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
+        :disabled="pageNumber >= pageCount()"
+        :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber >= pageCount() }"
+      >
+        <svg
+          class="h-8 w-8 text-indigo-600"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="5 4 15 12 5 20 5 4"></polygon>
+          <line x1="19" y1="5" x2="19" y2="19"></line>
+        </svg>
+      </button>
+    </div>
+
     </div>
   </div>
-
-  {% endblock %}
 </div>
+
+{% endblock %}

@@ -12,6 +12,7 @@ from tqdm import tqdm
 from datetime import datetime
 from torch.collections.specimens import Specimen, SpecimenImage
 from torch.tasks.save_specimen import save_specimen
+from prefect.orion.schemas.states import Completed, Failed
 
 # File extensions that are scanned and logged
 INPUT_FILE_TYPES = ['.jpg', '.jpeg', '.JPG', '.JPEG', '.tif', '.TIF', '.TIFF', '.tiff']
@@ -244,9 +245,10 @@ def herbar(specimen:Specimen, config):
                 
                 save_specimen(specimen,config,flow_run_id)
             else:
-                save_specimen(specimen,config,flow_run_id,'Failed')
-                raise ValueError("No barcodes found")
+                save_specimen(specimen,config,flow_run_id,'Failed','herbar')
+                return Failed(message="No barcode found")
     except:
-        save_specimen(specimen,config,flow_run_id,'Failed')
-        raise ValueError("Error processing herbar task")
+        save_specimen(specimen,config,flow_run_id,'Failed','herbar')
+        return Failed(message="Error processing herbar task")
+        
     

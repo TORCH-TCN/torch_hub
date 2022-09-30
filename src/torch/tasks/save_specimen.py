@@ -2,9 +2,10 @@ from torch.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None):
+def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None, failed_task = None):
         
-    engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
+    print("config" + config["SQLALCHEMY_DATABASE_URI"])
+    engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
     
     with Session(engine) as session:
 
@@ -13,6 +14,7 @@ def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None)
 
             local_specimen.flow_run_id = flow_run_id
             local_specimen.flow_run_state = flow_run_state if flow_run_state != None else 'Running'
+            local_specimen.failed_task = failed_task
                         
             session.add(local_specimen)
             session.commit()
