@@ -182,11 +182,20 @@ content %}
                       ></div>
                     </div>
                   </template>
-                  <template x-if="s.flow_run_state == 'Failed'">
-                    <p
-                      class="text-danger"
-                      x-text="'Error | ' + s.failed_task"
-                    ></p>
+                  <template x-if="s.flow_run_state == 'Failed' || s.flow_run_state == 'Retrying'">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                      <span
+                        class="text-danger"
+                        x-text="'Error | ' + s.failed_task"
+                      ></span>
+                      <img x-show="s.flow_run_state == 'Failed'" @click="retry(s)" @click.stop src="../static/images/retry_icon.svg" alt="retry icon" class="retry-icon">
+                      <div x-show="s.flow_run_state == 'Retrying'"
+                        class="spinner-border spinner-border-sm ml-auto text-secondary"
+                        role="status"
+                        aria-hidden="true"
+                      ></div>
+                    </div>
+                    
                   </template>
                 </div>
               </div>

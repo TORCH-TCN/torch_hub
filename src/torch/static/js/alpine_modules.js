@@ -132,6 +132,7 @@ document.addEventListener('alpine:init',()=>{
         pageNumber: 1,
         per_page: 14,
         uploadingMessage: "Uploading <span id='fileName'></span>",
+        collection: {},
         openPage(specimenid){
             window.open(window.location.href + "/" + specimenid,"_self")
         },
@@ -156,6 +157,7 @@ document.addEventListener('alpine:init',()=>{
                 
             if (sIndex > -1){
                 this.specimens[sIndex].flow_run_state = s.flow_run_state;
+                this.specimens[sIndex].failed_task = s.failed_task;
             }
             else{
                 if(this.specimens.length == this.per_page) this.specimens.pop();
@@ -165,25 +167,26 @@ document.addEventListener('alpine:init',()=>{
             }
         },
         openModal() {
-            this.fileCounter = 0;
-            document.getElementById("uploadingMessageContainer").style.display="none";
-            this.open = true;
+            if (this.collection.workflow != null){
+                this.fileCounter = 0;
+                document.getElementById("uploadingMessageContainer").style.display="none";
+                this.open = true;
+            }
+            else{
+                alert("You need to select a workflow for this collection. Go to the settings page.")
+            }
         },
         searchSpecimen() {
             this.loading = true;
-            fetch(`/collections/specimens/${collectionid}?searchString=${this.search}&onlyError=${this.onlyErrorToggle}&page=${this.pageNumber}&per_page=${this.per_page}`, {
-            // fetch(`/collections/specimens/${collectionid}?searchString=${this.search}&onlyError=${this.onlyErrorToggle}`, {
+            fetch(`/collections/specimens/${collectionid}?search_string=${this.search}&only_error=${this.onlyErrorToggle}&page=${this.pageNumber}&per_page=${this.per_page}`, {
                 method: "GET"
             }).then((_res) => {                
                 _res.json().then(data => {
-                   specimensList = JSON.parse(data.specimens)
-                        specimensList.forEach(x => {
-                            x.upload_path = x.upload_path.replace("torch\\","../");
-                            x.create_date = (new Date(x.create_date)).toLocaleDateString()
-                        });
-                        this.specimens = specimensList;  
-                        this.totalSpecimens = data.totalSpecimens;  
-                        this.loading = false;            
+                   
+                    this.specimens = data.specimens ? JSON.parse(data.specimens) : [];  
+                    this.collection = data.collection ? JSON.parse(data.collection) : {}
+                    this.totalSpecimens = data.totalSpecimens;  
+                    this.loading = false;            
                                          
                 })
             }) 
@@ -233,16 +236,38 @@ document.addEventListener('alpine:init',()=>{
             this.pageNumber = index;
             this.searchSpecimen();
         },    
-        //Next Page
         nextPage() {
             this.pageNumber++;
             this.searchSpecimen();
         },
-
-          //Previous Page
         prevPage() {
             this.pageNumber--;
             this.searchSpecimen();
-        },    
+        },
+        retry(specimen){
+            
+            failed_task = specimen.failed_task;
+            specimen.failed_task = "Retrying...";
+            specimen.flow_run_state = "Retrying"
+
+            fetch(`specimen/retry/${specimen.id}`, {
+                method: "POST"
+              }).then((_res) => {
+                  if(_res.status == 200)
+                      _res.json().then(data=>{
+                          console.log('result',data);
+                      })
+                  else{
+                    specimen.failed_task = failed_task;
+                    specimen.flow_run_state = "Failed"
+                    alert(_res.statusText)
+                  }
+                      
+              }).catch(error=>{
+                  specimen.failed_task = failed_task;
+                  specimen.flow_run_state = "Failed"
+                  alert('Something wrong happened');
+              });
+        }  
     }));
 })
