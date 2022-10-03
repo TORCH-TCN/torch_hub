@@ -11,6 +11,7 @@ from torch.collections.workflow import run_workflow
 from torch.institutions.institutions import Institution
 from werkzeug.utils import secure_filename
 
+ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
 class Collection(Base):
     __tablename__ = "collection"
@@ -200,7 +201,7 @@ def specimen(collectioncode, specimenid):
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
     
-    orion_url = current_app.config["PREFECT_ORION_URL"] if current_app.config["PREFECT_ORION_URL"] != None else "http://127.0.0.1:4200/"
+    orion_url = current_app.config.get("PREFECT_ORION_URL", ORION_URL_DEFAULT)
     prefect_url = orion_url  + "flow-run/" + specimen.flow_run_id
    
     return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)
