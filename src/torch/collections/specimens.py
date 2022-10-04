@@ -1,3 +1,6 @@
+import glob
+import os
+from uuid import uuid4
 import json
 from pathlib import Path
 
@@ -13,6 +16,7 @@ from torch import Base, db
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask import current_app
+from PIL import Image
 
 class Specimen(Base):
     __tablename__ = "specimen"
@@ -46,6 +50,43 @@ class Specimen(Base):
     def card_image(self):
         img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == self.id).filter(SpecimenImage.size == 'THUMB').first()
         return img.web_url() if img != None else self.web_url()
+    
+
+def get_specimens_by_batch_id(batch_id):
+    root = "webapp/static/uploads/{}".format(batch_id)
+    files = []
+
+    if not os.path.isdir(root):
+        return files
+
+    for file in glob.glob("{}/*.*".format(root)):
+        fname = file.split(os.sep)[-1]
+        files.append(fname)
+
+
+def upload_specimens(files):
+    # Create a unique "session ID" for this particular batch of uploads.
+    batch_id = str(uuid4())
+
+    target = "webapp/static/uploads/{}".format(batch_id)
+    os.mkdir(target)
+
+    for upload in files:
+        filename = upload.filename.rsplit("/")[0]
+        destination = "/".join([target, filename])
+        print("Accept incoming file:", filename)
+        print("Save it to:", destination)
+        upload.save(destination)
+
+    return batch_id
+
+def is_portrait(image_path=None):
+    with Image.open(image_path) as im:
+        width, height = im.size
+        if height > width:
+            return True
+        else:
+            return False
 
 
 class SpecimenImage(Base):
