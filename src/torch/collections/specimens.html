@@ -24,9 +24,9 @@ content %}
         type="text"
         placeholder="Search"
         x-model="search"
-        @keyup="searchSpecimen()"
+        @keyup="searchStringChanged()"
       />
-      <button x-on:click="searchSpecimen()">
+      <button x-on:click="searchStringChanged()">
         <i class="fa fa-search" style="font-size: 18px"> </i>
       </button>
     </div>

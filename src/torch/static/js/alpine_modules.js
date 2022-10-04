@@ -193,6 +193,10 @@ document.addEventListener('alpine:init',()=>{
                 })
             }) 
         },  
+        searchStringChanged() {
+            this.pageNumber = 1;
+            this.searchSpecimen();
+        },
         updateCounter(e) {
             this.fileCounter = (this.fileCounter + e);
             if(this.fileCounter == 0){
@@ -224,6 +228,7 @@ document.addEventListener('alpine:init',()=>{
         },
         showOnlyError() {
             this.onlyErrorToggle = !this.onlyErrorToggle;
+            this.pageNumber = 1;
             this.searchSpecimen();
         },
         pageCount() {
