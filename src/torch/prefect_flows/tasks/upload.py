@@ -5,7 +5,7 @@ from prefect import get_run_logger, task
 from botocore.exceptions import ClientError
 from botocore.config import Config
 from torch.collections.specimens import SpecimenImage
-from torch.tasks.save_specimen import save_specimen_image
+from torch.prefect_flows.tasks.save_specimen import save_specimen_image
 
 
 @task

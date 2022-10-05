@@ -4,10 +4,10 @@ import os
 from prefect import flow, task, get_run_logger
 from prefect.task_runners import SequentialTaskRunner
 from prefect.orion.schemas.states import Failed
-from tasks.generate_derivatives import generate_derivatives
-from tasks.herbar import herbar
-from tasks.save_specimen import save_specimen
-from tasks.check_orientation import check_orientation
+from torch.prefect_flows.tasks.generate_derivatives import generate_derivatives
+from torch.prefect_flows.tasks.herbar import herbar
+from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch.prefect_flows.tasks.check_orientation import check_orientation
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
@@ -32,7 +32,7 @@ def process_specimen(specimen, app_config):
         check_orientation(specimen,app_config)
 
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
-        generate_derivatives(specimen, flow_config)
+        generate_derivatives(specimen, flow_config, app_config)
         
         save_specimen(specimen, app_config, flow_run_id, "Completed")
     except:

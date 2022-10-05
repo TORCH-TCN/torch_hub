@@ -11,7 +11,7 @@ import prefect
 from tqdm import tqdm
 from datetime import datetime
 from torch.collections.specimens import Specimen, SpecimenImage
-from torch.tasks.save_specimen import save_specimen
+from torch.prefect_flows.tasks.save_specimen import save_specimen
 from prefect.orion.schemas.states import Completed, Failed
 
 # File extensions that are scanned and logged

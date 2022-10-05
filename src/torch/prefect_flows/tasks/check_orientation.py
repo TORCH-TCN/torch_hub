@@ -1,7 +1,7 @@
 from prefect import task
 import prefect
 from torch.collections.specimens import Specimen, is_portrait
-from torch.tasks.save_specimen import save_specimen
+from torch.prefect_flows.tasks.save_specimen import save_specimen
 from prefect.orion.schemas.states import Failed
 
 @task

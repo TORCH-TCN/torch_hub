@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import prefect
 from prefect.orion.schemas.states import Failed
-from tasks.save_specimen import save_specimen
+from torch.prefect_flows.tasks.save_specimen import save_specimen
 
 @task
 def generate_derivatives(specimen: Specimen, flow_config, app_config):
