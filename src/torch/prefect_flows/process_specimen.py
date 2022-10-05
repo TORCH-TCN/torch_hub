@@ -7,6 +7,7 @@ from prefect.orion.schemas.states import Failed
 from tasks.generate_derivatives import generate_derivatives
 from tasks.herbar import herbar
 from tasks.save_specimen import save_specimen
+from tasks.check_orientation import check_orientation
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
@@ -24,9 +25,12 @@ def process_specimen(specimen, app_config):
         save_specimen(specimen, app_config, flow_run_id, flow_run_state)
         logger.info(f"{specimen.name} saved...")
 
-        logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
-        herbar(specimen,app_config,flow_config)
-        
+        #logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
+        #herbar(specimen,config)
+
+        logger.info(f"Running check_orientation {specimen.name} (id:{specimen.id})...")
+        check_orientation(specimen,app_config)
+
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
         generate_derivatives(specimen, flow_config)
         
