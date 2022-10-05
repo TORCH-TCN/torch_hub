@@ -3,6 +3,7 @@ import prefect
 from torch.collections.specimens import Specimen
 from torch.tasks.generate_derivatives import generate_derivatives
 from torch.tasks.herbar import herbar
+from torch.tasks.check_orientation import check_orientation
 from torch.tasks.save_specimen import save_specimen
 import os
 from prefect.task_runners import SequentialTaskRunner
@@ -21,9 +22,12 @@ def process_specimen(specimen, config):
         save_specimen(specimen, config, flow_run_id, flow_run_state)
         logger.info(f"{specimen.name} saved...")
 
-        logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
-        herbar(specimen,config)
-        
+        #logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
+        #herbar(specimen,config)
+
+        logger.info(f"Running check_orientation {specimen.name} (id:{specimen.id})...")
+        check_orientation(specimen,config)
+
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
         generate_derivatives(specimen, config)
         

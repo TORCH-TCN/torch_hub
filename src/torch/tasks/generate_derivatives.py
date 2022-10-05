@@ -5,6 +5,7 @@ from torch.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import prefect
+from prefect.orion.schemas.states import Failed
 
 from torch.tasks.save_specimen import save_specimen
 
@@ -36,9 +37,8 @@ def generate_derivatives(specimen: Specimen, config):
             save_specimen(local_specimen,config,flow_run_id)
         except:
             session.commit()
-            #save state to db and error to specimen
             save_specimen(specimen,config,flow_run_id,'Failed','generate_derivatives')
-            raise
+            return Failed(message=f"Unable to create derivatives for specimen {specimen.id}-{specimen.name}")
         finally:
             session.close()
 
