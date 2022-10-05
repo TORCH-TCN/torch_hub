@@ -1,19 +1,18 @@
-from prefect import flow, task, get_run_logger
 import prefect
-from torch.collections.specimens import Specimen
-from torch.tasks.generate_derivatives import generate_derivatives
-from torch.tasks.herbar import herbar
-from torch.tasks.save_specimen import save_specimen
-import os
-from prefect.task_runners import SequentialTaskRunner
-from prefect.orion.schemas.states import Completed, Failed
 import json
+import os
+from prefect import flow, task, get_run_logger
+from prefect.task_runners import SequentialTaskRunner
+from prefect.orion.schemas.states import Failed
+from tasks.generate_derivatives import generate_derivatives
+from tasks.herbar import herbar
+from tasks.save_specimen import save_specimen
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
 def process_specimen(specimen, app_config):
 
-    with open(os.path.join(app_config["BASE_DIR"],'tasks','process_specimen_config.json'), 'r') as f:
+    with open(os.path.join(app_config["BASE_DIR"],'prefect_flows','configs','process_specimen_config.json'), 'r') as f:
         flow_config = json.load(f)
     
     logger = get_run_logger()
