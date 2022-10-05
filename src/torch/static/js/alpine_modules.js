@@ -131,6 +131,7 @@ document.addEventListener('alpine:init',()=>{
         totalSpecimens: 0,
         pageNumber: 1,
         per_page: 14,
+        visiblePages: 3,
         uploadingMessage: "Uploading <span id='fileName'></span>",
         collection: {},
         openPage(specimenid){
@@ -233,12 +234,30 @@ document.addEventListener('alpine:init',()=>{
         },
         pageCount() {
             return Math.ceil(this.totalSpecimens / this.per_page);
-        },         
+        },           
+        startPage() {
+            if (this.pageNumber == 1) {
+              return 1;
+            }
+            if (this.pageNumber == this.pageCount()) {
+              return this.pageCount() - this.visiblePages + 1;
+            }
+            return this.pageNumber - 1;
+        },
+        endPage() {
+            return Math.min(
+              this.startPage() + this.visiblePages - 1,
+              this.pageCount()
+            );
+        },
         pages() {
-            return Array.from({
-              length: Math.ceil(this.totalSpecimens / this.per_page),
-            });
-        },      
+            const range = [];
+            for (let i = this.startPage(); i <= this.endPage(); i += 1) {
+              range.push(i);
+            }
+            console.log("range", range);
+            return range;
+        },
         viewPage(index) {
             this.pageNumber = index;
             this.searchSpecimen();

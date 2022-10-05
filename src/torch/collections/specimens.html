@@ -243,11 +243,11 @@ content %}
       <template x-for="(page,index) in pages()" :key="index">
         <button
           class="page-number"
-          :class="{ 'bg-page' : index+1 === pageNumber }"
+          :class="{ 'bg-page' : page === pageNumber }"
           type="button"
-          x-on:click="viewPage(index+1)"
+          x-on:click="viewPage(page)"
         >
-          <span x-text="index+1"></span>
+          <span x-text="page"></span>
         </button>
       </template>
 
