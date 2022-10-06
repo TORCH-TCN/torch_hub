@@ -34,6 +34,8 @@ def generate_derivatives(specimen: Specimen, flow_config, app_config):
             session.commit()
 
             save_specimen(local_specimen,app_config,flow_run_id)
+
+            return local_specimen.images
         except:
             session.commit()
             save_specimen(specimen,app_config,flow_run_id,'Failed','generate_derivatives')

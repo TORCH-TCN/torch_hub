@@ -10,15 +10,16 @@ from torch.prefect_flows.tasks.save_specimen import save_specimen_image
 
 @task
 def upload(config, image: SpecimenImage):
+
     logger = get_run_logger()
     upload_type = config["UPLOAD"]["TYPE"]
     logger.info(f"Uploading {image.url} via {upload_type}...")
     
     match upload_type:
         case "sftp":
-            image.url = upload_via_sftp(config["UPLOAD"], image.url)
+            image.external_url = upload_via_sftp(config["UPLOAD"], image.url)
         case "s3":
-            image.url = upload_via_s3(config["UPLOAD"], image.url)
+            image.external_url = upload_via_s3(config["UPLOAD"], image.url)
         case _:
             raise NotImplementedError(
                 f"Upload type {upload_type} is not yet implemented."

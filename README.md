@@ -42,7 +42,11 @@ App specific configs: The current version needs a `config.json` file inside the 
 ```
 
 Workflow specific configs:
-Workflow configs should be added inside the `src/torch/tasks` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary
+Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch/prefect_flows/templates/flow_template.py)
+
+## How to create a new workflow
+1. Add a new flow file inside `src/torch/prefect_flows/` folder following the [flow template](src/torch/prefect_flows/templates/flow_template.py)
+2. Register the new flow on the `run_workflow` function at [workflow.py](src/torch/collections/workflow.py)
 
 ## How to run
 

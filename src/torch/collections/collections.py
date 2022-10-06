@@ -31,7 +31,7 @@ class Collection(Base):
 
     def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
-        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.name, batch_id)
+        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.collection_folder, batch_id)
         os.makedirs(target_dir)
         
         for file in files:

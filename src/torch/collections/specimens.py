@@ -32,6 +32,7 @@ class Specimen(Base):
     failed_task = Column(String(150))
     deleted = Column(Integer, default=0)
     images = relationship("SpecimenImage")
+    external_url = Column(Text)
 
 
     def toJSON(self):
@@ -98,6 +99,7 @@ class SpecimenImage(Base):
     url = Column(Text)
     create_date = Column(DateTime(timezone=True), default=func.now())
     specimen_id = Column(Integer, ForeignKey("specimen.id"))
+    external_url = Column(Text)
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 

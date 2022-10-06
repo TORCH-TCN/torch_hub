@@ -6,8 +6,9 @@ from prefect.task_runners import SequentialTaskRunner
 from prefect.orion.schemas.states import Failed
 from torch.prefect_flows.tasks.generate_derivatives import generate_derivatives
 from torch.prefect_flows.tasks.herbar import herbar
-from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch.prefect_flows.tasks.save_specimen import save_specimen, save_specimen_image
 from torch.prefect_flows.tasks.check_orientation import check_orientation
+from torch.prefect_flows.tasks.upload import upload
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
@@ -32,7 +33,12 @@ def process_specimen(specimen, app_config):
         check_orientation(specimen,app_config)
 
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
-        generate_derivatives(specimen, flow_config, app_config)
+        imgs = generate_derivatives(specimen, flow_config, app_config)
+
+        logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
+        for img in imgs:
+            upload(flow_config, img)
+            save_specimen_image(img,app_config)
         
         save_specimen(specimen, app_config, flow_run_id, "Completed")
     except:
