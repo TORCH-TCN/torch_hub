@@ -40,20 +40,20 @@
   min-height: 586px;
 }
 
-.main-container-body p{
+.main-container-body p {
   font-size: 12px;
   line-height: 18px;
   color: #667085;
 }
 
-.main-container-body a{
+.main-container-body a {
   font-weight: 600;
   font-size: 11px;
   line-height: 18px;
-  color: #7F56D9;
+  color: #7f56d9;
 }
 
-.specimen-image{
+.specimen-image {
   height: 399px;
   width: 335px;
   left: 0px;
@@ -61,30 +61,48 @@
   border-radius: 8px;
 }
 
-.specimen-alert{
+.specimen-alert {
   font-size: 12px;
 }
 
-.back-link{
+.back-link {
   font-size: 14px;
   color: #667085;
   display: flex;
 }
 
-.back-link:hover{
+.back-link:hover {
   text-decoration: none;
   color: #667085;
 }
 
-.back-link img{
+.back-link img {
   margin-right: 5px;
 }
 
 .row-collection {
-  grid-template-columns: repeat(5, 208px);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
   display: grid;
-  gap: 24px;
   justify-content: space-between;
+}
+
+@media screen and (max-width : 900px) {
+  .row-collection {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width : 600px) {
+  .row-collection {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 }
 
 .row-collection a {
@@ -125,12 +143,13 @@
   border: 1px solid #dfdfe3;
   border-radius: 8px;
   min-width: 208px;
+  max-width: 208px;
   height: 239px;
   cursor: pointer;
   position: relative;
 }
 
-.retry-icon{
+.retry-icon {
   height: 12px !important;
   width: 13px !important;
   margin: 5px !important;
@@ -157,7 +176,8 @@
   color: #242427;
 }
 
-.card-body p, .card-body span {
+.card-body p,
+.card-body span {
   font-size: 14px;
   color: #9d9da4;
   text-overflow: ellipsis;
@@ -211,11 +231,9 @@
   color: #66747b;
 }
 
-.body-left-text p{
+.body-left-text p {
   margin-bottom: 5px;
 }
-
-
 
 .collection-card .menu-dropdown {
   height: 46px;
@@ -260,14 +278,14 @@
   background-color: rgba(191, 204, 232, 0.24);
 }
 
-.collections-sidelist{
+.collections-sidelist {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.collections-sidelist li{
-  font-family: 'Inter';
+.collections-sidelist li {
+  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -277,22 +295,23 @@
   cursor: pointer;
 }
 
-.collections-sidelist li.selected-collection{
-  background: #F4EBFF;
+.collections-sidelist li.selected-collection {
+  background: #f4ebff;
   border-radius: 8px;
   font-weight: 500;
-  color: #42307D;
+  color: #42307d;
 }
 
-.form-container{
-  background: #FFFFFF;
-  box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
+.form-container {
+  background: #ffffff;
+  box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1),
+    0px 2px 4px -2px rgba(16, 24, 40, 0.06);
   border-radius: 8px;
   padding: 32px 24px;
 }
 
 #dropbox {
-  border: 2px dashed #9D9DA4;
+  border: 2px dashed #9d9da4;
 }
 
 .back-page button {
@@ -334,8 +353,8 @@
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -346,8 +365,8 @@
   left: 2px;
   bottom: 2px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
@@ -356,7 +375,6 @@ input:checked + .slider {
 
 input:focus + .slider {
   box-shadow: 0 0 1px var(--primary-600);
-
 }
 
 input:checked + .slider:before {
@@ -380,13 +398,13 @@ input:checked + .slider:before {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   display: flex;
-  justify-content: space-between;    
+  justify-content: space-between;
   align-items: center;
   vertical-align: bottom;
 }
 
 .bg-page {
-  background-color: #7F56D9;
+  background-color: #7f56d9;
   color: white;
   font-weight: 700;
 }
@@ -405,9 +423,9 @@ input:checked + .slider:before {
 }
 
 .page-number {
-  padding-left: 1rem!important;
-  padding-right: 1rem!important;
-  padding-bottom: 0.5rem!important;
-  padding-top: 0.5rem!important;
-  border-radius: 0.25rem!important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-top: 0.5rem !important;
+  border-radius: 0.25rem !important;
 }

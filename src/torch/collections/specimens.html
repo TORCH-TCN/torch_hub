@@ -134,156 +134,148 @@ content %}
           </div>
 
           <template x-for="s in specimens">
-            <div>
-              <div
-                class="collection-card"
-                :alt="s.name"
-                x-on:click="openPage(s.id)"
-              >
-                <div x-data="{ open: false }" class="menu-dropdown">
-                  <button
-                    @click="open = ! open"
-                    class="menu-dropbtn"
-                    @click.stop
-                  >
-                    <img src="../static/images/list.png" alt="menu" />
-                  </button>
-                  <div
-                    x-show="open"
-                    @click.outside="open = false"
-                    class="menu-dropdown-content"
-                    @click.stop
-                  >
-                    <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
-                  </div>
+            <div
+              class="collection-card"
+              :alt="s.name"
+              x-on:click="openPage(s.id)"
+            >
+              <div x-data="{ open: false }" class="menu-dropdown">
+                <button @click="open = ! open" class="menu-dropbtn" @click.stop>
+                  <img src="../static/images/list.png" alt="menu" />
+                </button>
+                <div
+                  x-show="open"
+                  @click.outside="open = false"
+                  class="menu-dropdown-content"
+                  @click.stop
+                >
+                  <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
                 </div>
+              </div>
 
-                <img
-                  :src="s.cardimg"
-                  :alt="s.name"
-                  x-show="s.flow_run_state != 'Failed'"
-                />
-                <img
-                  src="../static/images/error.png"
-                  :alt="s.name"
-                  x-show="s.flow_run_state == 'Failed'"
-                />
-                <div class="card-body">
-                  <h5 x-text="s.name"></h5>
-                  <template x-if="s.flow_run_state == 'Completed'">
-                    <p x-text="s.create_date"></p>
-                  </template>
-                  <template x-if="s.flow_run_state == 'Running'">
-                    <div class="d-flex align-items-center">
-                      <div
-                        class="spinner-border spinner-border-sm ml-auto text-secondary"
-                        role="status"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                  </template>
-                  <template x-if="s.flow_run_state == 'Failed' || s.flow_run_state == 'Retrying'">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                      <span
-                        class="text-danger"
-                        x-text="'Error | ' + s.failed_task"
-                      ></span>
-                      <img x-show="s.flow_run_state == 'Failed'" @click="retry(s)" @click.stop src="../static/images/retry_icon.svg" alt="retry icon" class="retry-icon">
-                      <div x-show="s.flow_run_state == 'Retrying'"
-                        class="spinner-border spinner-border-sm ml-auto text-secondary"
-                        role="status"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    
-                  </template>
-                </div>
+              <img
+                :src="s.cardimg"
+                :alt="s.name"
+                x-show="s.flow_run_state != 'Failed'"
+              />
+              <img
+                src="../static/images/error.png"
+                :alt="s.name"
+                x-show="s.flow_run_state == 'Failed'"
+              />
+              <div class="card-body">
+                <h5 x-text="s.name"></h5>
+                <template x-if="s.flow_run_state == 'Completed'">
+                  <p x-text="s.create_date"></p>
+                </template>
+                <template x-if="s.flow_run_state == 'Running'">
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="spinner-border spinner-border-sm ml-auto text-secondary"
+                      role="status"
+                      aria-hidden="true"
+                    ></div>
+                  </div>
+                </template>
+                <template
+                  x-if="s.flow_run_state == 'Failed' || s.flow_run_state == 'Retrying'"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <span
+                      class="text-danger"
+                      x-text="'Error | ' + s.failed_task"
+                    ></span>
+                    <img
+                      x-show="s.flow_run_state == 'Failed'"
+                      @click="retry(s)"
+                      @click.stop
+                      src="../static/images/retry_icon.svg"
+                      alt="retry icon"
+                      class="retry-icon"
+                    />
+                    <div
+                      x-show="s.flow_run_state == 'Retrying'"
+                      class="spinner-border spinner-border-sm ml-auto text-secondary"
+                      role="status"
+                      aria-hidden="true"
+                    ></div>
+                  </div>
+                </template>
               </div>
             </div>
           </template>
         </div>
       </template>
+    </div>
 
-      <div
-      class="pagination"
-      x-show="pageCount() > 1"
-    >
-      <!--First Button-->
-      <button
-        x-on:click="viewPage(1)"
-        :disabled="pageNumber==1"
-        :class="{ 'disabled' : pageNumber==1 }"
-      >
-        <svg
-          class="svg-pagination"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <polygon points="19 20 9 12 19 4 19 20"></polygon>
-          <line x1="5" y1="19" x2="5" y2="5"></line>
-        </svg>
-      </button>
-
-      <!--Previous Button-->
-      <button
-        x-on:click="prevPage"
-        :disabled="pageNumber==1"
-        :class="{ 'disabled' : pageNumber==1 }"
-      >
-        <svg
-          class="svg-pagination"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
-
-      <!-- Display page numbers -->
-      <template x-for="(page,index) in pages()" :key="index">
+    <div>
+      <div class="pagination" x-show="pageCount() > 1">
+        <!--First Button-->
         <button
-          class="page-number"
-          :class="{ 'bg-page' : page === pageNumber }"
-          type="button"
-          x-on:click="viewPage(page)"
+          x-on:click="viewPage(1)"
+          :disabled="pageNumber==1"
+          :class="{ 'disabled' : pageNumber==1 }"
         >
-          <span x-text="page"></span>
+          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
+            <polygon points="19 20 9 12 19 4 19 20"></polygon>
+            <line x1="5" y1="19" x2="5" y2="5"></line>
+          </svg>
         </button>
-      </template>
 
-      <!--Next Button-->
-      <button
-        x-on:click="nextPage"
-        :disabled="pageNumber >= pageCount()"
-        :class="{ 'disabled' : pageNumber >= pageCount() }"
-      >
-        <svg
-          class="svg-pagination"
-          viewBox="0 0 24 24"
-          fill="none"
+        <!--Previous Button-->
+        <button
+          x-on:click="prevPage"
+          :disabled="pageNumber==1"
+          :class="{ 'disabled' : pageNumber==1 }"
         >
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
+          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
 
-      <!--Last Button-->
-      <button
-        x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
-        :disabled="pageNumber >= pageCount()"
-        :class="{ 'disabled' : pageNumber >= pageCount() }"
-      >
-        <svg
-          class="svg-pagination"
-          viewBox="0 0 24 24"
-          fill="none"
+        <!-- Display page numbers -->
+        <template x-for="(page,index) in pages()" :key="index">
+          <button
+            class="page-number"
+            :class="{ 'bg-page' : page === pageNumber }"
+            type="button"
+            x-on:click="viewPage(page)"
+          >
+            <span x-text="page"></span>
+          </button>
+        </template>
+
+        <!--Next Button-->
+        <button
+          x-on:click="nextPage"
+          :disabled="pageNumber >= pageCount()"
+          :class="{ 'disabled' : pageNumber >= pageCount() }"
         >
-          <polygon points="5 4 15 12 5 20 5 4"></polygon>
-          <line x1="19" y1="5" x2="19" y2="19"></line>
-        </svg>
-      </button>
+          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <!--Last Button-->
+        <button
+          x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
+          :disabled="pageNumber >= pageCount()"
+          :class="{ 'disabled' : pageNumber >= pageCount() }"
+        >
+          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
+            <polygon points="5 4 15 12 5 20 5 4"></polygon>
+            <line x1="19" y1="5" x2="19" y2="19"></line>
+          </svg>
+        </button>
+      </div>
     </div>
 
-    </div>
   </div>
 </div>
 
