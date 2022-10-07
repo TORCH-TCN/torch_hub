@@ -11,7 +11,7 @@ import prefect
 from tqdm import tqdm
 from datetime import datetime
 from torch.collections.specimens import Specimen, SpecimenImage
-from torch.tasks.save_specimen import save_specimen
+from torch.prefect_flows.tasks.save_specimen import save_specimen
 from prefect.orion.schemas.states import Completed, Failed
 
 # File extensions that are scanned and logged
@@ -181,7 +181,7 @@ def process(specimen,config,flow_run_id,file_path=None, new_stem=None, prepend_c
       
 
 @task
-def herbar(specimen:Specimen, config):
+def herbar(specimen:Specimen, app_config, flow_config):
     try:
 
         flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
@@ -195,7 +195,7 @@ def herbar(specimen:Specimen, config):
             if barcodes:
                 print('barcodes')
                 specimen.barcode = get_default_barcode(barcodes)
-                save_specimen(specimen,config,flow_run_id)
+                save_specimen(specimen,app_config,flow_run_id)
 
                 file_stem = file_path.stem
                 # find archive files matching stem
@@ -206,8 +206,8 @@ def herbar(specimen:Specimen, config):
                 derivative_file_uuid = str(uuid.uuid4())
 
                 #todo migrate config to db
-                default_prefix = config["DEFAULT_PREFIX"]
-                jpeg_rename = config["JPEG_RENAME"]
+                default_prefix = flow_config["DEFAULT_PREFIX"]
+                jpeg_rename = flow_config["JPEG_RENAME"]
                 
                 # assume first barcode
                 # TODO check barcode pattern
@@ -238,17 +238,17 @@ def herbar(specimen:Specimen, config):
                     #pass
                 # TODO add derived from uuid
                 archival_stem = barcode + multi_string
-                new_path = process(specimen, config, flow_run_id, file_path=file_path, new_stem=jpeg_stem)
+                new_path = process(specimen, flow_config, flow_run_id, file_path=file_path, new_stem=jpeg_stem)
 
                 old_path_name = Path(specimen.upload_path).name
                 specimen.upload_path = specimen.upload_path.replace(old_path_name, new_path.name)
                 
-                save_specimen(specimen,config,flow_run_id)
+                save_specimen(specimen,app_config,flow_run_id)
             else:
-                save_specimen(specimen,config,flow_run_id,'Failed','herbar')
+                save_specimen(specimen,app_config,flow_run_id,'Failed','herbar')
                 return Failed(message="No barcode found")
     except:
-        save_specimen(specimen,config,flow_run_id,'Failed','herbar')
+        save_specimen(specimen,app_config,flow_run_id,'Failed','herbar')
         return Failed(message="Error processing herbar task")
         
     

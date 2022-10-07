@@ -1,17 +1,21 @@
-from prefect import flow, task, get_run_logger
 import prefect
-from torch.collections.specimens import Specimen
-from torch.tasks.generate_derivatives import generate_derivatives
-from torch.tasks.herbar import herbar
-from torch.tasks.check_orientation import check_orientation
-from torch.tasks.save_specimen import save_specimen
+import json
 import os
+from prefect import flow, task, get_run_logger
 from prefect.task_runners import SequentialTaskRunner
-from prefect.orion.schemas.states import Completed, Failed
+from prefect.orion.schemas.states import Failed
+from torch.prefect_flows.tasks.generate_derivatives import generate_derivatives
+from torch.prefect_flows.tasks.herbar import herbar
+from torch.prefect_flows.tasks.save_specimen import save_specimen, save_specimen_image
+from torch.prefect_flows.tasks.check_orientation import check_orientation
+from torch.prefect_flows.tasks.upload import upload
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
-def process_specimen(specimen, config):
+def process_specimen(specimen, app_config):
+
+    with open(os.path.join(app_config["BASE_DIR"],'prefect_flows','configs','process_specimen_config.json'), 'r') as f:
+        flow_config = json.load(f)
     
     logger = get_run_logger()
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
@@ -19,19 +23,24 @@ def process_specimen(specimen, config):
         
     try:
         logger.info(f"Saving {specimen.name} to database...")
-        save_specimen(specimen, config, flow_run_id, flow_run_state)
+        save_specimen(specimen, app_config, flow_run_id, flow_run_state)
         logger.info(f"{specimen.name} saved...")
 
         #logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
         #herbar(specimen,config)
 
         logger.info(f"Running check_orientation {specimen.name} (id:{specimen.id})...")
-        check_orientation(specimen,config)
+        check_orientation(specimen,app_config)
 
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
-        generate_derivatives(specimen, config)
+        imgs = generate_derivatives(specimen, flow_config, app_config)
+
+        logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
+        for img in imgs:
+            upload(flow_config, img)
+            save_specimen_image(img,app_config)
         
-        save_specimen(specimen, config, flow_run_id, "Completed")
+        save_specimen(specimen, app_config, flow_run_id, "Completed")
     except:
         logger.error(f"Error running process_specimen flow")
         return Failed(message="Error running process_specimen flow")

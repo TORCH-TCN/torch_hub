@@ -16,43 +16,10 @@ pip install -r requirements.txt
 
 ## Configuration
 
-The current version needs a config.json file inside the `src/torch` folder with the following format
-(this will be migrated to the database)
+App specific configs: The current version needs a `config.json` file inside the `src/torch` folder with the following format
 
 ```json
 { 
-    "COLLECTION": {
-        "NAME": "",
-        "PREFIX": "",
-        "CATALOG_NUMBER_REGEX": "",
-        "PROJECT_IDS": [],
-        "DEFAULT_PREFIX": null,
-        "BARCODE_PREFIX": ""
-    },
-    "UPLOAD": {
-        "TYPE": "sftp",
-        "HOST": "",
-        "PATH": "",
-        "USERNAME": "",
-        "PASSWORD": ""
-    },
-    "GENERATE_DERIVATIVES": {
-        "REGEX": "",
-        "SIZES": {
-            "FULL": {
-                "OUTPUT_PATH": ""
-            },
-            "MED": {
-                "WIDTH": 900,
-                "OUTPUT_PATH": ""
-            },
-            "THUMB": {
-                "WIDTH": 390,
-                "OUTPUT_PATH": ""
-            }
-        },
-        "JPG_RENAME_STRING": ""
-    },
     "SECRET_KEY": "",
     "SQLALCHEMY_DATABASE_URI": "sqlite:///torch-hub.db",
     "SQLALCHEMY_DATABASE_URI_PREFECT": "sqlite:///src/torch/torch-hub.db",
@@ -70,10 +37,17 @@ The current version needs a config.json file inside the `src/torch` folder with 
     "MAIL_USE_SSL": true,
     "MAIL_USE_TLS": true,
     "APP_URL": "http://localhost:5000",
-    "DEFAULT_PREFIX": "",
-    "JPEG_RENAME":""
+    "PREFECT_ORION_URL": "http://127.0.0.1:4200/"
 }
 ```
+
+Workflow specific configs:
+Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch/prefect_flows/templates/flow_template.py)
+
+## How to create a new workflow
+1. Add a new flow file inside `src/torch/prefect_flows/` folder following the [flow template](src/torch/prefect_flows/templates/flow_template.py)
+2. Register the new flow on the `run_workflow` function at [workflow.py](src/torch/collections/workflow.py)
+
 ## How to run
 
 Once the dependencies are installed, run the app as follows:

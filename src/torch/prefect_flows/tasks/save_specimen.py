@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 
 def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None, failed_task = None):
         
-    print("config" + config["SQLALCHEMY_DATABASE_URI"])
     engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
     
     with Session(engine) as session:
@@ -30,7 +29,7 @@ def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None,
 
 def save_specimen_image(image:SpecimenImage, config):
         
-    engine = create_engine(config["SQLALCHEMY_DATABASE_URI_PREFECT"], future=True)
+    engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
     
     with Session(engine) as session:
 

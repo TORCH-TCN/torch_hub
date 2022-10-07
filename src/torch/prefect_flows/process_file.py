@@ -1,8 +1,8 @@
 from prefect import Flow, Parameter
 
-from tasks.read_dir import read_dir
-from tasks.copy_file import copy_file
-from tasks.log_new_file_name import log_new_file_name
+from torch.prefect_flows.tasks.read_dir import read_dir
+from torch.prefect_flows.tasks.copy_file import copy_file
+from torch.prefect_flows.tasks.log_new_file_name import log_new_file_name
 
 
 with Flow("process-file") as process_file:
