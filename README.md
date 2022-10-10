@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-App specific configs: The current version needs a `config.json` file inside the `src/torch` folder with the following format
+App specific configs: The current version needs a `config.json` file inside the `src/torch` folder with the following format (use [config_example.json](src/torch/config_example.json) as a template)
 
 ```json
 { 
@@ -42,7 +42,7 @@ App specific configs: The current version needs a `config.json` file inside the 
 ```
 
 Workflow specific configs:
-Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch/prefect_flows/templates/flow_template.py)
+Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch/prefect_flows/templates/flow_template.py). There is a process_specimen workflow on this solution, use the [process_specimen_config_example.json](src/torch/prefect_flows/configs/process_specimen_config_example.json) as template.
 
 ## How to create a new workflow
 1. Add a new flow file inside `src/torch/prefect_flows/` folder following the [flow template](src/torch/prefect_flows/templates/flow_template.py)
