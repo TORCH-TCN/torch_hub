@@ -214,13 +214,15 @@ document.addEventListener('alpine:init',()=>{
                     if(_res.status == 200)
                         _res.json().then(data=>{
                             
-                            if (data.status == 'ok')
-                                this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);
-                            else
+                            if (data.status == 'ok') {                                 
+                                this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);   
+                                this.searchSpecimen();                                                      
+                            } else
                                 alert(data.statusText)  
                         })
                     else
-                        alert(_res.statusText)  
+                        alert(_res.statusText) 
+                        this.open=false;
                 }).catch(error=>{
                     console.log(error);
                     alert('Failed to remove the specimen');
