@@ -11,27 +11,27 @@ from torch.collections.workflow import run_workflow
 from torch.institutions.institutions import Institution
 from werkzeug.utils import secure_filename
 
+ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
 class Collection(Base):
     __tablename__ = "collection"
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
-    catalog_number_regex = Column(String(150))
-    web_base = Column(String(150))
-    url_base = Column(String(150))
     default_prefix = Column(String(15))
-    barcode_prefix = Column(String(15))
+    catalog_number_regex = Column(String(150))
     institution_id = Column(Integer, ForeignKey("institution.id"))
     flow_id = Column(String(150))
     workflow = Column(String(150))
+    collection_folder = Column(String(150))
+    project_ids = Column(String(150))
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def add_specimens(self, files, config) -> Specimen:
         batch_id = str(uuid4())
-        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.name, batch_id)
+        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.collection_folder, batch_id)
         os.makedirs(target_dir)
         
         for file in files:
@@ -115,12 +115,13 @@ def collectionspost():
             id = jcollection.get('id',None),
             name=newname,
             code=jcollection.get('code',None),
+            default_prefix = jcollection.get('default_prefix',None),
+            catalog_number_regex = jcollection.get('catalog_number_regex',None),
             institution_id=institution.id,
             flow_id = jcollection.get('flow_id',None),
-            catalog_number_regex = jcollection.get('catalog_number_regex',None),
-            default_prefix = jcollection.get('default_prefix',None),
-            barcode_prefix = jcollection.get('barcode_prefix',None),
-            workflow = 'process_specimen' #todo select with workflow options
+            workflow = jcollection.get('workflow', 'process_specimen'), #todo select with workflow options
+            collection_folder = jcollection.get('collection_folder',None),
+            project_ids = jcollection.get('project_ids',None)
         )
         
         local_collection = db.session.merge(new_collection)
@@ -200,7 +201,7 @@ def specimen(collectioncode, specimenid):
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
     images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
     
-    orion_url = current_app.config["PREFECT_ORION_URL"] if current_app.config["PREFECT_ORION_URL"] != None else "http://127.0.0.1:4200/"
+    orion_url = current_app.config.get("PREFECT_ORION_URL", ORION_URL_DEFAULT)
     prefect_url = orion_url  + "flow-run/" + specimen.flow_run_id
    
     return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)

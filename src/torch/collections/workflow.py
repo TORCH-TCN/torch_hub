@@ -1,5 +1,5 @@
 from torch import db, socketio
-from torch.tasks.process_specimen import process_specimen
+from torch.prefect_flows.process_specimen import process_specimen
 
 def run_workflow(collection,specimen,config):
     notify_specimen_update(specimen,"Running")

@@ -214,32 +214,39 @@ content %}
       </template>
     </div>
 
-    <div>
-      <div class="pagination" x-show="pageCount() > 1">
-        <!--First Button-->
-        <button
-          x-on:click="viewPage(1)"
-          :disabled="pageNumber==1"
-          :class="{ 'disabled' : pageNumber==1 }"
+      <div
+      class="pagination"
+      x-show="pageCount() > 1"
+    >
+      <button
+        x-on:click="viewPage(1)"
+        :disabled="pageNumber==1"
+        :class="{ 'disabled' : pageNumber==1 }"
+      >
+        <svg
+          class="svg-pagination"
+          viewBox="0 0 24 24"
+          fill="none"
         >
-          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
-            <polygon points="19 20 9 12 19 4 19 20"></polygon>
-            <line x1="5" y1="19" x2="5" y2="5"></line>
-          </svg>
-        </button>
+          <polygon points="19 20 9 12 19 4 19 20"></polygon>
+          <line x1="5" y1="19" x2="5" y2="5"></line>
+        </svg>
+      </button>
 
-        <!--Previous Button-->
-        <button
-          x-on:click="prevPage"
-          :disabled="pageNumber==1"
-          :class="{ 'disabled' : pageNumber==1 }"
+      <button
+        x-on:click="prevPage"
+        :disabled="pageNumber==1"
+        :class="{ 'disabled' : pageNumber==1 }"
+      >
+        <svg
+          class="svg-pagination"
+          viewBox="0 0 24 24"
+          fill="none"
         >
-          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
 
-        <!-- Display page numbers -->
         <template x-for="(page,index) in pages()" :key="index">
           <button
             class="page-number"
@@ -251,29 +258,35 @@ content %}
           </button>
         </template>
 
-        <!--Next Button-->
-        <button
-          x-on:click="nextPage"
-          :disabled="pageNumber >= pageCount()"
-          :class="{ 'disabled' : pageNumber >= pageCount() }"
+      
+      <button
+        x-on:click="nextPage"
+        :disabled="pageNumber >= pageCount()"
+        :class="{ 'disabled' : pageNumber >= pageCount() }"
+      >
+        <svg
+          class="svg-pagination"
+          viewBox="0 0 24 24"
+          fill="none"
         >
-          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
 
-        <!--Last Button-->
-        <button
-          x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
-          :disabled="pageNumber >= pageCount()"
-          :class="{ 'disabled' : pageNumber >= pageCount() }"
+      <button
+        x-on:click="viewPage(Math.ceil(totalSpecimens/per_page))"
+        :disabled="pageNumber >= pageCount()"
+        :class="{ 'disabled' : pageNumber >= pageCount() }"
+      >
+        <svg
+          class="svg-pagination"
+          viewBox="0 0 24 24"
+          fill="none"
         >
-          <svg class="svg-pagination" viewBox="0 0 24 24" fill="none">
-            <polygon points="5 4 15 12 5 20 5 4"></polygon>
-            <line x1="19" y1="5" x2="19" y2="19"></line>
-          </svg>
-        </button>
-      </div>
+          <polygon points="5 4 15 12 5 20 5 4"></polygon>
+          <line x1="19" y1="5" x2="19" y2="19"></line>
+        </svg>
+      </button>
     </div>
 
   </div>
