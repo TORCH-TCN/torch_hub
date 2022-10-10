@@ -131,6 +131,7 @@ document.addEventListener('alpine:init',()=>{
         totalSpecimens: 0,
         pageNumber: 1,
         per_page: 14,
+        visiblePages: 3,
         uploadingMessage: "Uploading <span id='fileName'></span>",
         collection: {},
         openPage(specimenid){
@@ -194,6 +195,10 @@ document.addEventListener('alpine:init',()=>{
                 })
             }) 
         },  
+        searchStringChanged() {
+            this.pageNumber = 1;
+            this.searchSpecimen();
+        },
         updateCounter(e) {
             this.fileCounter = (this.fileCounter + e);
             if(this.fileCounter == 0){
@@ -210,13 +215,15 @@ document.addEventListener('alpine:init',()=>{
                     if(_res.status == 200)
                         _res.json().then(data=>{
                             
-                            if (data.status == 'ok')
-                                this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);
-                            else
+                            if (data.status == 'ok') {                                 
+                                this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);   
+                                this.searchSpecimen();                                                      
+                            } else
                                 alert(data.statusText)  
                         })
                     else
-                        alert(_res.statusText)  
+                        alert(_res.statusText) 
+                        this.open=false;
                 }).catch(error=>{
                     console.log(error);
                     alert('Failed to remove the specimen');
@@ -225,16 +232,35 @@ document.addEventListener('alpine:init',()=>{
         },
         showOnlyError() {
             this.onlyErrorToggle = !this.onlyErrorToggle;
+            this.pageNumber = 1;
             this.searchSpecimen();
         },
         pageCount() {
             return Math.ceil(this.totalSpecimens / this.per_page);
-        },         
+        },           
+        startPage() {
+            if (this.pageNumber == 1) {
+              return 1;
+            }
+            if (this.pageNumber == this.pageCount()) {
+              return this.pageCount() - this.visiblePages + 1;
+            }
+            return this.pageNumber - 1;
+        },
+        endPage() {
+            return Math.min(
+              this.startPage() + this.visiblePages - 1,
+              this.pageCount()
+            );
+        },
         pages() {
-            return Array.from({
-              length: Math.ceil(this.totalSpecimens / this.per_page),
-            });
-        },      
+            const range = [];
+            for (let i = this.startPage(); i <= this.endPage(); i += 1) {
+              range.push(i);
+            }
+            console.log("range", range);
+            return range;
+        },
         viewPage(index) {
             this.pageNumber = index;
             this.searchSpecimen();

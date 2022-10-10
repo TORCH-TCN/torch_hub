@@ -24,9 +24,9 @@ content %}
         type="text"
         placeholder="Search"
         x-model="search"
-        @keyup="searchSpecimen()"
+        @keyup="searchStringChanged()"
       />
-      <button x-on:click="searchSpecimen()">
+      <button x-on:click="searchStringChanged()">
         <i class="fa fa-search" style="font-size: 18px"> </i>
       </button>
     </div>
@@ -134,75 +134,85 @@ content %}
           </div>
 
           <template x-for="s in specimens">
-            <div>
-              <div
-                class="collection-card"
-                :alt="s.name"
-                x-on:click="openPage(s.id)"
-              >
-                <div x-data="{ open: false }" class="menu-dropdown">
-                  <button
-                    @click="open = ! open"
-                    class="menu-dropbtn"
-                    @click.stop
-                  >
-                    <img src="../static/images/list.png" alt="menu" />
-                  </button>
-                  <div
-                    x-show="open"
-                    @click.outside="open = false"
-                    class="menu-dropdown-content"
-                    @click.stop
-                  >
-                    <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
-                  </div>
+            <div
+              class="collection-card"
+              :alt="s.name"
+              x-on:click="openPage(s.id)"
+            >
+              <div x-data="{ open: false }" class="menu-dropdown">
+                <button @click="open = ! open" class="menu-dropbtn" @click.stop>
+                  <img src="../static/images/list.png" alt="menu" />
+                </button>
+                <div
+                  x-show="open"
+                  @click.outside="open = false"
+                  class="menu-dropdown-content"
+                  @click.stop
+                >
+                  <p @click="deleteSpecimen(s.id)" class="xsmall">Delete</p>
                 </div>
+              </div>
 
-                <img
-                  :src="s.cardimg"
-                  :alt="s.name"
-                  x-show="s.flow_run_state != 'Failed'"
-                />
-                <img
-                  src="../static/images/error.png"
-                  :alt="s.name"
-                  x-show="s.flow_run_state == 'Failed'"
-                />
-                <div class="card-body">
-                  <h5 x-text="s.name"></h5>
-                  <template x-if="s.flow_run_state == 'Completed'">
-                    <p x-text="s.create_date"></p>
-                  </template>
-                  <template x-if="s.flow_run_state == 'Running'">
-                    <div class="d-flex align-items-center">
-                      <div
-                        class="spinner-border spinner-border-sm ml-auto text-secondary"
-                        role="status"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                  </template>
-                  <template x-if="s.flow_run_state == 'Failed' || s.flow_run_state == 'Retrying'">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                      <span
-                        class="text-danger"
-                        x-text="'Error | ' + s.failed_task"
-                      ></span>
-                      <img x-show="s.flow_run_state == 'Failed'" @click="retry(s)" @click.stop src="../static/images/retry_icon.svg" alt="retry icon" class="retry-icon">
-                      <div x-show="s.flow_run_state == 'Retrying'"
-                        class="spinner-border spinner-border-sm ml-auto text-secondary"
-                        role="status"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    
-                  </template>
-                </div>
+              <img
+                :src="s.cardimg"
+                :alt="s.name"
+                x-show="s.flow_run_state != 'Failed'"
+              />
+              <img
+                src="../static/images/error.png"
+                :alt="s.name"
+                x-show="s.flow_run_state == 'Failed'"
+              />
+              <div class="card-body">
+                <h5 x-text="s.name"></h5>
+                <template x-if="s.flow_run_state == 'Completed'">
+                  <p x-text="s.create_date"></p>
+                </template>
+                <template x-if="s.flow_run_state == 'Running'">
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="spinner-border spinner-border-sm ml-auto text-secondary"
+                      role="status"
+                      aria-hidden="true"
+                    ></div>
+                  </div>
+                </template>
+                <template
+                  x-if="s.flow_run_state == 'Failed' || s.flow_run_state == 'Retrying'"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <span
+                      class="text-danger"
+                      x-text="'Error | ' + s.failed_task"
+                    ></span>
+                    <img
+                      x-show="s.flow_run_state == 'Failed'"
+                      @click="retry(s)"
+                      @click.stop
+                      src="../static/images/retry_icon.svg"
+                      alt="retry icon"
+                      class="retry-icon"
+                    />
+                    <div
+                      x-show="s.flow_run_state == 'Retrying'"
+                      class="spinner-border spinner-border-sm ml-auto text-secondary"
+                      role="status"
+                      aria-hidden="true"
+                    ></div>
+                  </div>
+                </template>
               </div>
             </div>
           </template>
         </div>
       </template>
+    </div>
 
       <div
       class="pagination"
@@ -237,16 +247,16 @@ content %}
         </svg>
       </button>
 
-      <template x-for="(page,index) in pages()" :key="index">
-        <button
-          class="page-number"
-          :class="{ 'bg-page' : index+1 === pageNumber }"
-          type="button"
-          x-on:click="viewPage(index+1)"
-        >
-          <span x-text="index+1"></span>
-        </button>
-      </template>
+        <template x-for="(page,index) in pages()" :key="index">
+          <button
+            class="page-number"
+            :class="{ 'bg-page' : page === pageNumber }"
+            type="button"
+            x-on:click="viewPage(page)"
+          >
+            <span x-text="page"></span>
+          </button>
+        </template>
 
       
       <button
@@ -279,7 +289,6 @@ content %}
       </button>
     </div>
 
-    </div>
   </div>
 </div>
 

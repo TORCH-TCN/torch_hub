@@ -58,11 +58,13 @@ content %}
             {% for i in images %}
               <div class="col-sm-4">
                 <div class="collection-card">
+                  <a href="{{i.web_url()}}" target="_blank">
                   <img src="{{i.web_url()}}" alt="" />
                   <div class="card-body">
                     <h5>{{i.size}}</h5>
                     <p>{{i.create_date}}</p>
                   </div>
+                  </a>  
                 </div>
               </div>
             {% endfor %}
