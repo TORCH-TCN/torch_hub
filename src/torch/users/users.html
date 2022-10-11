@@ -2,14 +2,13 @@
 {% block title %}Users{% endblock %} 
 {% block content %}
     <h3 align="left" class="my-4">Users</h3>
-    
-    <table class="table table-bordered">
-        <thead>
+    <div class="form-container">
+      <table class="table table-bordered">
+        <thead class="thead-light">
             <tr>
-                <td>Email</td>
-                <td>Institution</td>
-                <td>Roles</td>
-                <td></td>
+                <th>Email</th>
+                <th>Roles</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +22,6 @@
                       {% endif %}
                       {{ user.email }}
                     </td>
-                    <td>{{user.institution_code}}</td>
                     <td>
                         
                         {% for role in user.roles %}
@@ -56,7 +54,9 @@
         </tbody>
     </table>
 
-    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+    
+    <div class="modal modal-users-roles" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -80,9 +80,9 @@
               
               </form>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onclick="addRoleToUser()">Add</button>
+            <div class="modal-footer pr-3 pb-3">
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+              <button type="button" class="btn btn-primary" onclick="addRoleToUser()">Save</button>
             </div>
           </div>
         </div>

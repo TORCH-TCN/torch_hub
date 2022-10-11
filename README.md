@@ -65,3 +65,8 @@ Fire up the Prefect UI locally by entering this command in your terminal:
 prefect orion start
 ```
 Follow the link in your terminal to see the dashboard.
+
+## Adding an admin user
+After running the web app for the first time the database and admin role are created and you should be able to Sign Up and create a new user from the Sign Up page.
+
+To assign the admin role to your user navigate to `src/torch` and access the database `sqlite3 torch-hub.db` and then execute the command `INSERT INTO roles_users (your_user_id, 1)`
