@@ -429,3 +429,8 @@ input:checked + .slider:before {
   padding-top: 0.5rem !important;
   border-radius: 0.25rem !important;
 }
+
+.deleteBtn {
+  font-weight: 600;
+  color: #7f56d9;
+}
