@@ -48,26 +48,22 @@
           </div>
           <div class="nav-right">
               {% if current_user.is_authenticated %}
-                <!-- <div class="dropdown">
-                  <button class="dropbtn">Reports</button>
-                  <div class="dropdown-content">
-                    <a class="nav-item nav-link" id="report-export" href="/reports/export">Export</a>
-                    <a class="nav-item nav-link" id="report-import" href="/reports/import">Import</a>                    
-                  </div>
-                </div>
-                <a class="nav-item nav-link" id="profile" href="/users/{{current_user.id}}">Profile</a> -->
-                
-                
+                                
                 {% if current_user.has_role('admin') %}
-                
-                  <div class="dropdown">
-                    <button class="dropbtn">Admin</button>
-                    <div class="dropdown-content">
-                      <a class="nav-item nav-link" id="users" href="/users">Users</a>
-                      <a class="nav-item nav-link" id="roles" href="/roles">Roles</a>
-                      <a class="nav-item nav-link" id="institutions" href="/institutions">Institutions</a>
+                  <a class="nav-item nav-link" id="reports" href="/reports/export">Reports</a>
+                                    
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Manage
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="/users/{{current_user.id}}">Profile</a>
+                      <a class="dropdown-item" href="/users">Users</a>
+                      <a class="dropdown-item" href="/roles">Roles</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="/institutions">Institutions</a>
                     </div>
-                  </div>
+                  </li>
                 {% endif %}
                 
                 <a class="nav-item nav-link" id="logout" href="/logout">Logout</a> 

@@ -775,3 +775,7 @@ header{
     border-radius: 8px;
     height: 40px;
 }
+
+.remember-field input{
+    width: auto;
+}

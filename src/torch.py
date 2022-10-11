@@ -4,6 +4,7 @@ from flask_mail import Mail
 from torch import create_app, db, socketio
 from torch.collections.collections import Collection
 from torch.institutions.institutions import Institution
+from torch.users.role import Role
 from torch.users.user import User
 
 
@@ -15,7 +16,7 @@ def create_tables():
     db.create_all()
 
 
-def check_default_institution(app):
+def check_init_db(app):
     app.app_context().push()
     create_tables()
     institutions = db.session.query(Institution).all()
@@ -35,9 +36,19 @@ def check_default_institution(app):
         db.session.add(default_collection)
         db.session.commit()
 
+    #admin role
+
+    roles = db.session.query(Role).all()
+
+    if len(roles) == 0:
+        print("Creating admin role...")
+        admin_role = Role(name="admin",description="admin")
+        db.session.add(admin_role)
+        db.session.commit()
+
 if __name__ == "__main__":
     freeze_support()
 
-    check_default_institution(app)
-    #app.run(debug=True)
-    socketio.run(app)
+    check_init_db(app)
+    app.run(debug=True)
+    #socketio.run(app)

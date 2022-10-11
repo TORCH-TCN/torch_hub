@@ -2,13 +2,13 @@ import csv
 import io
 from flask import Blueprint, make_response, render_template, request
 from torch import db
-from flask_security import current_user
+from flask_security import current_user, roles_accepted
 
 reports_bp = Blueprint("reports", __name__, url_prefix="/reports")
 
 
 @reports_bp.route("/import", methods=["GET"])
-# @roles_accepted('admin')
+@roles_accepted('admin')
 def csvfiles_import():
 
     header = []
@@ -20,7 +20,7 @@ def csvfiles_import():
 
 
 @reports_bp.route("/import", methods=["POST"])
-# @roles_accepted('admin')
+@roles_accepted('admin')
 def csvfiles_import_post():
 
     header = []
@@ -42,7 +42,7 @@ def csvfiles_import_post():
 
 
 @reports_bp.route("/export", methods=["GET"])
-# @roles_accepted('admin')
+@roles_accepted('admin')
 def reports():
     tables = db.engine.table_names()
 
@@ -50,7 +50,7 @@ def reports():
 
 
 @reports_bp.route("/export", methods=["POST"])
-# @roles_accepted('admin')
+@roles_accepted('admin')
 def reports_post():
     if request.method == "POST":
         selectedtable = request.form.get("selecttable")
