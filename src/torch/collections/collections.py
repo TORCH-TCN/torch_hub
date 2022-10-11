@@ -5,6 +5,8 @@ from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify
 from flask_security import current_user, login_required
 from sqlalchemy import Column, Integer, String, ForeignKey, func, desc
+import sqlalchemy as sa
+from sqlalchemy.orm import joinedload
 from torch import db, Base
 from torch.collections.specimens import Specimen, SpecimenImage
 from torch.collections.workflow import run_workflow
@@ -97,7 +99,7 @@ def collections_search():
 
 
 def getCollectionCardImage(collection):
-    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(SpecimenImage.size == 'THUMB').first()
+    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection.id).filter(Specimen.deleted == 0).filter(SpecimenImage.size == 'THUMB').first()
     return img.web_url() if img != None else "../static/images/default.jpg"
 
 
@@ -224,10 +226,54 @@ def delete(id):
 
 @collections_bp.route("specimen/<id>", methods=["DELETE"])
 def delete_specimen(id):
-    specimen = db.session.query(Specimen).get(id)
+    specimen = db.session.query(Specimen).options(joinedload("images")).get(id)
 
-    if specimen:        
+    if specimen:   
+        for i in specimen.images:
+            deleteImgFile(i.url) 
+
+        deleteImgFile(specimen.upload_path)        
         specimen.deleted = 1
         db.session.commit()
 
     return jsonify({"status":"ok"})
+
+@collections_bp.route("/transferred-specimens/<collectionid>", methods=["DELETE"])
+def delete_transfered_specimens(collectionid):
+    collection = db.session.query(Collection).get(collectionid)
+
+    if collection:
+        specimens_has_non_transferred_images = sa.exists(
+            sa.select([SpecimenImage.id])
+            .select_from(SpecimenImage)
+            .where((SpecimenImage.specimen_id == Specimen.id) &
+                    (SpecimenImage.external_url == None))
+        )
+
+        specimens_with_transferred_images =  (sa.select([Specimen.id])
+            .select_from(Specimen)
+            .where((Specimen.collection_id == collectionid) &  
+                    (Specimen.deleted == 0)    &                          
+                    ~specimens_has_non_transferred_images)
+        )
+
+        specimens_ids = list(map(lambda x:x.id, db.session.execute(specimens_with_transferred_images)))   
+
+        specimens = db.session.query(Specimen).options(joinedload("images")).filter(Specimen.id.in_(specimens_ids))
+
+        for s in specimens:
+            for i in s.images:                       
+                deleteImgFile(i.url)
+
+            deleteImgFile(s.upload_path)
+            s.deleted = 1
+            db.session.commit()
+
+    return jsonify({"status":"ok"})
+
+def deleteImgFile(upload_path):
+    if os.path.exists(upload_path):
+        os.remove(upload_path)
+    else:
+        print("The file does not exist")
+        

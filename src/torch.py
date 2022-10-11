@@ -32,7 +32,7 @@ def check_init_db(app):
 
     if len(collections) == 0:
         print("Creating default collection...")
-        default_collection = Collection(name="Default",code="DEFAULT",institution_id=1)
+        default_collection = Collection(name="Default",code="DEFAULT",institution_id=1, workflow="process_specimen", collection_folder="Default")
         db.session.add(default_collection)
         db.session.commit()
 

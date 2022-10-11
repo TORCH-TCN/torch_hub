@@ -297,6 +297,30 @@ document.addEventListener('alpine:init',()=>{
                   specimen.flow_run_state = "Failed"
                   alert('Something wrong happened');
               });
-        }  
+        },
+        deleteTransferredSpecimens(){
+            
+            if (confirm("Are you sure you want to remove the transferred specimens? This will delete all related specimen files.") == true) {
+                
+                fetch(`transferred-specimens/${this.collection.id}`, {
+                  method: "DELETE"
+                }).then((_res) => {
+                    console.log("res alpine:", _res)
+                    if(_res.status == 200)
+                        _res.json().then(data=>{
+                            
+                            if (data.status == 'ok') {                                 
+                                this.searchSpecimen();                                                      
+                            } else
+                                alert(data.statusText)  
+                        })
+                    else
+                        alert(_res.statusText)                         
+                }).catch(error=>{
+                    console.log(error);
+                    alert('Failed to remove the transferred specimens');
+                });
+              }
+        },
     }));
 })
