@@ -24,6 +24,10 @@
   top: 10%;
 }
 
+.modal-users-roles{
+  display: none;
+}
+
 .modal .modal-dialog {
   position: relative;
   width: auto;
