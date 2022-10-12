@@ -12,7 +12,7 @@ from torch.prefect_flows.tasks.upload import upload
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
-def process_specimen(specimen, app_config):
+def process_specimen(collection, specimen, app_config):
 
     with open(os.path.join(app_config["BASE_DIR"],'prefect_flows','configs','process_specimen_config.json'), 'r') as f:
         flow_config = json.load(f)
@@ -37,7 +37,7 @@ def process_specimen(specimen, app_config):
 
         logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
         for img in imgs:
-            upload(flow_config, img)
+            upload(collection, flow_config, img)
             save_specimen_image(img,app_config)
         
         save_specimen(specimen, app_config, flow_run_id, "Completed")
