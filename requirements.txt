@@ -148,3 +148,4 @@ wsproto==1.1.0
 WTForms==3.0.1
 yarl==1.8.1
 zict==2.2.0
+paramiko==2.11.0

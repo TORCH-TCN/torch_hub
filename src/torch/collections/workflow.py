@@ -6,7 +6,7 @@ def run_workflow(collection,specimen,config):
 
     match collection.workflow:
         case 'process_specimen':
-            state = process_specimen(specimen,config, return_state=True)
+            state = process_specimen(collection, specimen,config, return_state=True)
         case _:
             raise NotImplementedError 
     
