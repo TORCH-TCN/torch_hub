@@ -52,7 +52,6 @@ def reports():
 @reports_bp.route("/export", methods=["POST"])
 @roles_accepted('admin')
 def reports_post():
-    if request.method == "POST":
         selectedtable = request.form.get("selecttable")
         whereclause = request.form.get("whereclause")
 
@@ -67,6 +66,3 @@ def reports_post():
         output.headers["Content-type"] = "text/csv"
         return output
 
-    tables = db.engine.table_names()
-
-    return render_template("/reports/export.html", user=current_user, tables=tables)

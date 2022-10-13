@@ -1,8 +1,11 @@
+import csv
+import io
 import json
 from operator import or_
 import os
+from typing_extensions import Required
 from uuid import uuid4
-from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify
+from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify, make_response
 from flask_security import current_user, login_required
 from sqlalchemy import Column, Integer, String, ForeignKey, func, desc
 import sqlalchemy as sa
@@ -277,3 +280,31 @@ def deleteImgFile(upload_path):
     else:
         print("The file does not exist")
         
+@collections_bp.route('/export-csv/<collectionid>', methods=['GET'])
+def export_csv(collectionid):
+    collection = db.session.query(Collection).get(collectionid)
+
+    if collection:
+        specimens = db.session.query(Specimen).options(joinedload("images")).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0).order_by(Specimen.id.desc()).all()
+
+        si = io.StringIO()
+        fieldnames = ['catalog_number', 'large', 'web', 'thumbnail']
+        writer = csv.DictWriter(si, fieldnames=fieldnames, delimiter=',')
+        writer.writeheader()
+
+        for s in specimens:
+            large = getSpecimenImgUrl(s.images, 'FULL')
+            web = getSpecimenImgUrl(s.images, 'MED')
+            thumbnail = getSpecimenImgUrl(s.images, 'THUMB')
+            writer.writerow({'catalog_number': s.catalog_number, 'large': large, 'web': web, 'thumbnail': thumbnail})
+                
+        output = make_response(si.getvalue())
+        output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+        output.headers["Content-type"] = "text/csv"
+        return output   
+
+def getSpecimenImgUrl(specimenImages, size):
+    listImgs = list(filter(lambda x:x.size == size, specimenImages))
+    if len(listImgs) > 0:
+        return listImgs[0].external_url
+    return None

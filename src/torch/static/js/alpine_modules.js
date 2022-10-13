@@ -6,6 +6,7 @@ document.addEventListener('alpine:init',()=>{
         formData: {
             name: "",
             code: "",
+            collection_folder: "",
         },
         search: "",
         selectedCollection: null,
@@ -38,9 +39,14 @@ document.addEventListener('alpine:init',()=>{
         openModal() {
             this.formData.name = "";
             this.formData.code = "";
+            this.formData.collection_folder = "";
             this.open = true;
         },
         submitData(e){
+            if(this.formData.name == "" | this.formData.code == "" | this.formData.collection_folder == "") {
+                alert("All the fields are required!")
+                return
+            }
             fetch("/collections", {
                 method: "POST",
                 headers: {
@@ -116,8 +122,8 @@ document.addEventListener('alpine:init',()=>{
                     alert('Failed to remove the collection');
                 });
               }
-        }
-    }));
+        },
+}));
 
     Alpine.data('specimens',(collectionid)=>({
         specimens: [],
@@ -322,5 +328,14 @@ document.addEventListener('alpine:init',()=>{
                 });
               }
         },
+        downloadCSV(){                         
+            fetch(`export-csv/${this.collection.id}`, {
+                method: "GET"
+            }).then( res => res.blob() )
+                .then( blob => {
+                var file = window.URL.createObjectURL(blob);
+                window.location.assign(file);
+            });
+        }
     }));
 })
