@@ -38,6 +38,11 @@ content %}
       </div>
       <div class="right">
         <div class="list-sort">
+          <button type="button" @click="downloadCSV">
+            <p class="xsmall">Export CSV</p>
+          </button>
+        </div>
+        <div class="list-sort">
           <button type="button" @click="deleteTransferredSpecimens">
             <p class="xsmall deleteBtn">Delete transferred files</p>
           </button>
