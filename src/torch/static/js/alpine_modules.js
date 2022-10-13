@@ -335,24 +335,6 @@ document.addEventListener('alpine:init',()=>{
                 .then( blob => {
                 var file = window.URL.createObjectURL(blob);
                 window.location.assign(file);
-                
-            
-            
-            // then((_res) => {
-            //     console.log("res alpine:", _res)
-            //     if(_res.status == 200)
-            //         _res.json().then(data=>{
-                            
-            //             if (data.status == 'ok') {                                 
-            //                 this.searchSpecimen();                                                      
-            //             } else
-            //                 alert(data.statusText)  
-            //             })
-            //     else
-            //         alert(_res.statusText)                         
-            // }).catch(error=>{
-            //     console.log(error);
-            //     alert('Failed to download the CSV');
             });
         }
     }));
