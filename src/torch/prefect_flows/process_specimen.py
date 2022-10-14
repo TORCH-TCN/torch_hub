@@ -9,6 +9,7 @@ from torch.prefect_flows.tasks.herbar import herbar
 from torch.prefect_flows.tasks.save_specimen import save_specimen, save_specimen_image
 from torch.prefect_flows.tasks.check_orientation import check_orientation
 from torch.prefect_flows.tasks.upload import upload
+from torch.prefect_flows.tasks.ocr import textract
 
 
 @flow(name="Process Specimen",task_runner=SequentialTaskRunner, version=os.getenv("GIT_COMMIT_SHA"))
@@ -34,6 +35,9 @@ def process_specimen(collection, specimen, app_config):
 
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
         imgs = generate_derivatives(specimen, flow_config, app_config)
+
+        logger.info(f"OCRing image {specimen.name} (id:{specimen.id})...")
+        textract(specimen,app_config)
 
         logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
         for img in imgs:
