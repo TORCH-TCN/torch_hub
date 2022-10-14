@@ -9,7 +9,7 @@ import json
 import boto3
 
 @task
-def ocr(specimen:Specimen, app_config, flow_config):
+def textract(specimen:Specimen, app_config, flow_config):
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
     #file_path_string = os.path.join(root, specimen.upload_path)
     file_path = Path(specimen.upload_path)
