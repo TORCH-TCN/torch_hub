@@ -39,10 +39,10 @@ def process_specimen(collection, specimen, app_config):
         logger.info(f"OCRing image {specimen.name} (id:{specimen.id})...")
         textract(specimen,app_config)
 
-        logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
-        for img in imgs:
-            upload(collection, flow_config, img)
-            save_specimen_image(img,app_config)
+        #logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
+        #for img in imgs:
+        #    upload(collection, flow_config, img)
+        #    save_specimen_image(img,app_config)
         
         save_specimen(specimen, app_config, flow_run_id, "Completed")
     except:

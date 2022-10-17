@@ -19,19 +19,30 @@ Specimen = None
 def textract(specimen:Specimen, app_config):
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
     #file_path_string = os.path.join(root, specimen.upload_path)
+
+    # Full uploaded image is generally too big for AWS Textract service
     #file_path = Path(specimen.upload_path)
 
 
     # Get FULL resolution image - same dimensions as upload, but compressed
     # must be under 5MB for AWS Textract to work
+    specimen_id = specimen.id
+    print(specimen_id)
+    # When trying to get the image or filter for the FULL image type, I get the following error:
+    # sqlalchemy.exc.ProgrammingError: (sqlite3.ProgrammingError) SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 139664593766144 and this is thread id 139663469700864.
 
-    img_full = Specimen.images.query.filter_by(size='FULL').first()
-    print(img_full)
-    img_full_path = img_full.url
-    print(img_full_path)
-    file_path =img_full_path
+    for image in specimen.images:
+        print(image)
+    #print(specimen.images)
+
+    #img_full = specimen.images.query.filter_by(size='FULL').first()
+    #print(img_full)
+    #img_full_path = img_full.url
+    #print(img_full_path)
+    #file_path =img_full_path
     #file_path = specimen.upload_path
 
+"""
     # Document
     #documentName = "okla_images_ALL_OK_stamps_A/OKLA104946_area_cropped_jNcPTx9M6cWAZQXupcRgoM.jpg"
 
@@ -45,18 +56,11 @@ def textract(specimen:Specimen, app_config):
 
     # Call Amazon Textract
     response = textract.detect_document_text(Document={'Bytes': imageBytes})
-
     print(response)
 
     # Print detected text
     response_json = json.dumps(response)
-    #print(response_json)
-    """
-    with open('aws_output.jsonl', 'w') as outfile:
-        #for entry in response_json:
-        json.dump(response_json, outfile)
-        outfile.write('\n')
-    """
+"""
 
 if __name__ == "__main__":
     # test file path
