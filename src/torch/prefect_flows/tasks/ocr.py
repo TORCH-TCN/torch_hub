@@ -5,6 +5,8 @@ import prefect
 from torch.prefect_flows.tasks.save_specimen import save_specimen
 from torch.collections.specimens import Specimen
 from prefect.orion.schemas.states import Failed
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 import secrets
 
 import json
@@ -15,8 +17,54 @@ import boto3
 
 Specimen = None
 
+
 @task
-def textract(specimen:Specimen, app_config):
+def textract(specimen: Specimen, flow_config, app_config):
+
+    engine = create_engine(app_config["SQLALCHEMY_DATABASE_URI"], future=True)
+    flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
+
+    with Session(engine) as session:
+
+        try:
+            ocr_specimen = session.merge(specimen) #thread-safe
+
+            for image in ocr_specimen.images:
+                print(image.size)
+                print(image.id)
+
+            #img_full = ocr_specimen.images.query.filter_by(size='FULL').first()
+            #print(img_full)
+
+            """            
+            derivatives_to_add = {
+                size: config
+                for size, config in flow_config["GENERATE_DERIVATIVES"]["SIZES"].items()
+                if is_missing(local_specimen.images, size)
+            }
+
+            for derivative in derivatives_to_add.keys():
+                new_derivative = generate_derivative(
+                    local_specimen, derivative, derivatives_to_add[derivative]
+                )
+                local_specimen.images.append(new_derivative)
+            """
+            session.commit()
+
+            save_specimen(ocr_specimen,app_config,flow_run_id)
+
+            #return local_specimen.images
+            return 'OCR - results here'
+        except:
+            session.commit()
+            save_specimen(specimen,app_config,flow_run_id,'Failed','textract')
+            return Failed(message=f"Unable to generate OCR for specimen {specimen.id}-{specimen.name}")
+        finally:
+            session.close()
+
+
+@task
+def textract_old(specimen:Specimen, app_config):
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
     #file_path_string = os.path.join(root, specimen.upload_path)
 

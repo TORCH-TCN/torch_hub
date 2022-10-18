@@ -37,7 +37,7 @@ def process_specimen(collection, specimen, app_config):
         imgs = generate_derivatives(specimen, flow_config, app_config)
 
         logger.info(f"OCRing image {specimen.name} (id:{specimen.id})...")
-        textract(specimen,app_config)
+        textract(specimen,flow_config, app_config)
 
         #logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
         #for img in imgs:
