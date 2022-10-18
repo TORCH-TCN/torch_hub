@@ -1,5 +1,3 @@
-# from https://github.com/aws-samples/amazon-textract-code-samples/blob/master/python/01-detect-text-local.py
-
 from prefect import task
 import prefect
 from torch.prefect_flows.tasks.save_specimen import save_specimen
@@ -15,9 +13,7 @@ from PIL import Image
 
 import boto3
 
-
 Specimen = None
-
 
 @task
 def textract(specimen: Specimen, flow_config, app_config):
@@ -52,9 +48,9 @@ def textract(specimen: Specimen, flow_config, app_config):
 
                 # Call Amazon Textract
                 response = textract.detect_document_text(Document={'Bytes': imageBytes})
+                # Print detected text
                 print(response)
 
-                # Print detected text
                 response_json = json.dumps(response)
             except Exception as e:
                 response_json = None
