@@ -30,22 +30,14 @@ def textract(specimen: Specimen, flow_config, app_config):
         try:
             ocr_specimen = session.merge(specimen) #thread-safe
             
-            """
-            for image in ocr_specimen.images:
-                print(image.size)
-                print(image.id)
-            """
-
+            # Not sure if this is the right/best way to query the SpecimenImage
+            # Seems like I should be able to query as below but it didn't work:
             #img_full = ocr_specimen.images.query.filter_by(size='FULL').first()
-            #collection = db.session.query(Collection).filter_by(code=collectionid).first()
             img_full = session.query(SpecimenImage).filter_by(specimen_id=ocr_specimen.id).filter_by(size='FULL').first()
             file_path = img_full.url
             print(file_path)
 
-
             # Document
-            #documentName = "okla_images_ALL_OK_stamps_A/OKLA104946_area_cropped_jNcPTx9M6cWAZQXupcRgoM.jpg"
-
             try:
                 # Read document content
                 print('Opening file:', file_path)
@@ -55,7 +47,6 @@ def textract(specimen: Specimen, flow_config, app_config):
                 print(e)
 
             try:
-                #print(local_secrets.__dict__)
                 # Amazon Textract client
                 textract = boto3.client('textract', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
 
@@ -66,6 +57,7 @@ def textract(specimen: Specimen, flow_config, app_config):
                 # Print detected text
                 response_json = json.dumps(response)
             except Exception as e:
+                response_json = None
                 print(e)
 
             session.commit()
