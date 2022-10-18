@@ -3,11 +3,12 @@
 from prefect import task
 import prefect
 from torch.prefect_flows.tasks.save_specimen import save_specimen
-from torch.collections.specimens import Specimen
+from torch.collections.specimens import Specimen, SpecimenImage
 from prefect.orion.schemas.states import Failed
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-import secrets
+# for some reason I can't use 'import aws_secrets', getting module not found error
+from .aws_secrets import aws_access_key_id, aws_secret_access_key
 
 import json
 from PIL import Image
@@ -28,102 +29,53 @@ def textract(specimen: Specimen, flow_config, app_config):
 
         try:
             ocr_specimen = session.merge(specimen) #thread-safe
-
+            
+            """
             for image in ocr_specimen.images:
                 print(image.size)
                 print(image.id)
+            """
 
             #img_full = ocr_specimen.images.query.filter_by(size='FULL').first()
-            #print(img_full)
+            #collection = db.session.query(Collection).filter_by(code=collectionid).first()
+            img_full = session.query(SpecimenImage).filter_by(specimen_id=ocr_specimen.id).filter_by(size='FULL').first()
+            file_path = img_full.url
+            print(file_path)
 
-            """            
-            derivatives_to_add = {
-                size: config
-                for size, config in flow_config["GENERATE_DERIVATIVES"]["SIZES"].items()
-                if is_missing(local_specimen.images, size)
-            }
 
-            for derivative in derivatives_to_add.keys():
-                new_derivative = generate_derivative(
-                    local_specimen, derivative, derivatives_to_add[derivative]
-                )
-                local_specimen.images.append(new_derivative)
-            """
+            # Document
+            #documentName = "okla_images_ALL_OK_stamps_A/OKLA104946_area_cropped_jNcPTx9M6cWAZQXupcRgoM.jpg"
+
+            try:
+                # Read document content
+                print('Opening file:', file_path)
+                with open(file_path, 'rb') as document:
+                    imageBytes = bytearray(document.read())
+            except Exception as e:
+                print(e)
+
+            try:
+                #print(local_secrets.__dict__)
+                # Amazon Textract client
+                textract = boto3.client('textract', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+
+                # Call Amazon Textract
+                response = textract.detect_document_text(Document={'Bytes': imageBytes})
+                print(response)
+
+                # Print detected text
+                response_json = json.dumps(response)
+            except Exception as e:
+                print(e)
+
             session.commit()
 
             save_specimen(ocr_specimen,app_config,flow_run_id)
 
-            #return local_specimen.images
-            return 'OCR - results here'
+            return response_json
         except:
             session.commit()
             save_specimen(specimen,app_config,flow_run_id,'Failed','textract')
             return Failed(message=f"Unable to generate OCR for specimen {specimen.id}-{specimen.name}")
         finally:
             session.close()
-
-
-@task
-def textract_old(specimen:Specimen, app_config):
-    flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
-    #file_path_string = os.path.join(root, specimen.upload_path)
-
-    # Full uploaded image is generally too big for AWS Textract service
-    #file_path = Path(specimen.upload_path)
-
-
-    # Get FULL resolution image - same dimensions as upload, but compressed
-    # must be under 5MB for AWS Textract to work
-    specimen_id = specimen.id
-    print(specimen_id)
-    # When trying to get the image or filter for the FULL image type, I get the following error:
-    # sqlalchemy.exc.ProgrammingError: (sqlite3.ProgrammingError) SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 139664593766144 and this is thread id 139663469700864.
-
-    for image in specimen.images:
-        print(image)
-    #print(specimen.images)
-
-    #img_full = specimen.images.query.filter_by(size='FULL').first()
-    #print(img_full)
-    #img_full_path = img_full.url
-    #print(img_full_path)
-    #file_path =img_full_path
-    #file_path = specimen.upload_path
-
-"""
-    # Document
-    #documentName = "okla_images_ALL_OK_stamps_A/OKLA104946_area_cropped_jNcPTx9M6cWAZQXupcRgoM.jpg"
-
-    # Read document content
-    print('Opening file:', file_path)
-    with open(file_path, 'rb') as document:
-        imageBytes = bytearray(document.read())
-
-    # Amazon Textract client
-    textract = boto3.client('textract', aws_access_key_id=secrets.aws_access_key_id, aws_secret_access_key=secrets.aws_secret_access_key)
-
-    # Call Amazon Textract
-    response = textract.detect_document_text(Document={'Bytes': imageBytes})
-    print(response)
-
-    # Print detected text
-    response_json = json.dumps(response)
-"""
-
-if __name__ == "__main__":
-    # test file path
-    file_path = '/media/jbest/data2/BRIT_git/torch_hub/src/torch/static/uploads/BRIT-test/fee50aca-a8dd-4cd8-b492-dca6c43ef94c/BRIT384264_FULL.jpg'
-    #file_path = '/media/jbest/data2/OKLA_stamp_tests/okla_images_detected_objects_sorted/OKLA/OKLA000100000/OKLA100288_area_cropped_exEf8v8brdd7mXMkbNkisn.jpg'
-    print('Opening file:', file_path)
-    with open(file_path, 'rb') as document:
-        imageBytes = bytearray(document.read())
-
-    # Amazon Textract client
-    #textract = boto3.client('textract')
-    textract = boto3.client('textract', aws_access_key_id=secrets.aws_access_key_id, aws_secret_access_key=secrets.aws_secret_access_key)
-
-
-    # Call Amazon Textract
-    response = textract.detect_document_text(Document={'Bytes': imageBytes})
-
-    print(response)    
