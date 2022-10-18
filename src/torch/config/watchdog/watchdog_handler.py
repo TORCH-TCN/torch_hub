@@ -5,12 +5,13 @@ import watchdog.observers
 class HubHandler(watchdog.events.PatternMatchingEventHandler):
     def __init__(self, workflowid, path):
         super().__init__(
-            patterns=["*.png"],
+            patterns=["*.png", "*.dng", "*.jpg", "*.jpeg"],
             ignore_patterns=None,
             ignore_directories=False,
             case_sensitive=True,
         )
 
+        path = "../../static/watch-uploads/"
         self.workflowid = workflowid
         observer = watchdog.observers.Observer()
         observer.schedule(self, path, recursive=True)
