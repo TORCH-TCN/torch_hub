@@ -6,7 +6,16 @@ from prefect.orion.schemas.states import Failed
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 # for some reason I can't use 'import aws_secrets', getting module not found error
-from .aws_secrets import aws_access_key_id, aws_secret_access_key
+#from .aws_secrets import aws_access_key_id, aws_secret_access_key
+
+# Using Prefect Blocks for secrets
+from prefect.blocks.system import Secret
+
+aws_access_key_id_block = Secret.load("brit-aws-access-key-id")
+aws_access_key_id = aws_access_key_id_block.get()
+aws_secret_access_key_block = Secret.load("brit-aws-secret-access-key")
+aws_secret_access_key = aws_secret_access_key_block.get()
+
 
 import json
 from PIL import Image
