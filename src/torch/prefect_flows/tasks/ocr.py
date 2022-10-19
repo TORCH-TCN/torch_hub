@@ -7,20 +7,19 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 # for some reason I can't use 'import aws_secrets', getting module not found error
 #from .aws_secrets import aws_access_key_id, aws_secret_access_key
-
-# Using Prefect Blocks for secrets
 from prefect.blocks.system import Secret
-
-aws_access_key_id_block = Secret.load("brit-aws-access-key-id")
-aws_access_key_id = aws_access_key_id_block.get()
-aws_secret_access_key_block = Secret.load("brit-aws-secret-access-key")
-aws_secret_access_key = aws_secret_access_key_block.get()
-
 
 import json
 from PIL import Image
 
 import boto3
+
+# Retrieve Prefect Blocks for credential secrets
+aws_access_key_id_block = Secret.load("brit-aws-access-key-id")
+aws_access_key_id = aws_access_key_id_block.get()
+aws_secret_access_key_block = Secret.load("brit-aws-secret-access-key")
+aws_secret_access_key = aws_secret_access_key_block.get()
+
 
 Specimen = None
 
@@ -42,7 +41,7 @@ def textract(specimen: Specimen, flow_config, app_config):
             file_path = img_full.url
             print(file_path)
 
-            # Document
+            # Read Document
             try:
                 # Read document content
                 print('Opening file:', file_path)
