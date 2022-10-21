@@ -27,14 +27,20 @@ def upload(collection, config, image: SpecimenImage):
 
 
 def upload_via_paramiko_sftp(collection, config, path):
-    transport = paramiko.Transport((config["HOST"], 22))
+    host = config["HOST"]
+    transport = paramiko.Transport((host, 22))
     transport.connect(username = config["USERNAME"], password = config["PASSWORD"])
     sftp = paramiko.SFTPClient.from_transport(transport)
 
     mkdir_p(sftp, collection.collection_folder) 
-    sftp.put(path, os.path.basename(path))  # Upload file to root FTP folder
+    sftp.put(path, os.path.basename(path)) 
+    final_url = f'{host}' + sftp.getcwd() + f"/{os.path.basename(path)}"
     sftp.close()
     transport.close()
+
+    return final_url
+
+
 
 def upload_via_s3(collection, config, path):
     amazon_config = Config(

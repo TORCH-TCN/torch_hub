@@ -204,12 +204,13 @@ def ajax_response(status, msg):
 def specimen(collectioncode, specimenid):
     collection = db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
     specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
-    images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).all()
+    images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).filter(SpecimenImage.size != "DNG").all()
+    dng = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).filter(SpecimenImage.size == "DNG").first()
     
     orion_url = current_app.config.get("PREFECT_ORION_URL", ORION_URL_DEFAULT)
     prefect_url = orion_url  + "flow-run/" + specimen.flow_run_id
    
-    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url)
+    return render_template("/collections/specimen.html", collection=collection, specimen=specimen, images=images, prefect_url = prefect_url, dng = dng)
 
 
 @collections_bp.route("/<id>", methods=["DELETE"])

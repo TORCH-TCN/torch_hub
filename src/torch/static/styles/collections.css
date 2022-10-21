@@ -144,7 +144,7 @@
   border-radius: 8px;
   min-width: 208px;
   max-width: 208px;
-  height: 239px;
+  min-height: 239px;
   cursor: pointer;
   position: relative;
 }
