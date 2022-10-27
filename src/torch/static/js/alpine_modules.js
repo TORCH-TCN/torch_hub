@@ -10,6 +10,7 @@ document.addEventListener('alpine:init',()=>{
         },
         search: "",
         selectedCollection: null,
+        selectedCollectionRegexList: [],
         collectionSaved: false,
         openPage(collectioncode){
             window.open(window.location.href + "/" + collectioncode,"_self")
@@ -29,7 +30,7 @@ document.addEventListener('alpine:init',()=>{
                 method: "GET"
               }).then((_res) => {
                 _res.json().then(data=>{
-                    this.selectedCollection = data[0];
+                    this.selectCollection(data[0]);
                     this.collections = data;
                     this.filteredCollections = data;
                     
@@ -82,10 +83,23 @@ document.addEventListener('alpine:init',()=>{
         },
         selectCollection(collection){
             this.selectedCollection = collection
+            if (this.selectedCollection.catalog_number_regex == null || this.selectedCollection.catalog_number_regex == undefined)
+                this.selectedCollectionRegexList = [""]
+            else
+                this.selectedCollectionRegexList = JSON.parse(this.selectedCollection.catalog_number_regex)
+        },
+        saveRegex(exp,index){
+            this.selectedCollectionRegexList[index] = exp
+        },
+        addNewRegex(){
+            this.selectedCollectionRegexList.push("")
+        },
+        deleteRegex(index){
+            this.selectedCollectionRegexList.splice(index,1)
         },
         saveCollectionSettings(){
-            console.log('saveCollectionSettings',this.selectedCollection);
-            
+            this.selectedCollection.catalog_number_regex = JSON.stringify(this.selectedCollectionRegexList)
+                        
             fetch(`/collections`, {
                 method: "POST",
                 headers: {

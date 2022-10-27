@@ -50,5 +50,5 @@ if __name__ == "__main__":
     freeze_support()
 
     check_init_db(app)
-    app.run(debug=True)
-    #socketio.run(app)
+    #app.run(debug=True)
+    socketio.run(app)
