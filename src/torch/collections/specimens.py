@@ -31,8 +31,8 @@ class Specimen(Base):
     flow_run_state = Column(String(150))
     failed_task = Column(String(150))
     deleted = Column(Integer, default=0)
-    images = relationship("SpecimenImage")
-    external_url = Column(Text)
+    has_dng = Column(Integer, default=0)
+    images = relationship("SpecimenImage")    
 
 
     def toJSON(self):
