@@ -3,6 +3,7 @@ import io
 import json
 from operator import or_
 import os
+from typing import List
 from typing_extensions import Required
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify, make_response
@@ -14,7 +15,7 @@ from torch import db, Base
 from torch.collections.specimens import Specimen, SpecimenImage
 from torch.collections.workflow import run_workflow
 from torch.institutions.institutions import Institution
-from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
@@ -34,25 +35,15 @@ class Collection(Base):
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    def add_specimens(self, files, config) -> Specimen:
-        batch_id = str(uuid4())
-        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.collection_folder, batch_id)
-        os.makedirs(target_dir)
+    def add_specimens(self, files: List[FileStorage], config) -> Specimen:
+        #batch_id = str(uuid4())
+        target_dir = os.path.join(config['BASE_DIR'],"static","uploads", self.collection_folder)
+        
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
         
         for file in files:
-            filename = secure_filename(file.filename)
-            destination = os.path.join(target_dir, filename)
-                        
-            file.save(destination)
-
-            specimen = Specimen(
-                name=file.filename, upload_path=destination, collection_id=self.id
-            )
-
-            db.session.add(specimen)
-            db.session.commit()
-            
-            run_workflow(self,specimen,config)
+            run_workflow(self,file,target_dir,config)
             
         
 
