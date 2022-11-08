@@ -4,6 +4,7 @@ import os
 from prefect import flow, task, get_run_logger
 from prefect.task_runners import SequentialTaskRunner
 from prefect.orion.schemas.states import Failed
+from torch.prefect_flows.tasks.check_catalog_number import check_catalog_number
 from torch.prefect_flows.tasks.generate_derivatives import generate_derivatives
 from torch.prefect_flows.tasks.herbar import herbar
 from torch.prefect_flows.tasks.save_specimen import save_specimen, save_specimen_image
@@ -26,8 +27,9 @@ def process_specimen(collection, specimen, app_config):
         save_specimen(specimen, app_config, flow_run_id, flow_run_state)
         logger.info(f"{specimen.name} saved...")
 
-        #logger.info(f"Running herbar {specimen.name} (id:{specimen.id})...")
-        #herbar(specimen,config)
+        logger.info(f"Running check_catalog_number {specimen.name} (id:{specimen.id})...")
+        specimen.catalog_number = check_catalog_number(collection, specimen, app_config)
+        save_specimen(specimen, app_config, flow_run_id, flow_run_state)
 
         logger.info(f"Running check_orientation {specimen.name} (id:{specimen.id})...")
         check_orientation(specimen,app_config)

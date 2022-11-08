@@ -288,6 +288,8 @@ def export_csv(collectionid):
             large = getSpecimenImgUrl(s.images, 'FULL')
             web = getSpecimenImgUrl(s.images, 'MED')
             thumbnail = getSpecimenImgUrl(s.images, 'THUMB')
+            if s.catalog_number == None:
+                s.catalog_number = s.name
             writer.writerow({'catalog_number': s.catalog_number, 'large': large, 'web': web, 'thumbnail': thumbnail})
                 
         output = make_response(si.getvalue())
