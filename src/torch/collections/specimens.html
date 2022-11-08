@@ -175,6 +175,9 @@ content %}
               />
               <div class="card-body">
                 <h5 x-text="s.name"></h5>
+                <template x-if="s.has_dng == 1">
+                  <i class="fa fa-file has-dng" title="has .dng file"></i>
+                </template>
                 <template x-if="s.flow_run_state == 'Completed'">
                   <p x-text="s.create_date"></p>
                 </template>

@@ -144,7 +144,7 @@
   border-radius: 8px;
   min-width: 208px;
   max-width: 208px;
-  height: 239px;
+  min-height: 239px;
   cursor: pointer;
   position: relative;
 }
@@ -433,4 +433,11 @@ input:checked + .slider:before {
 .deleteBtn {
   font-weight: 600;
   color: #7f56d9;
+}
+
+.has-dng{
+  position: absolute;
+  right: 15px;
+  font-size: 12px;
+  color: rgb(54, 133, 54);
 }

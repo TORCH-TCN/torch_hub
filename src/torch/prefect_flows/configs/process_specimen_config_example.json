@@ -1,8 +1,7 @@
 {
     "UPLOAD": {
         "TYPE": "sftp",
-        "HOST": "",
-        "PATH": "",
+        "HOST": "",        
         "USERNAME": "",
         "PASSWORD": ""
     },

@@ -6,7 +6,8 @@ from prefect import get_run_logger, task
 from botocore.exceptions import ClientError
 from botocore.config import Config
 from torch.collections.specimens import SpecimenImage
-
+from minio import Minio
+from minio.error import S3Error
 
 @task
 def upload(collection, config, image: SpecimenImage):
@@ -20,6 +21,8 @@ def upload(collection, config, image: SpecimenImage):
             image.external_url = upload_via_paramiko_sftp(collection, config["UPLOAD"], image.url)
         case "s3":
             image.external_url = upload_via_s3(collection, config["UPLOAD"], image.url)
+        case "minio":
+            image.external_url = upload_via_minio(collection, config["UPLOAD"], image.url)
         case _:
             raise NotImplementedError(
                 f"Upload type {upload_type} is not yet implemented."
@@ -27,14 +30,20 @@ def upload(collection, config, image: SpecimenImage):
 
 
 def upload_via_paramiko_sftp(collection, config, path):
-    transport = paramiko.Transport((config["HOST"], 22))
+    host = config["HOST"]
+    transport = paramiko.Transport((host, 22))
     transport.connect(username = config["USERNAME"], password = config["PASSWORD"])
     sftp = paramiko.SFTPClient.from_transport(transport)
 
     mkdir_p(sftp, collection.collection_folder) 
-    sftp.put(path, os.path.basename(path))  # Upload file to root FTP folder
+    sftp.put(path, os.path.basename(path)) 
+    final_url = f'{host}' + sftp.getcwd() + f"/{os.path.basename(path)}"
     sftp.close()
     transport.close()
+
+    return final_url
+
+
 
 def upload_via_s3(collection, config, path):
     amazon_config = Config(
@@ -74,6 +83,23 @@ def upload_via_pysftp(collection, config, path):
 
         return f'{config["HOST"]}' + sftp.getcwd() + f"/{os.path.basename(path)}"
 
+def upload_via_minio(collection, config, path):
+    client = Minio(
+        config["HOST"], 
+        access_key=config["USERNAME"],
+        secret_key=config["PASSWORD"],
+    )
+
+    bucket = collection.collection_folder
+    found = client.bucket_exists(bucket)
+    if not found:
+        client.make_bucket(bucket)
+    else:
+        print(f"Bucket {bucket} already exists")
+
+    result = client.fput_object(bucket, os.path.basename(path), path)
+
+    return result.location
 
 def mkdir_p(sftp, remote_directory):
     if remote_directory == '/':
