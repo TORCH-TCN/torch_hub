@@ -8,7 +8,7 @@ from typing_extensions import Required
 from uuid import uuid4
 from flask import Blueprint, flash, redirect, render_template, request, current_app, jsonify, make_response
 from flask_security import current_user, login_required
-from sqlalchemy import Column, Integer, String, ForeignKey, func, desc
+from sqlalchemy import Column, Integer, String, ForeignKey, func, desc, Text
 import sqlalchemy as sa
 from sqlalchemy.orm import joinedload
 from torch import db, Base
@@ -25,7 +25,7 @@ class Collection(Base):
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
     default_prefix = Column(String(15))
-    catalog_number_regex = Column(String(150))
+    catalog_number_regex = Column(Text)
     institution_id = Column(Integer, ForeignKey("institution.id"))
     flow_id = Column(String(150))
     workflow = Column(String(150))
@@ -288,6 +288,8 @@ def export_csv(collectionid):
             large = getSpecimenImgUrl(s.images, 'FULL')
             web = getSpecimenImgUrl(s.images, 'MED')
             thumbnail = getSpecimenImgUrl(s.images, 'THUMB')
+            if s.catalog_number == None:
+                s.catalog_number = s.name
             writer.writerow({'catalog_number': s.catalog_number, 'large': large, 'web': web, 'thumbnail': thumbnail})
                 
         output = make_response(si.getvalue())
