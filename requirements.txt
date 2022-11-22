@@ -71,7 +71,7 @@ jsonschema==3.2.0
 kubernetes==24.2.0
 locket==1.0.0
 Mako==1.2.1
-MarkupSafe
+MarkupSafe==2.0.1
 marshmallow==3.17.0
 marshmallow-oneofschema==3.0.1
 mccabe==0.7.0
