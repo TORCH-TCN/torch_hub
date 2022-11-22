@@ -144,7 +144,7 @@ uvicorn==0.18.2
 Wand==0.6.9
 watchdog==2.1.9
 websocket-client==0.59.0
-Werkzeug==2.1.2
+Werkzeug==2.2.2
 wsproto==1.1.0
 WTForms==3.0.1
 yarl==1.8.1
