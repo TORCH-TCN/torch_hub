@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_socketio import SocketIO
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
@@ -15,17 +15,17 @@ Base.query = db.session.query_property()
 # migrate = Migrate()
 socketio = SocketIO()
 
+
 def create_app():
-    load_dotenv()
-    
+    load_dotenv(find_dotenv(raise_error_if_not_found=True))
+
     app = Flask(__name__, template_folder=".")
-    
+
     app.config.from_prefixed_env()
 
     basedir = os.path.abspath(os.path.dirname(__file__))
-    
-    app.config['BASE_DIR'] = basedir
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'torch-hub.db')
+
+    app.config["BASE_DIR"] = basedir
 
     db.init_app(app)
     socketio.init_app(app)

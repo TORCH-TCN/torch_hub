@@ -16,30 +16,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-App specific configs: The current version needs a `.env` file inside the `src/torch` folder with the following format (use [.env.sample](src/torch/.env.sample) as a template)
-
-```json
-{ 
-    "SECRET_KEY": "",
-    "SQLALCHEMY_DATABASE_URI": "sqlite:///torch-hub.db",
-    "SQLALCHEMY_DATABASE_URI_PREFECT": "sqlite:///src/torch/torch-hub.db",
-    "SECURITY_REGISTERABLE": true,
-    "SECURITY_PASSWORD_SALT": "",
-    "SECURITY_SEND_REGISTER_EMAIL": false,
-    "SECURITY_RECOVERABLE": true,
-    "SECURITY_CHANGEABLE": true,
-    "SQLALCHEMY_TRACK_MODIFICATIONS": false,
-    "MAIL_SERVER": "",
-    "MAIL_USERNAME": "",
-    "MAIL_PASSWORD": "",
-    "MAIL_DEFAULT_SENDER": "",
-    "MAIL_PORT": 587,
-    "MAIL_USE_SSL": true,
-    "MAIL_USE_TLS": true,
-    "APP_URL": "http://localhost:5000",
-    "PREFECT_ORION_URL": "http://127.0.0.1:4200/"
-}
-```
+App specific configs: The current version needs a `.env` file inside the `src/torch` folder. Use [.env.sample](src/.env.sample) as a template.
 
 Workflow specific configs:
 Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch/prefect_flows/templates/flow_template.py). There is a process_specimen workflow on this solution, use the [process_specimen_config_example.json](src/torch/prefect_flows/configs/process_specimen_config_example.json) as template.
