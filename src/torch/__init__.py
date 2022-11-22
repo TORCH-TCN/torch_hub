@@ -17,7 +17,7 @@ socketio = SocketIO()
 
 
 def create_app():
-    load_dotenv(find_dotenv(raise_error_if_not_found=True))
+    load_dotenv()
 
     app = Flask(__name__, template_folder=".")
 
