@@ -2,6 +2,8 @@
     "SECRET_KEY": "THISISASECRETKEY",
     "SQLALCHEMY_DATABASE_URI": "sqlite:///database-name.db",
     "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+    "PREFECT_API_URL": "http://127.0.0.1:4200/api",
+    "PREFECT_ORION_DATABASE_CONNECTION_URL": "postgresql+asyncpg://postgres:yourTopSecretPassword@localhost:5432/orion",
     "SECURITY_REGISTERABLE": true,
     "SECURITY_PASSWORD_SALT": "PASSWORDSALT",
     "SECURITY_SEND_REGISTER_EMAIL": false,

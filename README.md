@@ -53,9 +53,9 @@ Workflow configs should be added inside the `src/torch/prefect_flows/configs` fo
 Once the dependencies are installed, run the app as follows:
 Navigate to the `src` folder and run
 ```bash
-python3 torch.py
+python3 app.py
 ```
-or you can also run at Visual Studio Code, make sure the `launch.json` file is at the same directory as the `torch.py`, open the `torch.py` and select the `Run and Debug` menu
+or you can also run at Visual Studio Code, make sure the `launch.json` file is at the same directory as the `app.py`, open the `app.py` and select the `Run and Debug` menu
 
 ## Prefect server
 
