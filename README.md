@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-App specific configs: The current version needs a `config.json` file inside the `src/torch` folder with the following format (use [config_example.json](src/torch/config_example.json) as a template)
+App specific configs: The current version needs a `.env` file inside the `src/torch` folder with the following format (use [.env.sample](src/torch/.env.sample) as a template)
 
 ```json
 { 

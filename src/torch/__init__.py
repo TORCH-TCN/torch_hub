@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_socketio import SocketIO
+from dotenv import load_dotenv
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
@@ -15,9 +16,11 @@ Base.query = db.session.query_property()
 socketio = SocketIO()
 
 def create_app():
+    load_dotenv()
+    
     app = Flask(__name__, template_folder=".")
     
-    app.config.from_file("config.json", load=json.load)
+    app.config.from_prefixed_env()
 
     basedir = os.path.abspath(os.path.dirname(__file__))
     
