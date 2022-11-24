@@ -31,13 +31,13 @@ cryptography==37.0.4
 dask==2022.8.0
 distributed==2022.8.0
 distro==1.7.0
-dnspython==2.2.1
+dnspython==1.16.0
 docker==4.2.2
 docker-compose==1.26.2
 dockerpty==0.4.1
 docopt==0.6.2
 email-validator==1.2.1
-eventlet==0.33.2
+eventlet==0.30.2
 fastapi==0.79.0
 flake8==5.0.4
 Flask==2.2.2
