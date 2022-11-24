@@ -11,6 +11,7 @@ from torch.users.user import User
 app = create_app()
 mail = Mail(app)
 
+
 @app.before_first_request
 def create_tables():
     db.create_all()
@@ -20,35 +21,42 @@ def check_init_db(app):
     app.app_context().push()
     create_tables()
     institutions = db.session.query(Institution).all()
-    
+
     if len(institutions) == 0:
         print("Creating default institution...")
         default_institution = Institution(name="Default Institution", code="default")
         db.session.add(default_institution)
         db.session.commit()
 
-    #test collection
+    # test collection
     collections = db.session.query(Collection).all()
 
     if len(collections) == 0:
         print("Creating default collection...")
-        default_collection = Collection(name="Default",code="DEFAULT",institution_id=1, workflow="process_specimen", collection_folder="Default")
+        default_collection = Collection(
+            name="Default",
+            code="DEFAULT",
+            institution_id=1,
+            workflow="process_specimen",
+            collection_folder="Default",
+        )
         db.session.add(default_collection)
         db.session.commit()
 
-    #admin role
+    # admin role
 
     roles = db.session.query(Role).all()
 
     if len(roles) == 0:
         print("Creating admin role...")
-        admin_role = Role(name="admin",description="admin")
+        admin_role = Role(name="admin", description="admin")
         db.session.add(admin_role)
         db.session.commit()
+
 
 if __name__ == "__main__":
     freeze_support()
 
     check_init_db(app)
-    #app.run(debug=True)
-    socketio.run(app)
+    # app.run(debug=True)
+    # socketio.run(app)
