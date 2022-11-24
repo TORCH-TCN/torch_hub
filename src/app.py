@@ -59,4 +59,7 @@ if __name__ == "__main__":
 
     check_init_db(app)
     # app.run(debug=True)
-    # socketio.run(app)
+    socketio.run(app)
+else:
+    freeze_support()
+    check_init_db(app)
