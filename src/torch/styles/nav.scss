@@ -1,0 +1,34 @@
+nav {
+  background-color: var(--white);
+}
+
+.nav {
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0px;
+  font-weight: var(--font-weight-500);
+  color: var(--grey-500);
+
+
+  .nav-link {
+    padding: 0 1rem;
+
+    &:hover {
+      color: var(--primary-700);
+    }
+
+    a {
+      color: var(--grey-500);
+    }
+
+    .nav-left {
+      display: flex;
+    }
+
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

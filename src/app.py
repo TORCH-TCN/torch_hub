@@ -6,6 +6,7 @@ from torch import create_app, db, socketio
 from torch.collections.collections import Collection
 from torch.institutions.institutions import Institution
 from torch.users.role import Role
+from sassutils.wsgi import SassMiddleware
 
 app = create_app()
 mail = Mail(app)
@@ -57,7 +58,9 @@ if __name__ == "__main__":
     freeze_support()
 
     check_init_db(app)
-    # app.run(debug=True)
+    app.wsgi_app = SassMiddleware(app.wsgi_app, {
+        'torch': ('static/styles', 'static/styles', '/static/styles')
+    })
     socketio.run(app)
 else:
     freeze_support()
