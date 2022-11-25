@@ -32,11 +32,6 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/src/torch" />
-        <option value="$MODULE_DIR$/src/torch/collections" />
-        <option value="$MODULE_DIR$/src/torch/institutions" />
-        <option value="$MODULE_DIR$/src/torch/notifications" />
-        <option value="$MODULE_DIR$/src/torch/reports" />
-        <option value="$MODULE_DIR$/src/torch/users" />
       </list>
     </option>
   </component>

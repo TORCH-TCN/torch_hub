@@ -1,0 +1,5 @@
+graft torch/static
+global-include torch/*.html
+global-include torch/*.js
+global-include torch/*.scss
+global-exclude *.pyc
