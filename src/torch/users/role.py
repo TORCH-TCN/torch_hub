@@ -22,15 +22,15 @@ def add_role(name, description):
     db.session.commit()
 
 
-def assign_role_to_user(userId, role):
-    user = User.query.get(userId)
+def assign_role_to_user(user_id, role):
+    user = User.query.get(user_id)
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     user_datastore.add_role_to_user(user, role)
     db.session.commit()
 
 
-def unassign_role_from_user(userId, role):
-    user = User.query.get(userId)
+def unassign_role_from_user(user_id, role):
+    user = User.query.get(user_id)
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     user_datastore.remove_role_from_user(user, role)
     db.session.commit()

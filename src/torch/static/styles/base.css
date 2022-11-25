@@ -335,8 +335,6 @@ header{
   }
   
   input:checked + .slider:before {
-    -webkit-transform: translateX(16px);
-    -ms-transform: translateX(16px);
     transform: translateX(16px);
   }
   

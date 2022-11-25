@@ -6,9 +6,8 @@ from torch.collections.specimens import Specimen, SpecimenImage
 import os
 
 
-def run_workflow(collection, file: FileStorage, target_dir, config):
-
-    specimen, execute_workflow = upsert_specimen(collection, file, target_dir)
+def run_workflow(collection, file: FileStorage, config):
+    specimen, execute_workflow = upsert_specimen(collection, file, config)
 
     if execute_workflow:
         notify_specimen_update(specimen, "Running")
@@ -21,28 +20,30 @@ def run_workflow(collection, file: FileStorage, target_dir, config):
         notify_specimen_update(specimen, state.name)
 
 
-def upsert_specimen(collection, file, target_dir):
-    sfilename = secure_filename(file.filename)
-    filename = sfilename.split(".")[0]
-    extension = sfilename.split(".")[1]
+def upsert_specimen(collection, file, config):
+    s_filename = secure_filename(file.filename)
+    filename = s_filename.split(".")[0]
+    extension = s_filename.split(".")[1]
+    target_dir = os.path.join(config['BASE_DIR'], "static", "uploads", collection.collection_folder)
+
     execute_workflow = True
 
     specimen = db.session.query(Specimen).filter(Specimen.name == filename).first()
 
-    destination = os.path.join(target_dir, sfilename)
+    destination = os.path.join(target_dir, s_filename)
 
     if os.path.exists(destination):
         return specimen, False
 
     file.save(destination)
 
-    if specimen != None:
+    if specimen is not None:
         if extension.lower() == "dng":
             specimen.has_dng = 1
             execute_workflow = False
 
         else:
-            execute_workflow = specimen.flow_run_id != None
+            execute_workflow = specimen.flow_run_id is not None
 
     else:
         specimen = Specimen(
@@ -68,7 +69,7 @@ def upsert_specimen_image(specimen, destination, extension):
         .first()
     )
 
-    if si == None:
+    if si is None:
         new_si = SpecimenImage(specimen_id=specimen.id, url=destination, size=size)
         db.session.add(new_si)
         db.session.commit()

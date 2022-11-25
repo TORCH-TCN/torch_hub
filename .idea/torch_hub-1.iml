@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PYTHON_MODULE" version="4">
+  <component name="Flask">
+    <option name="enabled" value="true" />
+  </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
@@ -8,6 +11,13 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (torch_hub-1) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="font-awesome" level="application" />
+    <orderEntry type="library" name="alpinejs" level="application" />
+    <orderEntry type="library" name="dropzone" level="application" />
+    <orderEntry type="library" name="jquery-3.6.0" level="application" />
+    <orderEntry type="library" name="popper.js" level="application" />
+    <orderEntry type="library" name="socket.io" level="application" />
   </component>
   <component name="PackageRequirementsSettings">
     <option name="requirementsPath" value="C:\Users\josep\Source\Repos\torch_hub-1\src\requirements.txt" />
@@ -16,6 +26,19 @@
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
     <option name="myDocStringFormat" value="Plain" />
+  </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/src/torch" />
+        <option value="$MODULE_DIR$/src/torch/collections" />
+        <option value="$MODULE_DIR$/src/torch/institutions" />
+        <option value="$MODULE_DIR$/src/torch/notifications" />
+        <option value="$MODULE_DIR$/src/torch/reports" />
+        <option value="$MODULE_DIR$/src/torch/users" />
+      </list>
+    </option>
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="py.test" />

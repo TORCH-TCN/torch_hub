@@ -52,17 +52,17 @@ def reports():
 @reports_bp.route("/export", methods=["POST"])
 @roles_accepted('admin')
 def reports_post():
-        selectedtable = request.form.get("selecttable")
-        whereclause = request.form.get("whereclause")
+    selectedtable = request.form.get("selecttable")
+    whereclause = request.form.get("whereclause")
 
-        result = db.engine.execute("select * from " + selectedtable + " " + whereclause)
+    result = db.engine.execute("select * from " + selectedtable + " " + whereclause)
 
-        si = io.StringIO()
-        cw = csv.writer(si, delimiter=",")
-        cw.writerow(result.keys())
-        cw.writerows(result.fetchall())
-        output = make_response(si.getvalue())
-        output.headers["Content-Disposition"] = "attachment; filename=export.csv"
-        output.headers["Content-type"] = "text/csv"
-        return output
+    si = io.StringIO()
+    cw = csv.writer(si, delimiter=",")
+    cw.writerow(result.keys())
+    cw.writerows(result.fetchall())
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 

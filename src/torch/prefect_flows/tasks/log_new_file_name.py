@@ -1,10 +1,10 @@
 import os
-from prefect import prefect, task
+from prefect import task, get_run_logger
 
 
 @task
 def log_new_file_name(directory, new_path):
-    logger = prefect.context.get('logger')
+    logger = get_run_logger()
 
     logfile = os.path.abspath(directory) + '/newfiles.txt'
     with open(logfile, 'a') as log:

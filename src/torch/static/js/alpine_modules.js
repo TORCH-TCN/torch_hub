@@ -12,12 +12,12 @@ document.addEventListener('alpine:init',()=>{
         selectedCollection: null,
         selectedCollectionRegexList: [],
         collectionSaved: false,
-        openPage(collectioncode){
-            window.open(window.location.href + "/" + collectioncode,"_self")
+        openPage(collectionCode){
+            window.open(window.location.href + "/" + collectionCode,"_self")
         },
         init() {
             this.open = false;
-            var socket = io();
+            let socket = io();
 
             socket.on('connect', function() {
                 console.log('a user connected');
@@ -43,8 +43,8 @@ document.addEventListener('alpine:init',()=>{
             this.formData.collection_folder = "";
             this.open = true;
         },
-        submitData(e){
-            if(this.formData.name == "" | this.formData.code == "" | this.formData.collection_folder == "") {
+        submitData(){
+            if(this.formData.name === "" || this.formData.code === "" || this.formData.collection_folder === "") {
                 alert("All the fields are required!")
                 return
             }
@@ -83,7 +83,7 @@ document.addEventListener('alpine:init',()=>{
         },
         selectCollection(collection){
             this.selectedCollection = collection
-            if (this.selectedCollection.catalog_number_regex == null || this.selectedCollection.catalog_number_regex == undefined)
+            if (this.selectedCollection.catalog_number_regex == null)
                 this.selectedCollectionRegexList = [""]
             else
                 this.selectedCollectionRegexList = JSON.parse(this.selectedCollection.catalog_number_regex)
@@ -115,16 +115,16 @@ document.addEventListener('alpine:init',()=>{
         },
         deleteCollection(id){
             
-            if (confirm("Are you sure you want to remove this collection?") == true) {
+            if (confirm("Are you sure you want to remove this collection?") === true) {
                 
                 fetch(`${id}`, {
                   method: "DELETE",
                   body: JSON.stringify({ collectionId: id }),
                 }).then((_res) => {
-                    if(_res.status == 200)
+                    if(_res.status === 200)
                         _res.json().then(data=>{
                             
-                            if (data.status == 'ok')
+                            if (data.status === 'ok')
                                 this.collections.splice(this.collections.map(x=>x.id).indexOf(id),1);
                             else
                                 alert(data.statusText)  
@@ -139,7 +139,7 @@ document.addEventListener('alpine:init',()=>{
         },
 }));
 
-    Alpine.data('specimens',(collectionid)=>({
+    Alpine.data('specimens',(collectionId)=>({
         specimens: [],
         filteredSpecimens: [],
         notifications: [],
@@ -154,15 +154,17 @@ document.addEventListener('alpine:init',()=>{
         visiblePages: 3,
         uploadingMessage: "Uploading <span id='fileName'></span>",
         collection: {},
-        openPage(specimenid){
-            window.open(window.location.href + "/" + specimenid,"_self")
-        },
-        init(){
-            console.log('specimens init', collectionid);
-            
-            this.searchSpecimen();           
 
-            var socket = io();
+        openPage(specimenId){
+            window.open(window.location.href + "/" + specimenId,"_self")
+        },
+
+        init(){
+            console.log('specimens init');
+            
+            this.searchSpecimen();
+
+            let socket = io();
 
             socket.on('connect', function() {
                 console.log('a user connected');
@@ -174,14 +176,14 @@ document.addEventListener('alpine:init',()=>{
 
         },
         updateSpecimenCard(s){
-            var sIndex = this.specimens.map(x=>x.id).indexOf(s.id);
-                
+            let sIndex = this.specimens.map(x => x.id).indexOf(s.id);
+
             if (sIndex > -1){
                 this.specimens[sIndex].flow_run_state = s.flow_run_state;
                 this.specimens[sIndex].failed_task = s.failed_task;
             }
             else{
-                if(this.specimens.length == this.per_page) this.specimens.pop();
+                if(this.specimens.length === this.per_page) this.specimens.pop();
                 
                 this.specimens.unshift(s);
                 this.updateSpecimenCard(s);
@@ -190,7 +192,7 @@ document.addEventListener('alpine:init',()=>{
         openModal() {
             
             if (this.collection.workflow != null && this.collection.collection_folder != null){
-                if(this.pageNumber != 1) this.viewPage(1);
+                if(this.pageNumber !== 1) this.viewPage(1);
                 
                 this.fileCounter = 0;
                 document.getElementById("uploadingMessageContainer").style.display="none";
@@ -202,7 +204,7 @@ document.addEventListener('alpine:init',()=>{
         },
         searchSpecimen() {
             this.loading = true;
-            fetch(`/collections/specimens/${collectionid}?search_string=${this.search}&only_error=${this.onlyErrorToggle}&page=${this.pageNumber}&per_page=${this.per_page}`, {
+            fetch(`/collections/specimens/${collectionId}?search_string=${this.search}&only_error=${this.onlyErrorToggle}&page=${this.pageNumber}&per_page=${this.per_page}`, {
                 method: "GET"
             }).then((_res) => {                
                 _res.json().then(data => {
@@ -221,21 +223,21 @@ document.addEventListener('alpine:init',()=>{
         },
         updateCounter(e) {
             this.fileCounter = (this.fileCounter + e);
-            if(this.fileCounter == 0){
+            if(this.fileCounter === 0){
                 this.open = false;
             }
         },
         deleteSpecimen(id){
             
-            if (confirm("Are you sure you want to remove this specimen?") == true) {
+            if (confirm("Are you sure you want to remove this specimen?") === true) {
                 
                 fetch(`specimen/${id}`, {
                   method: "DELETE"
                 }).then((_res) => {
-                    if(_res.status == 200)
+                    if(_res.status === 200)
                         _res.json().then(data=>{
                             
-                            if (data.status == 'ok') {                                 
+                            if (data.status === 'ok') {
                                 this.specimens.splice(this.specimens.map(x=>x.id).indexOf(id),1);   
                                 this.searchSpecimen();                                                      
                             } else
@@ -259,10 +261,10 @@ document.addEventListener('alpine:init',()=>{
             return Math.ceil(this.totalSpecimens / this.per_page);
         },           
         startPage() {
-            if (this.pageNumber == 1) {
+            if (this.pageNumber === 1) {
               return 1;
             }
-            if (this.pageNumber == this.pageCount()) {
+            if (this.pageNumber === this.pageCount()) {
               return this.pageCount() - this.visiblePages + 1;
             }
             return this.pageNumber - 1;
@@ -295,14 +297,14 @@ document.addEventListener('alpine:init',()=>{
         },
         retry(specimen){
             
-            failed_task = specimen.failed_task;
+            let failed_task = specimen.failed_task;
             specimen.failed_task = "Retrying...";
             specimen.flow_run_state = "Retrying"
 
             fetch(`specimen/retry/${specimen.id}`, {
                 method: "POST"
               }).then((_res) => {
-                  if(_res.status == 200)
+                  if(_res.status === 200)
                       _res.json().then(data=>{
                           console.log('result',data);
                       })
@@ -315,21 +317,21 @@ document.addEventListener('alpine:init',()=>{
               }).catch(error=>{
                   specimen.failed_task = failed_task;
                   specimen.flow_run_state = "Failed"
-                  alert('Something wrong happened');
+                  alert('Something wrong happened:' + error);
               });
         },
         deleteTransferredSpecimens(){
             
-            if (confirm("Are you sure you want to remove the transferred specimens? This will delete all related specimen files.") == true) {
+            if (confirm("Are you sure you want to remove the transferred specimens? This will delete all related specimen files.") === true) {
                 
                 fetch(`transferred-specimens/${this.collection.id}`, {
                   method: "DELETE"
                 }).then((_res) => {
                     console.log("res alpine:", _res)
-                    if(_res.status == 200)
+                    if(_res.status === 200)
                         _res.json().then(data=>{
                             
-                            if (data.status == 'ok') {                                 
+                            if (data.status === 'ok') {
                                 this.searchSpecimen();                                                      
                             } else
                                 alert(data.statusText)  
@@ -347,8 +349,8 @@ document.addEventListener('alpine:init',()=>{
                 method: "GET"
             }).then( res => res.blob() )
                 .then( blob => {
-                var file = window.URL.createObjectURL(blob);
-                window.location.assign(file);
+                    let file = window.URL.createObjectURL(blob);
+                    window.location.assign(file);
             });
         }
     }));

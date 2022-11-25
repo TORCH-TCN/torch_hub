@@ -1,13 +1,14 @@
 import os
+
 import boto3
-import pysftp
 import paramiko
-from prefect import get_run_logger, task
-from botocore.exceptions import ClientError
+import pysftp
 from botocore.config import Config
-from torch.collections.specimens import SpecimenImage
+from botocore.exceptions import ClientError
 from minio import Minio
-from minio.error import S3Error
+from prefect import get_run_logger, task
+
+from torch.collections.specimens import SpecimenImage
 
 
 @task
@@ -112,10 +113,10 @@ def mkdir_p(sftp, remote_directory):
     if remote_directory == "":
         return
     try:
-        sftp.chdir(remote_directory)  # sub-directory exists
+        sftp.chdir(remote_directory)  # subdirectory exists
     except IOError:
         dirname, basename = os.path.split(remote_directory.rstrip("/"))
         mkdir_p(sftp, dirname)  # make parent directories
-        sftp.mkdir(basename)  # sub-directory missing, so created it
+        sftp.mkdir(basename)  # subdirectory missing, so created it
         sftp.chdir(basename)
         return True

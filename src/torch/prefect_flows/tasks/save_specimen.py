@@ -2,46 +2,46 @@ from torch.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-def save_specimen(specimen:Specimen, config, flow_run_id, flow_run_state = None, failed_task = None):
-        
+
+def save_specimen(specimen: Specimen, config, flow_run_id=None, flow_run_state=None, failed_task=None):
     engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
-    
+
     with Session(engine) as session:
 
         try:
-            local_specimen = session.merge(specimen) #thread-safe
+            local_specimen = session.merge(specimen)  # thread-safe
 
-            local_specimen.flow_run_id = flow_run_id
-            local_specimen.flow_run_state = flow_run_state if flow_run_state != None else 'Running'
+            if flow_run_id is not None:
+                local_specimen.flow_run_id = flow_run_id
+
+            local_specimen.flow_run_state = flow_run_state if flow_run_state is not None else 'Running'
             local_specimen.failed_task = failed_task
-                        
+
             session.add(local_specimen)
             session.commit()
 
             return local_specimen
-        except:
+        except Exception as e:
             session.rollback()
-            raise Exception("Error updating database")
+            raise Exception(f"Error updating database: {e}")
         finally:
             session.close()
 
 
-
-def save_specimen_image(image:SpecimenImage, config):
-        
+def save_specimen_image(image: SpecimenImage, config):
     engine = create_engine(config["SQLALCHEMY_DATABASE_URI"], future=True)
-    
+
     with Session(engine) as session:
 
         try:
-            local_image = session.merge(image) #thread-safe
-     
+            local_image = session.merge(image)  # thread-safe
+
             session.add(local_image)
             session.commit()
 
             return local_image
-        except:
+        except Exception as e:
             session.rollback()
-            raise Exception("Error updating database")
+            raise Exception(f"Error updating database: {e}")
         finally:
             session.close()

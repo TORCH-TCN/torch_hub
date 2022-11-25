@@ -8,9 +8,9 @@ from prefect.orion.schemas.states import Failed
 
 from torch.prefect_flows.tasks.save_specimen import save_specimen
 
+
 @task
 def task_template(specimen, app_config, flow_config):
-
     # get prefect log and task/flow info
     logger = get_run_logger()
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
@@ -20,8 +20,8 @@ def task_template(specimen, app_config, flow_config):
         logger.info(f"Task using {specimen.name}, Flow ID {flow_run_id}, example flow config {example_config}...")
 
         # manipulate specimen and after that:
-        save_specimen(specimen,app_config,flow_run_id)
-    except:
+        save_specimen(specimen, app_config, flow_run_id)
+    except Exception as e:
         # log which task failed
-        save_specimen(specimen,app_config,flow_run_id,'Failed','task_template')
-        return Failed(message=f"task_template failed for {specimen.id}-{specimen.name}")
+        save_specimen(specimen, app_config, flow_run_id, 'Failed', 'task_template')
+        return Failed(message=f"task_template failed for {specimen.id}-{specimen.name}: {e}")

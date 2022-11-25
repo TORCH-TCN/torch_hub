@@ -1,12 +1,12 @@
-import json
 import os
+
+from dotenv import load_dotenv
 from flask import Flask
-from sqlalchemy import MetaData
-from sqlalchemy.ext.declarative import declarative_base
-from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_socketio import SocketIO
-from dotenv import load_dotenv, find_dotenv
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
+from sqlalchemy.ext.declarative import declarative_base
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)

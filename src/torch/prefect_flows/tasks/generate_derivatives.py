@@ -1,4 +1,6 @@
 from pathlib import Path
+from typing import Optional
+
 from prefect import task
 from PIL import Image
 from torch.collections.specimens import Specimen, SpecimenImage
@@ -8,17 +10,17 @@ import prefect
 from prefect.orion.schemas.states import Failed
 from torch.prefect_flows.tasks.save_specimen import save_specimen
 
+
 @task
 def generate_derivatives(specimen: Specimen, flow_config, app_config):
-
     engine = create_engine(app_config["SQLALCHEMY_DATABASE_URI"], future=True)
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
     with Session(engine) as session:
 
         try:
-            local_specimen = session.merge(specimen) #thread-safe
-            
+            local_specimen = session.merge(specimen)  # thread-safe
+
             derivatives_to_add = {
                 size: config
                 for size, config in flow_config["GENERATE_DERIVATIVES"]["SIZES"].items()
@@ -33,13 +35,13 @@ def generate_derivatives(specimen: Specimen, flow_config, app_config):
 
             session.commit()
 
-            save_specimen(local_specimen,app_config,flow_run_id)
+            save_specimen(local_specimen, app_config, flow_run_id)
 
             return local_specimen.images
-        except:
+        except Exception as e:
             session.commit()
-            save_specimen(specimen,app_config,flow_run_id,'Failed','generate_derivatives')
-            return Failed(message=f"Unable to create derivatives for specimen {specimen.id}-{specimen.name}")
+            save_specimen(specimen, app_config, flow_run_id, 'Failed', 'generate_derivatives')
+            return Failed(message=f"Unable to create derivatives for specimen {specimen.id}-{specimen.name}: {e}")
         finally:
             session.close()
 
@@ -48,19 +50,19 @@ def is_missing(images, size):
     return not any(image.size == size for image in images)
 
 
-def generate_derivative(specimen: Specimen, size, flow_config) -> SpecimenImage:
+def generate_derivative(specimen: Specimen, size, flow_config) -> Optional[SpecimenImage]:
     full_image_path = Path(specimen.upload_path)
     derivative_file_name = full_image_path.stem + "_" + size + full_image_path.suffix
     derivative_path = str(full_image_path.parent.joinpath(derivative_file_name))
 
     try:
         img = Image.open(specimen.upload_path)
-        
+
         if size != 'FULL':
             img.thumbnail((flow_config["WIDTH"], flow_config["WIDTH"]))
-        
+
         img.save(derivative_path)
-        
+
         return SpecimenImage(
             specimen_id=specimen.id,
             size=size,

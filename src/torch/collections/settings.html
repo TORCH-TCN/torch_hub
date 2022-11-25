@@ -2,7 +2,7 @@
 {% block title %}Settings{% endblock %} 
 {% block content %}
 
-<section class="settings-page" x-data="collections">
+<section class="settings-page" x-data="collections" xmlns:x-on="http://www.w3.org/1999/xhtml">
     <header>
         <h6>Settings</h6>
         <p class="small">Adjust settings for collection.</p>
@@ -20,7 +20,7 @@
     </template>
     <div class="row">
         <div class="col-sm-2">
-            <ul class="collections-sidelist">
+            <ul class="collections-side-list">
                 <template x-for="(c,index) in collections" :key="index">
                     <li x-text="c.code" :class="{'selected-collection': selectedCollection.id == c.id}" x-on:click="selectCollection(c)"></li>
                 </template>

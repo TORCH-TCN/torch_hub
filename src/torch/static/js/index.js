@@ -1,29 +1,22 @@
-
-function upload(files) {
-  socket.emit("upload", files[0], (status) => {
-    console.log(status);
-  });
-}
-
-let myDropzone = Dropzone.options.dropbox = {
+Dropzone.options.dropbox = {
   uploadMultiple: true,
   parallelUploads: 1,
   paramName: (n) => 'file',
   init: function() {
     this.on("addedfile", file => {
       console.log("A file has been added");
-      var element = document.getElementById("fileName");
+      let element = document.getElementById("fileName");
       if (element) {
         element.innerHTML = file.name;
         document.getElementById("uploadingMessageContainer").style.display="";
       }
-      var incrementCounter = new CustomEvent('increment-counter');
+      const incrementCounter = new CustomEvent('increment-counter');
       window.dispatchEvent(incrementCounter);
     });
     this.on("complete", file => {
       console.log('uploaded');
-      this.removeFile(file);
-      var decrementCounter = new CustomEvent('decrement-counter');
+      //this.removeFile(file);
+      const decrementCounter = new CustomEvent('decrement-counter');
       window.dispatchEvent(decrementCounter);
     });
     this.on("successmultiple", () => {
@@ -33,9 +26,8 @@ let myDropzone = Dropzone.options.dropbox = {
     });
   }
 };
-
 function deleteInstitution(institutionId) {
-  if (confirm("Are you sure you want to remove this institution?") == true) {
+  if (confirm("Are you sure you want to remove this institution?") === true) {
     fetch("/delete-institution", {
       method: "POST",
       body: JSON.stringify({ institutionId: institutionId }),
@@ -45,7 +37,7 @@ function deleteInstitution(institutionId) {
   }
 }
 
-var selectedUserId = 0;
+let selectedUserId = 0;
 
 function openRoleModal(userId){
   console.log('openRoleModal',userId);
@@ -54,10 +46,10 @@ function openRoleModal(userId){
 }
 
 function changeUserActive(userId, active){
-    
-  str = eval(active.toLowerCase()) == true ? "deactivate" : "activate";
 
-  if (confirm(`Are you sure you want to ${str} this user?`) == true) {
+  let str = eval(active.toLowerCase()) === true ? "deactivate" : "activate";
+
+  if (confirm(`Are you sure you want to ${str} this user?`) === true) {
     fetch("/users/" + userId + "/active", {
       method: "POST",
       body: JSON.stringify({ userId: userId }),
@@ -68,8 +60,8 @@ function changeUserActive(userId, active){
 }
 
 function addRoleToUser(){
- 
-  var selectedRole = document.getElementById('selectedRole').value;
+
+  const selectedRole = document.getElementById('selectedRole').value;
   console.log('addRoleToUser', selectedUserId, selectedRole);
 
   fetch("/users/"+selectedUserId+"/roles", {
@@ -83,7 +75,7 @@ function addRoleToUser(){
 
 function deleteRoleFromUser(userId, role){
   
-  if (confirm("Are you sure you want to remove this role?") == true) {
+  if (confirm("Are you sure you want to remove this role?") === true) {
     fetch("/users/" + userId + "/roles", {
       method: "DELETE",
       body: JSON.stringify({ userId: userId, role: role }),
@@ -95,7 +87,7 @@ function deleteRoleFromUser(userId, role){
 }
 
 function deleteWorkflowSetting(workflowSettingId) {
-  if (confirm("Are you sure you want to remove this workflow setting?") == true) {
+  if (confirm("Are you sure you want to remove this workflow setting?") === true) {
     fetch("/workflows/settings/" + workflowSettingId, {
       method: "DELETE",
       body: JSON.stringify({ workflowSettingId: workflowSettingId }),

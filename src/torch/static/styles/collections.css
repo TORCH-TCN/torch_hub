@@ -132,7 +132,7 @@
 }
 
 .add-collection p {
-  font-family: "Inter";
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -251,7 +251,7 @@
   top: 15px;
 }
 
-.menu-dropbtn {
+.menu-dropdown-button {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -278,14 +278,14 @@
   background-color: rgba(191, 204, 232, 0.24);
 }
 
-.collections-sidelist {
+.collections-side-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.collections-sidelist li {
-  font-family: "Inter";
+.collections-side-list li {
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -295,7 +295,7 @@
   cursor: pointer;
 }
 
-.collections-sidelist li.selected-collection {
+.collections-side-list li.selected-collection {
   background: #f4ebff;
   border-radius: 8px;
   font-weight: 500;
@@ -378,8 +378,6 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(16px);
-  -ms-transform: translateX(16px);
   transform: translateX(16px);
 }
 

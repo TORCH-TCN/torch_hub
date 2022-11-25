@@ -18,6 +18,7 @@ from sqlalchemy.orm import relationship
 from flask import current_app
 from PIL import Image
 
+
 class Specimen(Base):
     __tablename__ = "specimen"
     id = Column(Integer, primary_key=True)
@@ -32,26 +33,26 @@ class Specimen(Base):
     failed_task = Column(String(150))
     deleted = Column(Integer, default=0)
     has_dng = Column(Integer, default=0)
-    images = relationship("SpecimenImage")    
+    images = relationship("SpecimenImage")
 
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
-    
     def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def web_url(self):
         base_path = Path(current_app.config['BASE_DIR'])
         web_path = Path(self.upload_path).relative_to(base_path)
         web_path = "/" + "/".join(web_path.parts)
         return web_path
-    
+
     def card_image(self):
-        img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == self.id).filter(SpecimenImage.size == 'THUMB').first()
-        return img.web_url() if img != None else self.web_url()
-    
+        img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == self.id).filter(
+            SpecimenImage.size == 'THUMB').first()
+        return img.web_url() if img is not None else self.web_url()
+
 
 def get_specimens_by_batch_id(batch_id):
     root = "webapp/static/uploads/{}".format(batch_id)
@@ -81,6 +82,7 @@ def upload_specimens(files):
 
     return batch_id
 
+
 def is_portrait(image_path=None):
     with Image.open(image_path) as im:
         width, height = im.size
@@ -101,15 +103,15 @@ class SpecimenImage(Base):
     specimen_id = Column(Integer, ForeignKey("specimen.id"))
     external_url = Column(Text)
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
-    
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
+
     def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def web_url(self):
-        base_path = Path(current_app.config['BASE_DIR']) 
+        base_path = Path(current_app.config['BASE_DIR'])
         web_path = Path(self.url).relative_to(base_path)
         web_path = "/" + "/".join(web_path.parts)
         return web_path

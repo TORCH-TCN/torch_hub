@@ -21,7 +21,7 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 
 @users_bp.route("/", methods=["GET"])
 @roles_accepted("admin")
-def users():
+def users_getall():
     users = User.query.options(orm.joinedload("roles"))
     roles = get_roles()
     return render_template(
@@ -66,7 +66,7 @@ def user_add_role(userid):
 @roles_accepted("admin")
 def assign_role(userid):
     data = json.loads(request.data)
-    assign_role_to_user(data["userId"], data["role"])
+    assign_role_to_user(userid, data["role"])
     return jsonify({})
 
 
@@ -75,5 +75,5 @@ def assign_role(userid):
 def delete_role_user(userid):
     data = json.loads(request.data)
     print(data)
-    unassign_role_from_user(data["userId"], data["role"])
+    unassign_role_from_user(userid, data["role"])
     return jsonify({})

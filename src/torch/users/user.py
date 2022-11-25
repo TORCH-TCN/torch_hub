@@ -30,12 +30,12 @@ class User(Base, UserMixin):
     )
 
 
-def get_user(id) -> User:
-    return db.session.query(User).filter_by(id=id).first()
+def get_user(user_id) -> User:
+    return db.session.query(User).filter_by(id=user_id).first()
 
 
-def save_user(id, first_name, last_name, institution_id):
-    user = get_user(id)
+def save_user(user_id, first_name, last_name, institution_id):
+    user = get_user(user_id)
 
     user.first_name = first_name
     user.last_name = last_name
@@ -53,8 +53,8 @@ def save_user(id, first_name, last_name, institution_id):
     db.session.commit()
 
 
-def toggle_user_active(id):
-    user = db.session.query(User).get(id)
+def toggle_user_active(user_id):
+    user = db.session.query(User).get(user_id)
     user.active = 0 if user.active == 1 else 1
 
     db.session.commit()

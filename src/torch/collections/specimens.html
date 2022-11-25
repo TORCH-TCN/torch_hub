@@ -2,12 +2,12 @@
 content %}
 
 <div
-  x-data="specimens({{collection.id}})"
-  class="page-container"
-  @close-modal.window="open = false"
-  @increment-counter.window="updateCounter(1)"
-  @decrement-counter.window="updateCounter(-1)"
->
+        x-data="specimens({{ collection.id }})"
+        class="page-container"
+        @close-modal.window="open = false"
+        @increment-counter.window="updateCounter(1)"
+        @decrement-counter.window="updateCounter(-1)"
+        xmlns:x-on="http://www.w3.org/1999/xhtml">
   <div class="back-page">
     <a href="/collections" class="back-link">
       <img src="../../static//images/arrow-left.svg" alt="Left arrow" />

@@ -19,7 +19,7 @@ institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions"
 
 
 @institutions_bp.route("/", methods=["GET"])
-def institutions():
+def institutions_get():
     institutions = db.session.query(Institution).all()
 
     return render_template(
@@ -40,12 +40,12 @@ def post_institution():
 
         flash("Institution added!", category="success")
 
-    return institutions()
+    return institutions_get()
 
 
-@institutions_bp.route("/<id>", methods=["DELETE"])
-def delete(id):
-    institution = db.session.query(Institution).get(id)
+@institutions_bp.route("/<institution_id>", methods=["DELETE"])
+def delete(institution_id):
+    institution = db.session.query(Institution).get(institution_id)
     if institution:
         db.session.delete(institution)
         db.session.commit()

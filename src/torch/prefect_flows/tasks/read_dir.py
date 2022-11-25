@@ -1,10 +1,10 @@
-from prefect import prefect, task
+from prefect import get_run_logger, task
 import os
 
 
 @task
 def read_dir(path: str):
-    logger = prefect.context.get('logger')
+    logger = get_run_logger()
 
     files = [os.path.join(os.path.abspath(path), file)
              for file in os.listdir(path)

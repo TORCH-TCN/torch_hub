@@ -1,12 +1,11 @@
 from multiprocessing.dummy import freeze_support
 
 from flask_mail import Mail
+
 from torch import create_app, db, socketio
 from torch.collections.collections import Collection
 from torch.institutions.institutions import Institution
 from torch.users.role import Role
-from torch.users.user import User
-
 
 app = create_app()
 mail = Mail(app)
@@ -17,8 +16,8 @@ def create_tables():
     db.create_all()
 
 
-def check_init_db(app):
-    app.app_context().push()
+def check_init_db(flask_app):
+    flask_app.app_context().push()
     create_tables()
     institutions = db.session.query(Institution).all()
 

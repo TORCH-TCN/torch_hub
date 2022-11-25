@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
 
-<div x-data="collections" class="page-container">
+<div x-data="collections" class="page-container" xmlns:x-on="http://www.w3.org/1999/xhtml">
   <div class="page-container-header">
     <div class="left">
       <h5 class="mb-0">All Collections</h5>
@@ -97,7 +97,7 @@
             x-on:click="openPage(c.code)"
           >
             <div x-data="{ open: false }" class="menu-dropdown">
-              <button @click="open = ! open" class="menu-dropbtn" @click.stop>
+              <button @click="open = ! open" class="menu-dropdown-button" @click.stop>
                 <img src="../static/images/list.png" alt="menu" />
               </button>
               <div x-show="open" @click.outside="open = false" class="menu-dropdown-content" @click.stop>
