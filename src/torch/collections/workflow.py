@@ -3,6 +3,7 @@ from torch.prefect_flows.process_specimen import process_specimen
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from torch.collections.specimens import Specimen, SpecimenImage
+from pathlib import Path
 import os
 
 
@@ -24,7 +25,9 @@ def upsert_specimen(collection, file, config):
     s_filename = secure_filename(file.filename)
     filename = s_filename.split(".")[0]
     extension = s_filename.split(".")[1]
+
     target_dir = os.path.join(config['BASE_DIR'], "static", "uploads", collection.collection_folder)
+    Path(target_dir).mkdir(parents=True, exist_ok=True)
 
     execute_workflow = True
 

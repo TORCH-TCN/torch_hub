@@ -66,23 +66,6 @@ def get_specimens_by_batch_id(batch_id):
         files.append(fname)
 
 
-def upload_specimens(files):
-    # Create a unique "session ID" for this particular batch of uploads.
-    batch_id = str(uuid4())
-
-    target = "webapp/static/uploads/{}".format(batch_id)
-    os.mkdir(target)
-
-    for upload in files:
-        filename = upload.filename.rsplit("/")[0]
-        destination = "/".join([target, filename])
-        print("Accept incoming file:", filename)
-        print("Save it to:", destination)
-        upload.save(destination)
-
-    return batch_id
-
-
 def is_portrait(image_path=None):
     with Image.open(image_path) as im:
         width, height = im.size
