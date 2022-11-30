@@ -1,3 +1,5 @@
+import json
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -12,7 +14,7 @@ from torch.prefect_flows.tasks.save_specimen import save_specimen
 
 
 @task
-def generate_derivatives(specimen: Specimen, flow_config, app_config):
+def generate_derivatives(specimen: Specimen, app_config):
     engine = create_engine(app_config["SQLALCHEMY_DATABASE_URI"], future=True)
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
@@ -21,9 +23,11 @@ def generate_derivatives(specimen: Specimen, flow_config, app_config):
         try:
             local_specimen = session.merge(specimen)  # thread-safe
 
+            sizes = json.loads(os.environ["TORCH_GENERATE_DERIVATIVES_SIZES"])
+
             derivatives_to_add = {
                 size: config
-                for size, config in flow_config["GENERATE_DERIVATIVES"]["SIZES"].items()
+                for size, config in sizes.items()
                 if is_missing(local_specimen.images, size)
             }
 

@@ -14,10 +14,6 @@ from torch.prefect_flows.tasks.upload import upload
 
 @flow(name="Process Specimen", version=os.getenv("GIT_COMMIT_SHA"))
 def process_specimen(collection, specimen, app_config):
-    with open(os.path.join(app_config["BASE_DIR"], 'prefect_flows', 'configs', 'process_specimen_config.json'),
-              'r') as f:
-        flow_config = json.load(f)
-
     logger = get_run_logger()
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
     flow_run_state = prefect.context.get_run_context().flow_run.state_name
@@ -35,11 +31,11 @@ def process_specimen(collection, specimen, app_config):
         check_orientation(specimen, app_config)
 
         logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
-        imgs = generate_derivatives(specimen, flow_config, app_config)
+        imgs = generate_derivatives(specimen, app_config)
 
         logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
         for img in imgs:
-            upload(collection, flow_config, img)
+            upload(collection, img)
             save_specimen_image(img, app_config)
 
         save_specimen(specimen, app_config, flow_run_id, "Completed")
