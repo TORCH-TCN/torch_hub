@@ -26,7 +26,7 @@
           <button @click="openModal()">
             <div>
               <div class="add-collection">
-                <img src="../static/images/plus_icon.svg" alt="Plus icon" />
+                <img src="/static/images/plus_icon.svg" alt="Plus icon" />
                 <p>New collection</p>
               </div>
             </div>
@@ -41,7 +41,7 @@
                   <div class="modal-header">
                     <h5 class="modal-title">New Collection</h5>
                     <button @click="open = false" class="btn-close">
-                      <img src="../static/images/close_icon.svg" />
+                      <img src="/static/images/close_icon.svg" />
                     </button>
                   </div>
 
@@ -98,7 +98,7 @@
           >
             <div x-data="{ open: false }" class="menu-dropdown">
               <button @click="open = ! open" class="menu-dropdown-button" @click.stop>
-                <img src="../static/images/list.png" alt="menu" />
+                <img src="/static/images/list.png" alt="menu" />
               </button>
               <div x-show="open" @click.outside="open = false" class="menu-dropdown-content" @click.stop>
                 <p @click="deleteCollection(c.id)" class="xsmall">Delete</p>

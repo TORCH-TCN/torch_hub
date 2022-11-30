@@ -91,7 +91,7 @@ def collections_search():
 def get_collection_card_image(collection_id):
     img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection_id).filter(
         Specimen.deleted == 0).filter(SpecimenImage.size == 'THUMB').first()
-    return img.web_url() if img is not None else "../static/images/default.jpg"
+    return img.web_url() if img is not None else "/static/images/default.jpg"
 
 
 @collections_bp.route("/", methods=["POST"])

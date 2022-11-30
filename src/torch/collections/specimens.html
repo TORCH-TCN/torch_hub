@@ -10,7 +10,7 @@ content %}
         xmlns:x-on="http://www.w3.org/1999/xhtml">
   <div class="back-page">
     <a href="/collections" class="back-link">
-      <img src="../../static//images/arrow-left.svg" alt="Left arrow" />
+      <img src="/static/images/arrow-left.svg" alt="Left arrow" />
       Back
     </a>
   </div>
@@ -84,7 +84,7 @@ content %}
                 <h5 class="modal-title"></h5>
 
                 <button @click="open = false" class="btn-close">
-                  <img src="../static/images/close_icon.svg" />
+                  <img src="/static/images/close_icon.svg" />
                 </button>
               </div>
 
@@ -99,7 +99,7 @@ content %}
                     >
                       <div class="dz-message" data-dz-message>
                         <img
-                          src="../static/images/upload_icon.svg"
+                          src="/static/images/upload_icon.svg"
                           alt="Upload cloud icon"
                         />
                         <p><span>Click to upload</span> or drag and drop</p>
@@ -136,7 +136,7 @@ content %}
             <button @click="openModal">
               <div>
                 <div class="add-collection">
-                  <img src="../static//images/plus.png" alt="Plus icon" />
+                  <img src="/static//images/plus.png" alt="Plus icon" />
                   <p>New specimen</p>
                 </div>
               </div>
@@ -151,7 +151,7 @@ content %}
             >
               <div x-data="{ open: false }" class="menu-dropdown">
                 <button @click="open = ! open" class="menu-dropbtn" @click.stop>
-                  <img src="../static/images/list.png" alt="menu" />
+                  <img src="/static/images/list.png" alt="menu" />
                 </button>
                 <div
                   x-show="open"
@@ -169,7 +169,7 @@ content %}
                 x-show="s.flow_run_state != 'Failed'"
               />
               <img
-                src="../static/images/error.png"
+                src="/static/images/error.png"
                 :alt="s.name"
                 x-show="s.flow_run_state == 'Failed'"
               />
@@ -208,7 +208,7 @@ content %}
                       x-show="s.flow_run_state == 'Failed'"
                       @click="retry(s)"
                       @click.stop
-                      src="../static/images/retry_icon.svg"
+                      src="/static/images/retry_icon.svg"
                       alt="retry icon"
                       class="retry-icon"
                     />
