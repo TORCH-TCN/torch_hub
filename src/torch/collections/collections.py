@@ -150,7 +150,7 @@ def collection_specimens(collectionid):
 
     total_specimens = specimens.count()
 
-    specimens = specimens.order_by(Specimen.id.desc()).paginate(page, per_page=per_page)
+    specimens = specimens.order_by(Specimen.id.desc()).paginate(page=page, per_page=per_page)
 
     specimensdict = []
     for s in specimens.items:
