@@ -67,12 +67,17 @@ def get_specimens_by_batch_id(batch_id):
 
 
 def is_portrait(image_path=None):
-    with Image.open(image_path) as im:
-        width, height = im.size
-        if height > width:
-            return True
-        else:
-            return False
+    try:
+        with Image.open(image_path) as im:
+            width, height = im.size
+            if height > width:
+                return True
+            else:
+                return False
+    except Exception as e:
+        print('Error: ', e)\
+        raise
+
 
 
 class SpecimenImage(Base):
