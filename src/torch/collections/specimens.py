@@ -75,7 +75,7 @@ def is_portrait(image_path=None):
             else:
                 return False
     except Exception as e:
-        print('Error: ', e)\
+        print('Error: ', e)
         raise
 
 
