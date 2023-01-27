@@ -1,0 +1,32 @@
+{% extends "../base.html" %}
+{% block title %}Export{% endblock %} 
+{% block content %}
+
+<section class="export-section">
+    <header>
+        <h3 align="left" class="mt-4">Export</h3>
+        <p class="mb-4">Select a table or view to generate a file with results</p>
+    </header>
+    
+    <div class="content-wrapper">
+        <form method="POST">
+            <div class="form-group">
+                <label for="selecttable">Select a table</label>
+                <select class="form-control" name="selecttable">
+                    {% for table in tables %}
+                        <option value="{{table}}">{{table}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="whereclause">Where clause</label>
+                <input type="text" placeholder="Where clause" class="form-control" name="whereclause"  />
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      
+    </div>
+</section>
+
+{% endblock %}

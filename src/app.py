@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     check_init_db(app)
     app.wsgi_app = SassMiddleware(app.wsgi_app, {
-        'torch': ('static/styles', 'static/styles', '/static/styles')
+        'torch_hub': ('static/styles', 'static/styles', '/static/styles')
     })
     socketio.run(app)
 else:
