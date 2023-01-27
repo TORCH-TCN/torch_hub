@@ -1,12 +1,11 @@
 from prefect import task
 import prefect
-from torch.collections.specimens import Specimen, is_portrait
-from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch_hub.collections import specimens
 from prefect.orion.schemas.states import Failed
 
 
 @task
-def check_orientation(specimen: Specimen, config):
+def check_orientation(specimen: specimens.Specimen, config):
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
     if is_portrait(specimen.upload_path):

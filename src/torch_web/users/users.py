@@ -2,12 +2,7 @@ import json
 from flask import Blueprint, flash, jsonify, render_template, request
 from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
-from torch.users.role import (
-    assign_role_to_user,
-    get_roles,
-    unassign_role_from_user,
-)
-from torch.users.user import User, get_user, save_user, toggle_user_active
+from torch_hub.users import user, role
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -21,8 +16,8 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 @users_bp.route("/", methods=["GET"])
 @roles_accepted("admin")
 def users_getall():
-    users = get_users()
-    roles = get_roles()
+    users = user.get_users()
+    roles = role.get_roles()
     return render_template(
         "/users/users.html", user=current_user, users=users, roles=roles
     )

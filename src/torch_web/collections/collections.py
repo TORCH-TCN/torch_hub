@@ -12,9 +12,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey, func, Text
 from sqlalchemy.orm import joinedload
 from werkzeug.datastructures import FileStorage
 
-from torch.collections.specimens import Specimen, SpecimenImage
-from torch.collections.workflow import run_workflow
-from torch.institutions.institutions import Institution
+from torch_hub.collections import collections, specimens, workflow
+from torch_hub.institutions import institutions
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
@@ -34,8 +33,8 @@ def collections_settings():
 
 
 @collections_bp.route("/", methods=["GET"])
-def collections():
-    institution = get_default_institution()
+def get_collections():
+    institution = collections.get_default_institution()
 
     return render_template(
         "/collections/all_collections.html",

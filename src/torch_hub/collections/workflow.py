@@ -1,8 +1,8 @@
-from torch import db, socketio
-from torch.prefect_flows.process_specimen import process_specimen
+from torch_hub import db
+from torch_hub.prefect_flows import process_specimen
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-from torch.collections.specimens import Specimen, SpecimenImage
+from torch_hub.collections.specimens import Specimen, SpecimenImage
 from pathlib import Path
 import os
 
@@ -11,14 +11,14 @@ def run_workflow(collection, file: FileStorage, config):
     specimen, execute_workflow = upsert_specimen(collection, file, config)
 
     if execute_workflow:
-        notify_specimen_update(specimen, "Running")
+        notify_specimen_update(specimen, "Running", socketio)
 
         if collection.workflow == "process_specimen":
             state = process_specimen(collection, specimen, config, return_state=True)
         else:
             raise NotImplementedError
 
-        notify_specimen_update(specimen, state.name)
+        notify_specimen_update(specimen, state.name, socketio)
 
 
 def upsert_specimen(collection, file, config):
@@ -31,7 +31,7 @@ def upsert_specimen(collection, file, config):
 
     execute_workflow = True
 
-    specimen = db.session.query(Specimen).filter(Specimen.name == filename).first()
+    specimen = db().query(Specimen).filter(Specimen.name == filename).first()
 
     destination = os.path.join(target_dir, s_filename)
 
@@ -66,7 +66,7 @@ def upsert_specimen_image(specimen, destination, extension):
         size = "DNG"
 
     si = (
-        db.session.query(SpecimenImage)
+        db().query(SpecimenImage)
         .filter(SpecimenImage.specimen_id == specimen.id)
         .filter(SpecimenImage.size == size)
         .first()
@@ -78,7 +78,7 @@ def upsert_specimen_image(specimen, destination, extension):
         db.session.commit()
 
 
-def notify_specimen_update(specimen, state):
+def notify_specimen_update(specimen, state, socketio):
     db.session.refresh(specimen)
     socketio.emit(
         "notify",

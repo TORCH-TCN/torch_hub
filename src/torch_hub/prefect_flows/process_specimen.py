@@ -1,16 +1,10 @@
-import json
 import os
 
 import prefect
 from prefect import flow, get_run_logger
 from prefect.orion.schemas.states import Failed
 
-from torch.prefect_flows.tasks.check_catalog_number import check_catalog_number
-from torch.prefect_flows.tasks.check_orientation import check_orientation
-from torch.prefect_flows.tasks.generate_derivatives import generate_derivatives
-from torch.prefect_flows.tasks.save_specimen import save_specimen, save_specimen_image
-from torch.prefect_flows.tasks.upload import upload
-
+from torch_hub.prefect_flows.tasks import check_catalog_number, check_orientation, generate_derivatives, save_specimen, upload
 
 @flow(name="Process Specimen", version=os.getenv("GIT_COMMIT_SHA"))
 def process_specimen(collection, specimen, app_config):

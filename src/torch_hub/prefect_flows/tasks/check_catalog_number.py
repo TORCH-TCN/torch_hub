@@ -5,12 +5,11 @@ import prefect
 from prefect import task
 from prefect.orion.schemas.states import Failed
 
-from torch.collections.specimens import Specimen
-from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch_hub.collections import specimens
 
 
 @task
-def check_catalog_number(collection, specimen: Specimen, app_config):
+def check_catalog_number(collection, specimen: specimens.Specimen, app_config):
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
     try:

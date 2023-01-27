@@ -6,9 +6,9 @@ import json
 import prefect
 from prefect import flow, get_run_logger
 from prefect.orion.schemas.states import Failed
-from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch_hub import save_specimen
 
-from torch.prefect_flows.templates.task_template import task_template
+from torch_hub import task_template
 
 
 # to declare a new flow:

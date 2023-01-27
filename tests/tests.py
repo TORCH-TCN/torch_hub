@@ -1,4 +1,4 @@
-from torch.collections.specimens import is_portrait
+from torch_hub import is_portrait
 
 
 def image_orientation():

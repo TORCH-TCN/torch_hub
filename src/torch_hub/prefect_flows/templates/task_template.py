@@ -6,7 +6,7 @@ import prefect
 from prefect import get_run_logger, task
 from prefect.orion.schemas.states import Failed
 
-from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch_hub import save_specimen
 
 
 @task

@@ -10,8 +10,8 @@ from prefect import task, get_run_logger
 from prefect.orion.schemas.states import Failed
 from pyzbar.pyzbar import decode
 
-from torch.collections.specimens import Specimen
-from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch_hub import Specimen
+from torch_hub import save_specimen
 
 # File extensions that are scanned and logged
 INPUT_FILE_TYPES = ['.jpg', '.jpeg', '.JPG', '.JPEG', '.tif', '.TIF', '.TIFF', '.tiff']

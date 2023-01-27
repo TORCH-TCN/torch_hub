@@ -1,6 +1,5 @@
 import csv
 import io
-import json
 import os
 from operator import or_
 from typing import List
@@ -10,10 +9,10 @@ from sqlalchemy import Column, Integer, String, ForeignKey, func, Text
 from sqlalchemy.orm import joinedload
 from werkzeug.datastructures import FileStorage
 
-from torch import db, Base
-from torch.collections.specimens import Specimen, SpecimenImage
-from torch.collections.workflow import run_workflow
-from torch.institutions.institutions import Institution
+from torch_hub import db, Base
+from torch_hub.collections.specimens import Specimen, SpecimenImage
+from torch_hub.institutions.institutions import Institution
+from torch_hub.collections.workflow import run_workflow
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
@@ -40,14 +39,14 @@ class Collection(Base):
 
 
 def get_default_institution():
-    return db.session.query(Institution).first()
+    return db().query(Institution).first()
 
 
 def get_collections():
     institution = get_default_institution()
 
     collections_result = (
-        db.session.query(Collection).filter_by(institution_id=institution.id).all()
+        db().query(Collection).filter_by(institution_id=institution.id).all()
     )
 
     collections_dict = []
@@ -60,7 +59,7 @@ def get_collections():
 
 
 def get_collection_card_image(collection_id):
-    img = db.session.query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection_id).filter(
+    img = db().query(SpecimenImage).join(Specimen).filter(Specimen.collection_id == collection_id).filter(
         Specimen.deleted == 0).filter(SpecimenImage.size == 'THUMB').first()
     return img.web_url() if img is not None else "/static/images/default.jpg"
 
@@ -94,11 +93,11 @@ def create_collection(collection_id, name, code, default_prefix, catalog_number_
 
 
 def get_collection(collectioncode):
-    return db.session.query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
+    return db().query(Collection).filter(func.lower(Collection.code) == func.lower(collectioncode)).first()
 
 
 def get_collection_specimens(collectionid, search_string, only_error, page=1, per_page=14):
-    specimens = db.session.query(Specimen).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0)
+    specimens = db().query(Specimen).filter(Specimen.collection_id == collectionid).filter(Specimen.deleted == 0)
 
     if search_string is not None:
         specimens = specimens.filter(or_(Specimen.name.contains(search_string),
@@ -119,23 +118,23 @@ def get_collection_specimens(collectionid, search_string, only_error, page=1, pe
 
 
 def retry_workflow(specimenid):
-    specimen = db.session.query(Specimen).get(specimenid)
-    collection = db.session.query(Collection).get(specimen.collection_id)
+    specimen = db().query(Specimen).get(specimenid)
+    collection = db().query(Collection).get(specimen.collection_id)
     run_workflow(collection, specimen, config=current_app.config)
     return True
 
 
 def upload(collectionid, files, config):
-    collection = db.session.query(Collection).filter_by(code=collectionid).first()
+    collection = db().query(Collection).filter_by(code=collectionid).first()
     collection.add_specimens(files, config)
     return True
 
 
 def get_specimen(specimenid):
-    specimen = db.session.query(Specimen).filter(Specimen.id == specimenid).first()
-    images = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).filter(
+    specimen = db().query(Specimen).filter(Specimen.id == specimenid).first()
+    images = db().query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).filter(
         SpecimenImage.size != "DNG").all()
-    dng = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).filter(
+    dng = db().query(SpecimenImage).filter(SpecimenImage.specimen_id == specimenid).filter(
         SpecimenImage.size == "DNG").first()
 
     specimen.images = images
@@ -145,10 +144,10 @@ def get_specimen(specimenid):
 
 
 def delete_collection(collection_id):
-    collection = db.session.query(Collection).get(collection_id)
+    collection = db().query(Collection).get(collection_id)
 
     if collection:
-        specimens = db.session.query(Specimen).filter(Specimen.collection_id == collection_id).all()
+        specimens = db().query(Specimen).filter(Specimen.collection_id == collection_id).all()
         print(specimens)
         if len(specimens) > 0:
             return False
@@ -160,7 +159,7 @@ def delete_collection(collection_id):
 
 
 def delete_specimen(specimen_id):
-    specimen = db.session.query(Specimen).options(joinedload("images")).get(specimen_id)
+    specimen = db().query(Specimen).options(joinedload("images")).get(specimen_id)
 
     if specimen:
         for i in specimen.images:
@@ -174,7 +173,7 @@ def delete_specimen(specimen_id):
 
 
 def delete_transfered_specimens(collectionid):
-    collection = db.session.query(Collection).get(collectionid)
+    collection = db().query(Collection).get(collectionid)
 
     if collection:
         specimens_has_non_transferred_images = sa.exists(
@@ -193,7 +192,7 @@ def delete_transfered_specimens(collectionid):
 
         specimens_ids = list(map(lambda x: x.id, db.session.execute(specimens_with_transferred_images)))
 
-        specimens = db.session.query(Specimen).options(joinedload("images")).filter(Specimen.id.in_(specimens_ids))
+        specimens = db().query(Specimen).options(joinedload("images")).filter(Specimen.id.in_(specimens_ids))
 
         for s in specimens:
             for i in s.images:
@@ -214,10 +213,10 @@ def delete_img_file(upload_path):
 
 
 def export_csv(collectionid):
-    collection = db.session.query(Collection).get(collectionid)
+    collection = db().query(Collection).get(collectionid)
 
     if collection:
-        specimens = db.session.query(Specimen).options(joinedload("images")).filter(
+        specimens = db().query(Specimen).options(joinedload("images")).filter(
             Specimen.collection_id == collectionid).filter(Specimen.deleted == 0).order_by(Specimen.id.desc()).all()
 
         si = io.StringIO()

@@ -1,6 +1,5 @@
 import glob
 import os
-from uuid import uuid4
 import json
 from pathlib import Path
 
@@ -12,7 +11,7 @@ from sqlalchemy import (
     ForeignKey,
     Text,
 )
-from torch import Base, db
+from torch_hub import Base, db
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask import current_app
@@ -49,7 +48,7 @@ class Specimen(Base):
         return web_path
 
     def card_image(self):
-        img = db.session.query(SpecimenImage).filter(SpecimenImage.specimen_id == self.id).filter(
+        img = db().query(SpecimenImage).filter(SpecimenImage.specimen_id == self.id).filter(
             SpecimenImage.size == 'THUMB').first()
         return img.web_url() if img is not None else self.web_url()
 

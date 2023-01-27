@@ -5,16 +5,15 @@ from typing import Optional
 
 from prefect import task
 from PIL import Image
-from torch.collections.specimens import Specimen, SpecimenImage
+from torch_hub.collections import specimens
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import prefect
 from prefect.orion.schemas.states import Failed
-from torch.prefect_flows.tasks.save_specimen import save_specimen
 
 
 @task
-def generate_derivatives(specimen: Specimen, app_config):
+def generate_derivatives(specimen: specimens.Specimen, app_config):
     engine = create_engine(app_config["SQLALCHEMY_DATABASE_URI"], future=True)
     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex
 
@@ -54,7 +53,7 @@ def is_missing(images, size):
     return not any(image.size == size for image in images)
 
 
-def generate_derivative(specimen: Specimen, size, flow_config) -> Optional[SpecimenImage]:
+def generate_derivative(specimen: specimens.Specimen, size, flow_config) -> Optional[specimens.SpecimenImage]:
     full_image_path = Path(specimen.upload_path)
     derivative_file_name = full_image_path.stem + "_" + size + full_image_path.suffix
     derivative_path = str(full_image_path.parent.joinpath(derivative_file_name))

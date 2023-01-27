@@ -1,6 +1,6 @@
 import csv
 import io
-from torch import db
+from torch_hub import db
 
 
 def import_csv(file):

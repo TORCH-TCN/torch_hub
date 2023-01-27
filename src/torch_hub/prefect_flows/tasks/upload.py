@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 from minio import Minio
 from prefect import get_run_logger, task
 
-from torch.collections.specimens import SpecimenImage
+from torch_hub.collections.specimens import SpecimenImage
 
 
 @task

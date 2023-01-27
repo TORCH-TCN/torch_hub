@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "torch_hub"
-version = "0.1"
+version = "0.1.1"
 authors = [
   { name="Jason Best", email="jbest@brit.org" },
   { name="Joseph Young", email="joseph@sparc.coop" },

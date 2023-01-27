@@ -1,6 +1,6 @@
 from sqlalchemy import func, Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
-from torch import Base, db
+from torch_hub import Base, db
 
 
 class Institution(Base):
@@ -14,7 +14,7 @@ class Institution(Base):
 
 
 def get_institutions():
-    return db.session.query(Institution).all()
+    return db().query(Institution).all()
 
 
 def create_institution(name, code):
@@ -29,7 +29,7 @@ def create_institution(name, code):
 
 
 def delete_institution(institution_id):
-    institution = db.session.query(Institution).get(institution_id)
+    institution = db().query(Institution).get(institution_id)
     if institution:
         db.session.delete(institution)
         db.session.commit()

@@ -1,8 +1,8 @@
 from typing import List
 from flask_security import RoleMixin, SQLAlchemyUserDatastore
 from sqlalchemy import Column, Integer, String
-from torch.users.user import User
-from torch import db, Base
+from torch_hub.users import user
+from torch_hub import db, Base
 
 
 class Role(Base, RoleMixin):

@@ -2,7 +2,7 @@ from urllib import request
 
 from flask import Blueprint, request, jsonify
 
-from torch import socketio
+import socketio
 
 notifications_bp = Blueprint("notificationshub", __name__, url_prefix="/notificationshub")
 

@@ -1,4 +1,3 @@
-from multiprocessing.dummy import freeze_support
 import argparse
 from prefect.executors import DaskExecutor, LocalExecutor
 from config.TorchConfig import TorchConfig

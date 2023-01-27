@@ -1,6 +1,6 @@
 from flask_security import UserMixin
-from torch.institutions.institutions import Institution
-from torch import db, Base
+from torch_hub.institutions import institutions
+from torch_hub import db, Base
 from sqlalchemy import Table, Integer, Column, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
@@ -35,7 +35,7 @@ def get_users():
 
 
 def get_user(user_id) -> User:
-    return db.session.query(User).filter_by(id=user_id).first()
+    return db().query(User).filter_by(id=user_id).first()
 
 
 def save_user(user_id, first_name, last_name, institution_id):
@@ -58,7 +58,7 @@ def save_user(user_id, first_name, last_name, institution_id):
 
 
 def toggle_user_active(user_id):
-    user = db.session.query(User).get(user_id)
+    user = db().query(User).get(user_id)
     user.active = 0 if user.active == 1 else 1
 
     db.session.commit()
