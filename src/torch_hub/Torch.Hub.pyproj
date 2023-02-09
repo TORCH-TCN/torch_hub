@@ -20,38 +20,9 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="collections\collections.py" />
-    <Compile Include="collections\specimens.py" />
-    <Compile Include="collections\workflow.py" />
-    <Compile Include="config\watchdog\watchdog_cli.py" />
-    <Compile Include="config\watchdog\watchdog_handler.py" />
-    <Compile Include="institutions\institutions.py" />
-    <Compile Include="prefect_flows\process_specimen.py" />
-    <Compile Include="prefect_flows\tasks\check_catalog_number.py" />
-    <Compile Include="prefect_flows\tasks\check_orientation.py" />
-    <Compile Include="prefect_flows\tasks\copy_file.py" />
-    <Compile Include="prefect_flows\tasks\generate_derivatives.py" />
-    <Compile Include="prefect_flows\tasks\herbar.py" />
-    <Compile Include="prefect_flows\tasks\log_new_file_name.py" />
-    <Compile Include="prefect_flows\tasks\read_dir.py" />
-    <Compile Include="prefect_flows\tasks\save_specimen.py" />
-    <Compile Include="prefect_flows\tasks\upload.py" />
-    <Compile Include="prefect_flows\templates\flow_template.py" />
-    <Compile Include="prefect_flows\templates\task_template.py" />
-    <Compile Include="reports\reports.py" />
-    <Compile Include="users\role.py" />
-    <Compile Include="users\user.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="collections" />
-    <Folder Include="config\" />
-    <Folder Include="config\watchdog" />
-    <Folder Include="institutions" />
-    <Folder Include="prefect_flows" />
-    <Folder Include="prefect_flows\tasks" />
-    <Folder Include="prefect_flows\templates" />
-    <Folder Include="reports" />
     <Folder Include="users" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

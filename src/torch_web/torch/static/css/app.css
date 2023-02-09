@@ -1,6 +1,6 @@
 /* Error: Can't find stylesheet to import.
  *    ,
- * 10 | @import 'torch_hub/collections/settings';
+ * 10 | @import 'torch_web/collections/settings';
  *    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *    '
  *   app.scss 10:9  root stylesheet */
@@ -13,5 +13,5 @@ body::before {
   padding: 1em;
   margin-bottom: 1em;
   border-bottom: 2px solid black;
-  content: "Error: Can't find stylesheet to import.\a    \2577 \a 10 \2502  @import 'torch_hub/collections/settings';\d\a    \2502          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   app.scss 10:9  root stylesheet";
+  content: "Error: Can't find stylesheet to import.\a    \2577 \a 10 \2502  @import 'torch_web/collections/settings';\d\a    \2502          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   app.scss 10:9  root stylesheet";
 }
