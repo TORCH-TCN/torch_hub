@@ -28,7 +28,7 @@ def create_app():
     from torch_web.users.users_api import users_bp, ExtendedRegisterForm
     from torch_web.users.roles_api import roles_bp
     from torch_web.institutions.institutions_api import institutions_bp
-    from torch_web.collections.collections_api import collections_bp, home_bp
+    from torch_web.collections.collections_api import collections_bp, home_bp, specimens_bp
     from torch_web.reports.reports_api import reports_bp
     from torch_web.notifications.notifications_api import notifications_bp
 
@@ -39,6 +39,7 @@ def create_app():
     app.register_blueprint(home_bp)
     app.register_blueprint(reports_bp)
     app.register_blueprint(notifications_bp)
+    app.register_blueprint(specimens_bp)
 
     from torch_web.users.user import User
     from torch_web.users.role import Role

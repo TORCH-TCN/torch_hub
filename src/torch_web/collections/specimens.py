@@ -51,7 +51,7 @@ class Specimen(Base):
         img = db.session.scalars(select(SpecimenImage)
                                  .filter(SpecimenImage.specimen_id == self.id)
                                  .filter(SpecimenImage.size == 'THUMB')).first()
-        return img.web_url() if img is not None else self.web_url()
+        return img.external_url if img is not None else None
 
 
 def get_specimens_by_batch_id(batch_id):

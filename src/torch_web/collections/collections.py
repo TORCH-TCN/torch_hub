@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, exists, 
 from sqlalchemy.orm import joinedload
 from werkzeug.datastructures import FileStorage
 
-from torch_web import db, Base
+from torch_web import db, Base, app
 from torch_web.collections.specimens import Specimen, SpecimenImage
 from torch_web.collections.workflow import run_workflow
 
@@ -34,7 +34,7 @@ class Collection(Base):
 
 
 def get_collections(institutionid):
-    collections_result = db.session.scalars(select(Collection).where(institution_id=institutionid)).all()
+    collections_result = db.session.scalars(select(Collection).filter_by(institution_id=institutionid)).all()
 
     collections_dict = []
     for c in collections_result:
@@ -49,8 +49,8 @@ def get_collection_card_image(collection_id):
     img = db.session.scalars(select(SpecimenImage).join(Specimen)
                              .where(Specimen.collection_id == collection_id)
                              .where(Specimen.deleted == 0)
-                             .where(SpecimenImage.size == 'THUMB')).one_or_none()
-    return img.web_url() if img is not None else "/static/images/default.jpg"
+                             .where(SpecimenImage.size == 'THUMB')).first()
+    return img.external_url if img is not None else "/static/images/default.jpg"
 
 
 def create_collection(institutionid, collection_id, name, code, default_prefix, catalog_number_regex, flow_id, workflow,
@@ -80,10 +80,7 @@ def get_collection(collectioncode):
 
 
 def get_collection_specimens(collectionid, search_string, only_error, page=1, per_page=14):
-    specimens = db.session.scalars(
-        select(Specimen)
-        .where(Specimen.collection_id == collectionid)
-        .where(Specimen.deleted == 0)).all()
+    specimens = select(Specimen).where(Specimen.collection_id == collectionid).where(Specimen.deleted == 0)
 
     if search_string is not None:
         specimens = specimens.filter(or_(Specimen.name.contains(search_string),
@@ -92,10 +89,11 @@ def get_collection_specimens(collectionid, search_string, only_error, page=1, pe
     if only_error == 'true':
         specimens = specimens.filter(func.lower(Specimen.flow_run_state) == 'failed')
 
-    specimens = specimens.order_by(Specimen.id.desc()).paginate(page=page, per_page=per_page)
+    specimens = specimens.order_by(Specimen.id.desc()).limit(per_page).offset((page - 1) * per_page)
+    result = db.session.scalars(specimens).all()
 
     specimensdict = []
-    for s in specimens.items:
+    for s in result:
         sd = s.as_dict()
         sd["cardimg"] = s.card_image()
         specimensdict.append(sd)

@@ -1,22 +1,43 @@
 import json
-
+import click
+from rich import print
 from flask import Blueprint, request, current_app, jsonify, make_response
 from flask_security import current_user
 from torch_web.collections import collections
+from rich.console import Console
+from rich.table import Table
+
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
 home_bp = Blueprint("home", __name__)
 collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
-
+specimens_bp = Blueprint("specimens", __name__)
 
 @collections_bp.get("/")
-def get_collections():
-    collections = get_collections(current_user.institution_id)
+def collections_get():
+    result = collections.get_collections(current_user.institution_id)
+    
     return { 
-        'collections': collections
+        'collections': result
     }  
 
+
+@collections_bp.cli.command("list")
+@click.argument('institution_id')
+def list_collections(institution_id):
+    result = collections.get_collections(institution_id)
+    table = Table(title="Current Collections")
+    table.add_column("ID", style="cyan")
+    table.add_column("Name", style="magenta")
+    table.add_column("Code", style="green")
+    table.add_column("Default Workflow", style="orange3")
+
+    for i in result:
+        table.add_row(str(i["id"]), i["name"], i["code"], i["workflow"])
+
+    Console().print(table)
+    
 
 @collections_bp.post("/")
 def collections_post():
@@ -57,6 +78,23 @@ def collection_specimens(collectionid):
     return {'specimens': json.dumps(specimens, indent=4, sort_keys=True, default=str),
             'total_specimens': specimens.count()}
 
+
+@specimens_bp.cli.command("list")
+@click.argument('collection_id')
+@click.option('-s', '--search_string')
+@click.option('-t', '--take', default=50)
+def list_collections(collection_id, search_string, take):
+    result = collections.get_collection_specimens(collection_id, search_string, False, 1, take)
+    table = Table(title="Collection Specimens")
+    table.add_column("ID", style="cyan")
+    table.add_column("Name", style="magenta")
+    table.add_column("Catalog Num", style="green")
+    table.add_column("Processing State", style="orange3")
+
+    for i in result:
+        table.add_row(str(i["id"]), i["name"], i["catalog_number"], i["flow_run_state"] + (" (" + i["failed_task"] + ")" if i["failed_task"] else ""))
+
+    Console().print(table)
 
 
 @collections_bp.post("/<collectionid>/specimens")
