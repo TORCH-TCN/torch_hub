@@ -45,11 +45,11 @@ def save_user(user_id, first_name, last_name, institution_id):
     print(last_name)
 
     if institution_id is not None:
-        institution = Institution.query.filter_by(id=institution_id).first()
+        institution = db.session.get(Institution, institution_id)
         user.institution_id = institution.id
         user.institution_code = institution.code
     elif user.institution_code is not None:
-        institution = Institution.query.filter_by(code=user.institution_code).first()
+        institution = db.session.scalars(select(Institution).filter_by(code=user.institution_code)).first()
         user.institution_id = institution.id
 
     db.session.commit()
