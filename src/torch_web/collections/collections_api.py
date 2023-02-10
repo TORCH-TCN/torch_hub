@@ -9,6 +9,8 @@ from torch_web.collections import collections
 from rich.console import Console
 from rich.table import Table
 from rich.progress import Progress
+from rich.prompt import Prompt
+from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
@@ -85,6 +87,25 @@ def collections_cli_create(institutionid, name, code):
     )
     Console().print(f'Collection [bold cyan]{name}[/bold cyan] created! ID is [bold magenta]{new_collection.id}[/bold magenta].')
 
+
+@collections_bp.cli.command("update-credentials")
+@click.argument("id")
+def collections_cli_update_credentials(id):
+    console = Console()
+    type = Prompt.ask('Choose the upload type: ', choices=["sftp", "s3", "minio"])
+    host = console.input(f'Enter the [bold cyan]{type} host[/bold cyan]: ')
+    username = console.input(f'Enter the [bold cyan]username[/bold cyan]: ')
+    password = Prompt.ask(f'Enter the [bold magenta]password[/bold magenta]: ', password=True)
+
+    credentials = UploadCredentials(
+        host=host,
+        type=type,
+        username=username,
+        password=password)
+
+    credentials.save(name=str(id))
+    console.print(f'Credentials for collection [bold cyan]{id}[/bold cyan] updated!')
+    
 
 @collections_bp.delete("/<collection_id>")
 def collection_delete(collection_id):

@@ -37,6 +37,9 @@
     <Content Include="static\uploads\Default\BRIT342753.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="prefect_flows\blocks\upload_credentials.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="__init__.py" />
     <Compile Include="app.py" />
     <Compile Include="collections\collections_api.py" />
@@ -74,6 +77,7 @@
     <Folder Include="institutions" />
     <Folder Include="notifications" />
     <Folder Include="prefect_flows\" />
+    <Folder Include="prefect_flows\blocks\" />
     <Folder Include="prefect_flows\tasks\" />
     <Folder Include="prefect_flows\templates\" />
     <Folder Include="reports" />

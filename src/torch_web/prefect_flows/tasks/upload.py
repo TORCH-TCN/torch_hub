@@ -7,8 +7,10 @@ from botocore.config import Config
 from botocore.exceptions import ClientError
 from minio import Minio
 from prefect import get_run_logger, task
+from prefect.blocks.core import Block
 
 from torch_web.collections.specimens import SpecimenImage
+from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 from torch_web.prefect_flows.tasks import save_specimen
 
 
@@ -16,25 +18,26 @@ from torch_web.prefect_flows.tasks import save_specimen
 def upload(collection, image: SpecimenImage, config):
 
     logger = get_run_logger()
-    upload_type = os.environ["TORCH_UPLOAD_TYPE"]
+    credentials = UploadCredentials.load(f"{collection.id}")
+    upload_type = credentials.type
     logger.info(f"Uploading {image.url} via {upload_type}...")
 
     if upload_type == "sftp":
-        image.external_url = upload_via_paramiko_sftp(collection, image.url)
+        image.external_url = upload_via_paramiko_sftp(collection, image.url, credentials)
     elif upload_type == "s3":
-        image.external_url = upload_via_s3(collection, image.url)
+        image.external_url = upload_via_s3(collection, image.url, credentials)
     elif upload_type == "minio":
-        image.external_url = upload_via_minio(collection, image.url)
+        image.external_url = upload_via_minio(collection, image.url, credentials)
     else:
         raise NotImplementedError(f"Upload type {upload_type} is not yet implemented.")
 
     save_specimen.save_specimen_image(image, config)
 
 
-def upload_via_paramiko_sftp(collection, path):
-    host = os.environ["TORCH_UPLOAD_HOST"]
+def upload_via_paramiko_sftp(collection, path, credentials):
+    host = credentials.host
     transport = paramiko.Transport((host, 22))
-    transport.connect(username=os.environ["TORCH_UPLOAD_USERNAME"], password=os.environ["TORCH_UPLOAD_PASSWORD"])
+    transport.connect(username=credentials.username, password=credentials.password.get_secret_value())
     sftp = paramiko.SFTPClient.from_transport(transport)
 
     mkdir_p(sftp, collection.collection_folder)
@@ -46,16 +49,16 @@ def upload_via_paramiko_sftp(collection, path):
     return final_url
 
 
-def upload_via_s3(collection, path):
+def upload_via_s3(collection, path, credentials):
     amazon_config = Config(
-        region_name=os.environ["TORCH_UPLOAD_HOST"],
+        region_name=credentials.host,
     )
 
     s3 = boto3.client(
         "s3",
         config=amazon_config,
-        aws_access_key_id=os.environ["TORCH_UPLOAD_USERNAME"],
-        aws_secret_access_key=os.environ["TORCH_UPLOAD_PASSWORD"],
+        aws_access_key_id=credentials.username,
+        aws_secret_access_key=credentials.password.get_secret_value(),
     )
 
     try:
@@ -67,14 +70,14 @@ def upload_via_s3(collection, path):
         return None
 
 
-def upload_via_pysftp(collection, path):
+def upload_via_pysftp(collection, path, credentials):
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
 
     with pysftp.Connection(
-        host=os.environ["TORCH_UPLOAD_HOST"],
-        username=os.environ["TORCH_UPLOAD_USERNAME"],
-        password=os.environ["TORCH_UPLOAD_PASSWORD"],
+        host=credentials.host,
+        username=credentials.username,
+        password=credentials.password.get_secret_value(),
         cnopts=cnopts,
     ) as sftp:
         try:
@@ -85,14 +88,14 @@ def upload_via_pysftp(collection, path):
 
         sftp.put(path)
 
-        return f'{os.environ["TORCH_UPLOAD_HOST"]}' + sftp.getcwd() + f"/{os.path.basename(path)}"
+        return f'{credentials.host}' + sftp.getcwd() + f"/{os.path.basename(path)}"
 
 
-def upload_via_minio(collection, path):
+def upload_via_minio(collection, path, credentials):
     client = Minio(
-        os.environ["TORCH_UPLOAD_HOST"],
-        access_key=os.environ["TORCH_UPLOAD_USERNAME"],
-        secret_key=os.environ["TORCH_UPLOAD_PASSWORD"],
+        credentials.host,
+        access_key=credentials.username,
+        secret_key=credentials.password.get_secret_value(),
     )
 
     bucket = collection.collection_folder
