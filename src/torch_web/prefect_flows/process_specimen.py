@@ -15,8 +15,8 @@ def execute(collection, specimen, app_config, progress):
         task = progress.add_task(specimen.name, total=5)
 
     def log(message, advance=False):
-        if logger:
-            logger.info(message)
+        # if logger:
+            # logger.info(message)
         if progress:
             progress.console.log(message)
             if advance:
@@ -46,7 +46,7 @@ def execute(collection, specimen, app_config, progress):
             upload.upload(collection, img)
             save_specimen.save_specimen_image(img, app_config)
 
-        save_specimen.save_specimen_image(specimen, app_config, flow_run_id, "Completed")
+        save_specimen.save_specimen(specimen, app_config, flow_run_id, "Completed")
         log(f"Complete!", True)
         
     except Exception as e:

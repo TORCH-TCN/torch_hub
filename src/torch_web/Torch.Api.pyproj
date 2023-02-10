@@ -23,35 +23,18 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="base.html" />
     <Content Include="security\base.html" />
     <Content Include="security\change_password.html" />
     <Content Include="security\forgot_password.html" />
     <Content Include="security\login_user.html" />
     <Content Include="security\register_user.html" />
     <Content Include="security\reset_password.html" />
-    <Content Include="static\css\app.css" />
-    <Content Include="static\images\arrow-left.svg" />
-    <Content Include="static\images\BRIT240602.jpg" />
-    <Content Include="static\images\close_icon.svg" />
-    <Content Include="static\images\default.jpg" />
-    <Content Include="static\images\dng_file.png" />
-    <Content Include="static\images\down-filled-triangular-arrow.png" />
-    <Content Include="static\images\error.png" />
-    <Content Include="static\images\list.png" />
-    <Content Include="static\images\plus.png" />
-    <Content Include="static\images\plus_icon.svg" />
-    <Content Include="static\images\retry_icon.svg" />
-    <Content Include="static\images\upload_icon.svg" />
-    <Content Include="static\js\alpine_modules.js" />
-    <Content Include="static\js\dropbox.js" />
     <Content Include="static\uploads\Default\BRIT240602.jpg" />
     <Content Include="static\uploads\Default\BRIT259313.jpg" />
     <Content Include="static\uploads\Default\BRIT259313_MED.jpg" />
     <Content Include="static\uploads\Default\BRIT259313_THUMB.jpg" />
     <Content Include="static\uploads\Default\BRIT337760.jpg" />
     <Content Include="static\uploads\Default\BRIT342753.jpg" />
-    <Content Include="torch\static\css\app.css" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="__init__.py" />
@@ -96,14 +79,8 @@
     <Folder Include="reports" />
     <Folder Include="security" />
     <Folder Include="static\" />
-    <Folder Include="static\css" />
-    <Folder Include="static\images" />
-    <Folder Include="static\js" />
     <Folder Include="static\uploads\" />
     <Folder Include="static\uploads\Default" />
-    <Folder Include="torch\" />
-    <Folder Include="torch\static\" />
-    <Folder Include="torch\static\css" />
     <Folder Include="users" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
