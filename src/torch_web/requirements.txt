@@ -89,7 +89,7 @@ python-slugify==8.0.0
 python-socketio==5.7.2
 pytz==2022.7.1
 pytzdata==2020.1
-pywin32==305
+pywin32==305; sys_platform == 'win32'
 PyYAML==6.0
 pyzbar==0.1.9
 readchar==4.0.3
