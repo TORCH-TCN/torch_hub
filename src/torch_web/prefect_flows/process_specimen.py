@@ -43,8 +43,7 @@ def execute(collection, specimen, app_config, progress):
 
         for img in imgs:
             log(f"Uploading image {img.size}...")
-            upload.upload(collection, img)
-            save_specimen.save_specimen_image(img, app_config)
+            upload.upload.submit(collection, img, app_config)
 
         save_specimen.save_specimen(specimen, app_config, flow_run_id, "Completed")
         log(f"Complete!", True)

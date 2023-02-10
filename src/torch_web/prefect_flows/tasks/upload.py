@@ -9,10 +9,11 @@ from minio import Minio
 from prefect import get_run_logger, task
 
 from torch_web.collections.specimens import SpecimenImage
+from torch_web.prefect_flows.tasks import save_specimen
 
 
 @task
-def upload(collection, image: SpecimenImage):
+def upload(collection, image: SpecimenImage, config):
 
     logger = get_run_logger()
     upload_type = os.environ["TORCH_UPLOAD_TYPE"]
@@ -26,6 +27,8 @@ def upload(collection, image: SpecimenImage):
         image.external_url = upload_via_minio(collection, image.url)
     else:
         raise NotImplementedError(f"Upload type {upload_type} is not yet implemented.")
+
+    save_specimen.save_specimen_image(image, config)
 
 
 def upload_via_paramiko_sftp(collection, path):
