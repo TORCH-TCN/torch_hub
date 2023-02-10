@@ -1,11 +1,14 @@
 import json
+from pathlib import Path
 import click
-from rich import print
+import os
+
 from flask import Blueprint, request, current_app, jsonify, make_response
 from flask_security import current_user
 from torch_web.collections import collections
 from rich.console import Console
 from rich.table import Table
+from rich.progress import Progress
 
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
@@ -100,9 +103,29 @@ def list_collections(collection_id, search_string, take):
 @collections_bp.post("/<collectionid>/specimens")
 def upload(collectionid):
     files = request.files.getlist("file")
-    result = upload(collectionid, files, current_app.config)
+    for file in files:
+        target_dir = os.path.join(config['BASE_DIR'], "static", "uploads", collection.collection_folder)
+        Path(target_dir).mkdir(parents=True, exist_ok=True)
+        file = secure_filename(file.filename)
+        destination = os.path.join(target_dir, filename)
+        file.save(destination)
+
+    result = collections.upload(collectionid, files, current_app.config)
     return ajax_response(result, "")
 
+
+@specimens_bp.cli.command("process")
+@click.argument('collection_id')
+@click.argument('path')
+def process_local(collection_id, path):
+    if os.path.isdir(path):
+        files = [os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    else:
+        files = [path]
+    
+    with Progress() as progress:
+        collections.upload(collection_id, files, current_app.config, progress)
+    
 
 
 @collections_bp.get("/<collectionid>/specimens/<specimenid>")

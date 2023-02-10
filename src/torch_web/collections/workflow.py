@@ -1,45 +1,31 @@
 from torch_web import db
 from torch_web.prefect_flows import process_specimen
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
 from torch_web.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import select
-from pathlib import Path
 import os
 
 
-def run_workflow(collection, file: FileStorage, config):
+def run_workflow(collection, file, config, progress):
     specimen, execute_workflow = upsert_specimen(collection, file, config)
 
     if execute_workflow:
-        notify_specimen_update(specimen, "Running", socketio)
-
+        # notify_specimen_update(specimen, "Running", socketio)
+        
         if collection.workflow == "process_specimen":
-            state = process_specimen(collection, specimen, config, return_state=True)
+            state = process_specimen.execute(collection, specimen, config, return_state=True, progress=progress)
         else:
             raise NotImplementedError
 
-        notify_specimen_update(specimen, state.name, socketio)
+        # notify_specimen_update(specimen, state.name, socketio)
 
 
 def upsert_specimen(collection, file, config):
-    s_filename = secure_filename(file.filename)
-    filename = s_filename.split(".")[0]
-    extension = s_filename.split(".")[1]
-
-    target_dir = os.path.join(config['BASE_DIR'], "static", "uploads", collection.collection_folder)
-    Path(target_dir).mkdir(parents=True, exist_ok=True)
+    filename = os.path.basename(file).split(".")[0]
+    extension = os.path.basename(file).split(".")[1]
 
     execute_workflow = True
 
     specimen = db.session.scalars(select(Specimen).filter(Specimen.name == filename)).first()
-
-    destination = os.path.join(target_dir, s_filename)
-
-    if os.path.exists(destination):
-        return specimen, False
-
-    file.save(destination)
 
     if specimen is not None:
         if extension.lower() == "dng":
@@ -51,12 +37,12 @@ def upsert_specimen(collection, file, config):
 
     else:
         specimen = Specimen(
-            name=filename, upload_path=destination, collection_id=collection.id
+            name=filename, upload_path=file, collection_id=collection.id
         )
         db.session.add(specimen)
         db.session.commit()
 
-    upsert_specimen_image(specimen, destination, extension.lower())
+    upsert_specimen_image(specimen, file, extension.lower())
 
     return specimen, execute_workflow
 
@@ -76,16 +62,20 @@ def upsert_specimen_image(specimen, destination, extension):
         db.session.commit()
 
 
-def notify_specimen_update(specimen, state, socketio):
+def notify_specimen_update(specimen, state, socketio, progress):
     db.session.refresh(specimen)
-    socketio.emit(
-        "notify",
-        {
-            "id": specimen.id,
-            "name": specimen.name,
-            "cardimg": specimen.card_image(),
-            "create_date": str(specimen.create_date),
-            "flow_run_state": state,
-            "failed_task": specimen.failed_task,
-        },
-    )
+    if socketio:
+        socketio.emit(
+            "notify",
+            {
+                "id": specimen.id,
+                "name": specimen.name,
+                "cardimg": specimen.card_image(),
+                "create_date": str(specimen.create_date),
+                "flow_run_state": state,
+                "failed_task": specimen.failed_task,
+            },
+        )
+    
+    if progress:
+        progress.add_task(state,)

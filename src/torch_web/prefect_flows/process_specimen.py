@@ -3,40 +3,55 @@ import os
 import prefect
 from prefect import flow, get_run_logger
 from prefect.orion.schemas.states import Failed
-
 from torch_web.prefect_flows.tasks import check_catalog_number, check_orientation, generate_derivatives, save_specimen, upload
 
+
 @flow(name="Process Specimen", version=os.getenv("GIT_COMMIT_SHA"))
-def process_specimen(collection, specimen, app_config):
+def execute(collection, specimen, app_config, progress):
     logger = get_run_logger()
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
     flow_run_state = prefect.context.get_run_context().flow_run.state_name
+    if progress:
+        task = progress.add_task(specimen.name, total=5)
+
+    def log(message, advance=False):
+        if logger:
+            logger.info(message)
+        if progress:
+            progress.console.log(message)
+            if advance:
+                progress.advance(task)
+
 
     try:
-        logger.info(f"Saving {specimen.name} to database...")
-        save_specimen(specimen, app_config, flow_run_id, flow_run_state)
-        logger.info(f"{specimen.name} saved...")
+        log(f"Saving to database...")
+        save_specimen.save_specimen(specimen, app_config, flow_run_id, flow_run_state)
+        log(f"Saved!", True)
 
-        logger.info(f"Running check_catalog_number {specimen.name} (id:{specimen.id})...")
-        specimen.catalog_number = check_catalog_number(collection, specimen, app_config)
-        save_specimen(specimen, app_config, flow_run_id, flow_run_state)
+        log(f"Running check_catalog_number...")
+        specimen.catalog_number = check_catalog_number.check_catalog_number(collection, specimen, app_config)
+        save_specimen.save_specimen(specimen, app_config, flow_run_id, flow_run_state)
+        log(f"check_catalog_number complete...", True)
 
-        logger.info(f"Running check_orientation {specimen.name} (id:{specimen.id})...")
-        check_orientation(specimen, app_config)
+        log(f"Running check_orientation...")
+        check_orientation.check_orientation(specimen, app_config)
+        log(f"check_orientation complete...", True)
 
-        logger.info(f"Running generate_derivatives {specimen.name} (id:{specimen.id})...")
-        imgs = generate_derivatives(specimen, app_config)
+        log(f"Running generate_derivatives...")
+        imgs = generate_derivatives.generate_derivatives(specimen, app_config)
+        log(f"generate_derivatives complete...", True)
 
-        logger.info(f"Uploading image {specimen.name} (id:{specimen.id})...")
         for img in imgs:
-            upload(collection, img)
-            save_specimen_image(img, app_config)
+            log(f"Uploading image {img.size}...")
+            upload.upload(collection, img)
+            save_specimen.save_specimen_image(img, app_config)
 
-        save_specimen(specimen, app_config, flow_run_id, "Completed")
+        save_specimen.save_specimen_image(specimen, app_config, flow_run_id, "Completed")
+        log(f"Complete!", True)
+        
     except Exception as e:
         logger.error(f"Error running process_specimen flow", exc_info=e)
         return Failed(message="Error running process_specimen flow")
-
 # @task(name="test_task_error")
 # def test_task(specimen: Specimen, config):
 #     flow_run_id = prefect.context.get_run_context().task_run.flow_run_id.hex

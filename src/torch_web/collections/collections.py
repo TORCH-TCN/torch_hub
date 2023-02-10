@@ -3,7 +3,6 @@ from typing import List
 
 from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, exists, select
 from sqlalchemy.orm import joinedload
-from werkzeug.datastructures import FileStorage
 
 from torch_web import db, Base, app
 from torch_web.collections.specimens import Specimen, SpecimenImage
@@ -28,9 +27,9 @@ class Collection(Base):
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    def add_specimens(self, files: List[FileStorage], config):
+    def add_specimens(self, files, config, progress):
         for file in files:
-            run_workflow(self, file, config)
+            run_workflow(self, file, config, progress)
 
 
 def get_collections(institutionid):
@@ -108,9 +107,9 @@ def retry_workflow(specimenid, config):
     return True
 
 
-def upload(collectionid, files, config):
-    collection = db.session.scalars(select(Collection).where(code=collectionid)).first()
-    collection.add_specimens(files, config)
+def upload(collectionid, files, config, progress):
+    collection = db.session.get(Collection, collectionid)
+    collection.add_specimens(files, config, progress)
     return True
 
 
