@@ -23,6 +23,7 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="requirements.txt" />
     <Content Include="security\base.html" />
     <Content Include="security\change_password.html" />
     <Content Include="security\forgot_password.html" />
