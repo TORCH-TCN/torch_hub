@@ -71,7 +71,7 @@ def create_collection(institutionid, collection_id, name, code, default_prefix, 
     db.session.add(local_collection)
     db.session.commit()
 
-    return new_collection
+    return local_collection
 
 
 def get_collection(collectioncode):

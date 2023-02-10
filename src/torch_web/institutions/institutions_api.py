@@ -1,3 +1,5 @@
+import click
+
 from flask import Blueprint, jsonify, render_template, request
 from flask_security import current_user
 from torch_web.institutions import institutions
@@ -37,7 +39,22 @@ def post_institution():
     return institutions.get_institutions()
 
 
+@institutions_bp.cli.command("create")
+@click.argument("name")
+@click.argument("code")
+def create_institution(name, code):
+    result = institutions.create_institution(name, code)
+    Console().print(f'Institution [bold cyan]{name}[/bold cyan] created! ID is [bold magenta]{result.id}[/bold magenta].')
+
+
 @institutions_bp.delete("/<institution_id>")
 def delete(institution_id):
     institutions.delete_institution(institution_id)
     return jsonify({})
+
+
+@institutions_bp.cli.command("delete")
+@click.argument("id")
+def delete_cli(id):
+    institutions.delete_institution(id)
+    Console().print(f'Institution ID [bold cyan]{id}[/bold cyan] deleted!')

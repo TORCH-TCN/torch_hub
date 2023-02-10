@@ -61,6 +61,31 @@ def collections_post():
     return jsonify({"collectionid": new_collection.id})
 
 
+@collections_bp.cli.command("create")
+@click.argument("institutionid")
+@click.argument("name")
+@click.argument("code")
+def collections_cli_create(institutionid, name, code):
+    console = Console()
+    default_prefix = console.input('Enter the [bold cyan]default prefix[/bold cyan] for specimen files: ')
+    catalog_number_regex = console.input('Enter the [bold cyan]regular expression to obtain the catalog number[/bold cyan] from your specimen files: ')
+    collection_folder = console.input('Enter the [bold cyan]path to the folder[/bold cyan] where your specimen files should be uploaded: ')
+    
+    new_collection = collections.create_collection(
+        institutionid = institutionid,
+        collection_id=None,
+        flow_id=None,
+        project_ids=None,
+        name=name,
+        code=code,
+        default_prefix=default_prefix,
+        catalog_number_regex=catalog_number_regex,
+        collection_folder=collection_folder,
+        workflow='process_specimen'
+    )
+    Console().print(f'Collection [bold cyan]{name}[/bold cyan] created! ID is [bold magenta]{new_collection.id}[/bold magenta].')
+
+
 @collections_bp.delete("/<collection_id>")
 def collection_delete(collection_id):
     result = collections.delete_collection(collection_id)
@@ -68,6 +93,13 @@ def collection_delete(collection_id):
         return jsonify({"status": "error", "statusText": "Impossible to delete a collection with specimens."})
 
     return jsonify({"status": "ok"})
+
+
+@collections_bp.cli.command("delete")
+@click.argument("id")
+def collection_delete_cli(id):
+    collections.delete_collection(id)
+    Console().print(f'Collection ID [bold cyan]{id}[/bold cyan] deleted!')
 
 
 @collections_bp.get("/<collectionid>/specimens")
@@ -151,6 +183,13 @@ def retry(collectionid, specimenid):
 def specimen_delete(collectionid, specimenid):
     collections.delete_specimen(specimenid)
     return jsonify({"status": "ok"})
+
+
+@specimens_bp.cli.command("delete")
+@click.argument("id")
+def specimen_delete_cli(id):
+    collections.delete_specimen(id)
+    Console().print(f'Specimen ID [bold cyan]{id}[/bold cyan] deleted!')
 
 
 @collections_bp.get('/<collectionid>/csv')
