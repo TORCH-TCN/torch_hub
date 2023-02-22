@@ -3,7 +3,8 @@ from pathlib import Path
 import click
 import os
 
-from flask import Blueprint, request, current_app, jsonify, make_response
+from apiflask import APIBlueprint
+from flask import request, current_app, jsonify, make_response
 from flask_security import current_user
 from torch_web.collections import collections
 from rich.console import Console
@@ -15,9 +16,9 @@ from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
-home_bp = Blueprint("home", __name__)
-collections_bp = Blueprint("collections", __name__, url_prefix="/collections")
-specimens_bp = Blueprint("specimens", __name__)
+home_bp = APIBlueprint("home", __name__)
+collections_bp = APIBlueprint("collections", __name__, url_prefix="/collections")
+specimens_bp = APIBlueprint("specimens", __name__)
 
 @collections_bp.get("/")
 def collections_get():

@@ -1,7 +1,8 @@
-from flask import Blueprint, make_response, render_template, request
+from apiflask import APIBlueprint
+from flask import make_response, render_template, request
 from flask_security import current_user, roles_accepted
 
-reports_bp = Blueprint("reports", __name__, url_prefix="/reports")
+reports_bp = APIBlueprint("reports", __name__, url_prefix="/reports")
 
 
 @reports_bp.get("/import")
