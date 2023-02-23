@@ -1,5 +1,6 @@
 import json
-from flask import Blueprint, flash, jsonify, render_template, request
+from apiflask import APIBlueprint
+from flask import flash, jsonify, render_template, request
 from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
@@ -10,7 +11,7 @@ class ExtendedRegisterForm(RegisterForm):
     last_name = StringField("Last Name")
 
 
-users_bp = Blueprint("users", __name__, url_prefix="/users")
+users_bp = APIBlueprint("users", __name__, url_prefix="/users")
 
 
 @users_bp.get("/")

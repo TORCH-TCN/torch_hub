@@ -1,13 +1,14 @@
 import click
 
-from flask import Blueprint, jsonify, render_template, request
+from apiflask import APIBlueprint
+from flask import jsonify, render_template, request
 from flask_security import current_user
 from torch_web.institutions import institutions
 from rich.console import Console
 from rich.table import Table
 
 
-institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions")
+institutions_bp = APIBlueprint("institutions", __name__, url_prefix="/institutions")
 
 
 @institutions_bp.get("/")

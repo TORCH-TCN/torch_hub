@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\torch_web"
   ],
-  "SelectedNode": "\\C:\\Users\\josep\\Source\\Repos\\torch_hub-1",
+  "SelectedNode": "\\src\\Torch.sln",
   "PreviewInSolutionExplorer": false
 }
