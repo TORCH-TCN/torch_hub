@@ -41,6 +41,7 @@
     <Compile Include="prefect_flows\blocks\upload_credentials.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="prefect_flows\tasks\check_duplicate.py" />
     <Compile Include="__init__.py" />
     <Compile Include="app.py" />
     <Compile Include="collections\collections_api.py" />

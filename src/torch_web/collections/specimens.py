@@ -2,6 +2,7 @@ import glob
 import os
 import json
 from pathlib import Path
+import imagehash
 
 from sqlalchemy import (
     Integer,
@@ -78,6 +79,10 @@ def is_portrait(image_path=None):
         print('Error: ', e)
         raise
 
+   
+def hash(image_path, hashfunc="average"):
+    with Image.open(image_path) as im:
+        return imagehash.average_hash(im) if hashfunc == "average" else imagehash.phash(im)
 
 
 class SpecimenImage(Base):
@@ -90,7 +95,11 @@ class SpecimenImage(Base):
     create_date = Column(DateTime(timezone=True), default=func.now())
     specimen_id = Column(Integer, ForeignKey("specimen.id"))
     external_url = Column(Text)
-
+    hash_a = Column(String(16))
+    hash_b = Column(String(16))
+    hash_c = Column(String(16))
+    hash_d = Column(String(16))
+    
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=4)
@@ -103,3 +112,6 @@ class SpecimenImage(Base):
         web_path = Path(self.url).relative_to(base_path)
         web_path = "/" + "/".join(web_path.parts)
         return web_path
+
+    def average_hash(self):
+        return imagehash.hex_to_hash(f'{self.hash_a}{self.hash_b}{self.hash_c}{self.hash_d}')
