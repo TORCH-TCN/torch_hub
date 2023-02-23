@@ -3,7 +3,7 @@ import os
 import prefect
 from prefect import flow, get_run_logger
 from prefect.orion.schemas.states import Failed
-from torch_web.prefect_flows.tasks import check_catalog_number, check_orientation, generate_derivatives, save_specimen, upload
+from torch_web.prefect_flows.tasks import check_catalog_number, check_orientation, generate_derivatives, save_specimen, upload, check_duplicate
 
 
 @flow(name="Process Specimen", version=os.getenv("GIT_COMMIT_SHA"))
@@ -42,6 +42,10 @@ def execute(collection, specimen, app_config, progress):
         log(f"generate_derivatives complete...", True)
 
         for img in imgs:
+            log(f"Running check_duplicate...")
+            check_duplicate.check_duplicate(img, app_config)
+            log(f"check_duplicate complete...", True)
+
             log(f"Uploading image {img.size}...")
             upload.upload.submit(collection, img, app_config)
 
