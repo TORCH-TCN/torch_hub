@@ -1,12 +1,17 @@
 from apiflask import APIBlueprint
 from flask import make_response, render_template, request
 from flask_security import current_user, roles_accepted
+from torch_web.reports import reports
 
 reports_bp = APIBlueprint("reports", __name__, url_prefix="/reports")
 
+@reports_bp.get('/')
+def reports_get():
+    result = reports.get_reports()
+    return result
+
 
 @reports_bp.get("/import")
-@roles_accepted('admin')
 def csvfiles_import():
 
     header = []
@@ -18,7 +23,6 @@ def csvfiles_import():
 
 
 @reports_bp.post("/import")
-@roles_accepted('admin')
 def csvfiles_import_post():
     result = import_csv(request.files["csv-file"])
     return render_template(
@@ -27,13 +31,11 @@ def csvfiles_import_post():
 
 
 @reports_bp.get("/export")
-@roles_accepted('admin')
-def reports():
+def reports_export():
     return render_template("/reports/export.html", user=current_user, tables=get_reports())
 
 
 @reports_bp.post("/export")
-@roles_accepted('admin')
 def reports_post():
     selectedtable = request.form.get("selecttable")
     whereclause = request.form.get("whereclause")
