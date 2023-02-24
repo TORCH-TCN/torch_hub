@@ -1,26 +1,37 @@
-from flask import Blueprint, flash, jsonify, render_template, request
-from flask_security import current_user
+from sqlalchemy import func, Column, Integer, String, DateTime, select
+from sqlalchemy.orm import relationship
+from torch_web import Base, db
 
 
-institutions_bp = Blueprint("institutions", __name__, url_prefix="/institutions")
+class Institution(Base):
+    __tablename__ = "institution"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), unique=True)
+    code = Column(String(10), unique=True)
+    created_date = Column(DateTime(timezone=True), default=func.now())
+    # users = relationship("User")
+    collections = relationship("Collection")
 
 
-@institutions_bp.route("/", methods=["GET"])
-def institutions_get():
-    return render_template(
-        "/institutions/institutions.html", user=current_user, institutions=get_institutions()
-    )
+def get_institutions():
+    return db.session.scalars(select(Institution)).all()
 
 
-@institutions_bp.route("/", methods=["POST"])
-def post_institution():
-    name = request.form.get("institution")
-    code = request.form.get("code")
-    create_institution(name, code)
-    return get_institutions()
+def create_institution(name, code):
+    if len(name) < 1:
+        flash("Name is too short!", category="error")
+        return None
+
+    new_institution = Institution(name=name, code=code)
+    db.session.add(new_institution)
+    db.session.commit()
+    return new_institution
 
 
-@institutions_bp.route("/<institution_id>", methods=["DELETE"])
-def delete(institution_id):
-    delete_institution(institution_id)
-    return jsonify({})
+def delete_institution(institution_id):
+    institution = db.session.get(Institution, institution_id)
+    if institution:
+        db.session.delete(institution)
+        db.session.commit()
+
+    return True

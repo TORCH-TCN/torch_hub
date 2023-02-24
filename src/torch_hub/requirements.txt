@@ -1,0 +1,14 @@
+boto3==1.26.19
+botocore==1.29.19
+Flask==2.2.2
+minio==7.1.12
+paramiko~=2.12.0
+Pillow~=9.3.0
+prefect~=2.6.9
+pysftp==0.2.9
+python-dotenv~=0.21.0
+pyzbar==0.1.9
+SQLAlchemy~=1.4.44
+watchdog==2.1.9
+Werkzeug==2.2.2
+WTForms==3.0.1

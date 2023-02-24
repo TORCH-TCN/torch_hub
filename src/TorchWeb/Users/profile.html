@@ -1,0 +1,32 @@
+{% extends "../base.html" %}
+{% block title %}Profile{% endblock %} 
+{% block content %}
+    <h3 align="left" class="my-4">Profile</h3>
+    <a href="/change">Reset password</a>
+    <form method="POST">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              value="{{current_user.first_name}}"
+              class="form-control"
+              id="firstName"
+              name="firstName"
+              placeholder="Enter first name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              value="{{current_user.last_name}}"
+              class="form-control"
+              id="lastName"
+              name="lastName"
+              placeholder="Enter last name"
+            />
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

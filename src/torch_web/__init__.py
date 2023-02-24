@@ -3,21 +3,13 @@ import os
 from dotenv import load_dotenv
 from flask import Flask
 from flask_security import Security, SQLAlchemyUserDatastore
-from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
-from torch_hub.users import user, role
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 db = SQLAlchemy(metadata=metadata)
-user_datastore = SQLAlchemyUserDatastore(db, user.User, role.Role)
-
-Base.query = db.session.query_property()
-# migrate = Migrate()
-socketio = SocketIO()
-
 
 def create_app():
     load_dotenv()
@@ -32,14 +24,13 @@ def create_app():
     app.config["BASE_DIR"] = basedir
 
     db.init_app(app)
-    socketio.init_app(app)
 
-    from torch_web.users.users import users_bp, ExtendedRegisterForm
-    from torch_web.users.roles import roles_bp
-    from torch_web.institutions.institutions import institutions_bp
-    from torch_web.collections.collections import collections_bp, home_bp
-    from torch_web.reports.reports import reports_bp
-    from torch_web.notifications.notifications import notifications_bp
+    from torch_web.users.users_api import users_bp, ExtendedRegisterForm
+    from torch_web.users.roles_api import roles_bp
+    from torch_web.institutions.institutions_api import institutions_bp
+    from torch_web.collections.collections_api import collections_bp, home_bp, specimens_bp
+    from torch_web.reports.reports_api import reports_bp
+    from torch_web.notifications.notifications_api import notifications_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
@@ -48,6 +39,11 @@ def create_app():
     app.register_blueprint(home_bp)
     app.register_blueprint(reports_bp)
     app.register_blueprint(notifications_bp)
+    app.register_blueprint(specimens_bp)
+
+    from torch_web.users.user import User
+    from torch_web.users.role import Role
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
     Security(app, user_datastore, register_form=ExtendedRegisterForm)
     return app
