@@ -14,7 +14,7 @@
         font-size: 16px;
         color: #667085;
 
-        &.active {
+        &:hover, &.active {
             color: var(--primary-500);
         }
     }

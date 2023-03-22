@@ -29,7 +29,7 @@
   font-size: 16px;
   color: #667085;
 }
-.nav-menu a.active {
+.nav-menu a:hover, .nav-menu a.active {
   color: var(--primary-500);
 }
 
