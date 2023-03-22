@@ -2,7 +2,7 @@ from prefect import task
 from torch_web.collections import specimens
 from prefect.orion.schemas.states import Failed
 from torch_web.prefect_flows.tasks import save_specimen
-from sqlalchemy import create_engine, or_, select, filter
+from sqlalchemy import create_engine, or_, select
 from sqlalchemy.orm import Session
 
 
