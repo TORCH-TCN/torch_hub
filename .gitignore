@@ -535,3 +535,4 @@ FodyWeavers.xsd
 *.sln.iml
 /.vs/slnx.sqlite
 /.vs/VSWorkspaceState.json
+/.vs/torch_hub-1/v17/.wsuo
