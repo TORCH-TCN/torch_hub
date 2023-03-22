@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request
+from apiflask import APIBlueprint
+from flask import render_template, request
 from flask_security import current_user, roles_accepted
-from torch_web.users import user, role
+from torch_web.users import role
 
 
-roles_bp = Blueprint("roles", __name__, url_prefix="/roles")
+roles_bp = APIBlueprint("roles", __name__, url_prefix="/roles")
 
 
 @roles_bp.get("/")

@@ -534,3 +534,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json

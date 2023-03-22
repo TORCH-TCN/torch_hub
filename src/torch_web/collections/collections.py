@@ -1,10 +1,9 @@
 from operator import or_
-from typing import List
 
 from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, exists, select
 from sqlalchemy.orm import joinedload
 
-from torch_web import db, Base, app
+from torch_web import db, Base
 from torch_web.collections.specimens import Specimen, SpecimenImage
 from torch_web.collections.workflow import run_workflow
 

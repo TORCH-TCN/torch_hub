@@ -1,6 +1,7 @@
 aiosqlite==0.18.0
 alembic==1.9.3
 anyio==3.6.2
+apiflask==1.2.3
 apprise==1.2.1
 asgi-lifespan==2.0.0
 astroid==2.14.1
