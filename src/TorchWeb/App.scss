@@ -1,2 +1,6 @@
 @import 'Shared/MainLayout';
 @import 'Shared/NavMenu';
+
+#blazor-error-ui {
+    display: none;
+}
