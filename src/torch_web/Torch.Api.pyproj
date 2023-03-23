@@ -23,6 +23,7 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="requirements.txt" />
     <Content Include="security\base.html" />
     <Content Include="security\change_password.html" />
@@ -30,6 +31,8 @@
     <Content Include="security\login_user.html" />
     <Content Include="security\register_user.html" />
     <Content Include="security\reset_password.html" />
+    <Content Include="static\security.css" />
+    <Content Include="security\_macros.html" />
     <Content Include="static\uploads\Default\BRIT240602.jpg" />
     <Content Include="static\uploads\Default\BRIT259313.jpg" />
     <Content Include="static\uploads\Default\BRIT259313_MED.jpg" />

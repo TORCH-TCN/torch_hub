@@ -1,6 +1,31 @@
 {
   "components": {
     "schemas": {
+      "CollectionResponse": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CollectionsResponse": {
+        "properties": {
+          "collections": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionResponse"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
       "HTTPError": {
         "properties": {
           "detail": {
@@ -27,7 +52,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsResponse"
+                }
               }
             },
             "description": "Successful response"

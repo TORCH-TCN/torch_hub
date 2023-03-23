@@ -1,0 +1,23 @@
+﻿@page "/Collections"
+
+<h3>Collections</h3>
+
+@if (Model != null)
+{
+    <ul>
+        @foreach (var collection in Model.Collections)
+        {
+            <li>@collection.Code: @collection.Name</li>
+        }
+    </ul>
+}
+
+@inject TorchApi TorchCommands
+@code {
+    
+    CollectionsResponse? Model;
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await TorchCommands.CollectionsAsync();
+    }
+}

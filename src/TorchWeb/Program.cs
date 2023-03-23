@@ -10,6 +10,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazoredModal();
-builder.AddBlossom<TorchApi>(builder.Configuration["ApiUrl"]);
+builder.AddBlossom<TorchApi>(builder.Configuration["Blossom:Authority"]);
 
 await builder.Build().RunAsync();

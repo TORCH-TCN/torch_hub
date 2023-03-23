@@ -5,7 +5,7 @@ from torch_web.users import user
 from torch_web import db, Base
 
 
-class Role(Base, RoleMixin):
+class Role(db.Model, RoleMixin):
     __tablename__ = 'role'
     id = Column(Integer, primary_key=True)
     name = Column(String(80), unique=True)

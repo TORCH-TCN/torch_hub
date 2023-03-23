@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torch.Web", "TorchWeb\Torch.Web.csproj", "{0034B8A7-A744-41BC-8E96-68E42AD42D4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Torch.Web", "TorchWeb\Torch.Web.csproj", "{0034B8A7-A744-41BC-8E96-68E42AD42D4B}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Torch.Api", "torch_web\Torch.Api.pyproj", "{A21B8773-30BD-4ADC-9CD3-986092994965}"
 EndProject

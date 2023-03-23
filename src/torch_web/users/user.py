@@ -12,7 +12,7 @@ roles_users = Table(
 )
 
 
-class User(Base, UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
     email = Column(String(150), unique=True)

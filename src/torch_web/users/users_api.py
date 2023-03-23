@@ -1,6 +1,6 @@
 import json
 from apiflask import APIBlueprint
-from flask import flash, jsonify, render_template, request
+from flask import flash, jsonify, render_template, request, redirect, abort
 from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
@@ -12,6 +12,28 @@ class ExtendedRegisterForm(RegisterForm):
 
 
 users_bp = APIBlueprint("users", __name__, url_prefix="/users")
+auth_bp = APIBlueprint("auth", __name__, url_prefix="/_auth")
+
+
+@auth_bp.get("/login")
+def login():
+    return redirect("/login")
+
+
+@auth_bp.get("/logout")
+def logout():
+    return redirect("/logout")
+
+
+@auth_bp.get("/userinfo")
+def userinfo():
+    if not current_user.is_authenticated:
+        abort(401, description="Not logged in.")
+    
+    return {
+        "Id": current_user.id,
+        "UserName": current_user.email
+    }
 
 
 @users_bp.get("/")

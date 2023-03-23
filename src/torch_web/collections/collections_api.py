@@ -3,8 +3,9 @@ from pathlib import Path
 import click
 import os
 
-from apiflask import APIBlueprint
-from flask import request, current_app, jsonify, make_response
+from apiflask import APIBlueprint, Schema
+from apiflask.fields import Integer, String, List, Nested
+from flask import request, current_app, jsonify, make_response, redirect
 from flask_security import current_user
 from torch_web.collections import collections
 from rich.console import Console
@@ -16,17 +17,38 @@ from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
-home_bp = APIBlueprint("home", __name__)
+home_bp = APIBlueprint("home", __name__, url_prefix="")
 collections_bp = APIBlueprint("collections", __name__, url_prefix="/collections")
 specimens_bp = APIBlueprint("specimens", __name__)
 
+
+class CollectionResponse(Schema):
+    id = Integer()
+    name = String()
+    code = String()
+
+
+class CollectionsResponse(Schema):
+    collections = List(Nested(CollectionResponse))
+
+
+@home_bp.route("/")
+def home():
+    response = redirect(os.environ.get('APP_URL'))
+    session_cookie = request.cookies.get('session')
+    if session_cookie is not None:
+        response.set_cookie('session', value=session_cookie, domain=request.base_url, samesite='None', secure=True)
+    
+    return response
+
+
 @collections_bp.get("/")
+@collections_bp.output(CollectionsResponse)
 def collections_get():
     result = collections.get_collections(current_user.institution_id)
-    
-    return { 
-        'collections': result
-    }  
+    return {
+        "collections": result
+    }
 
 
 @collections_bp.cli.command("list")
