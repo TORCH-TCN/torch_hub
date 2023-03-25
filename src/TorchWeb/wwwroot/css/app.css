@@ -23,6 +23,7 @@
 }
 .nav-menu ul, .nav-menu > div {
   display: flex;
+  align-items: center;
   gap: 32px;
 }
 .nav-menu a {
