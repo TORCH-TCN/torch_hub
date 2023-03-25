@@ -31,7 +31,7 @@ def userinfo():
         abort(401, description="Not logged in.")
     
     return {
-        "Id": current_user.id,
+        "Id": str(current_user.id),
         "UserName": current_user.email
     }
 
