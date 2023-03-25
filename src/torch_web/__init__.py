@@ -5,8 +5,8 @@ from apiflask import APIFlask
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
-from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from flask_cors import CORS
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
@@ -16,9 +16,9 @@ def create_app():
     load_dotenv()
 
     app = APIFlask(__name__, template_folder=".", title="TorchHub API", version="1.0")
-
     app.config.from_prefixed_env()
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("TORCH_HUB_DATABASE_URI")
+    CORS(app)
 
     basedir = os.path.abspath(os.path.dirname(__file__))
 

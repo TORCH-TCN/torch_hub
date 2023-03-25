@@ -37,7 +37,7 @@ def home():
     response = redirect(os.environ.get('APP_URL'))
     session_cookie = request.cookies.get('session')
     if session_cookie is not None:
-        response.set_cookie('session', value=session_cookie, domain=request.base_url, samesite='None', secure=True)
+        response.set_cookie('session', value=session_cookie, samesite='Strict')
     
     return response
 
