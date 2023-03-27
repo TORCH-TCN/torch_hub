@@ -45,8 +45,85 @@
   },
   "openapi": "3.0.3",
   "paths": {
+    "/": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Home",
+        "tags": [
+          "Home"
+        ]
+      }
+    },
+    "/_auth/login": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/_auth/logout": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/_auth/userinfo": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Userinfo",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/collections/": {
       "get": {
+        "operationId": "GetCollections",
         "parameters": [],
         "responses": {
           "200": {
@@ -764,6 +841,9 @@
     },
     {
       "name": "Specimens"
+    },
+    {
+      "name": "Auth"
     }
   ]
 }

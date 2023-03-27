@@ -44,6 +44,7 @@ def home():
 
 @collections_bp.get("/")
 @collections_bp.output(CollectionsResponse)
+@collections_bp.doc(operation_id='GetCollections')
 def collections_get():
     result = collections.get_collections(current_user.institution_id)
     return {
