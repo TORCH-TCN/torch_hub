@@ -56,6 +56,65 @@
           }
         },
         "type": "object"
+      },
+      "SpecimenResponse": {
+        "properties": {
+          "catalog_number": {
+            "type": "string"
+          },
+          "collection_code": {
+            "type": "string"
+          },
+          "collection_id": {
+            "type": "integer"
+          },
+          "collection_name": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/SpecimenImageResponse"
+            },
+            "type": "array"
+          },
+          "status": {
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SpecimensResponse": {
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "specimens": {
+            "items": {
+              "$ref": "#/components/schemas/SpecimenResponse"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "error_message": {
+            "type": "string"
+          }
+        },
+        "type": "object"
       }
     }
   },
@@ -218,6 +277,47 @@
         ]
       }
     },
+    "/collections/{collectionid}": {
+      "get": {
+        "operationId": "GetCollection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectionid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          }
+        },
+        "summary": "Collection Get",
+        "tags": [
+          "Collections"
+        ]
+      }
+    },
     "/collections/{collectionid}/csv": {
       "get": {
         "parameters": [
@@ -258,13 +358,38 @@
     },
     "/collections/{collectionid}/specimens": {
       "get": {
+        "operationId": "GetSpecimens",
         "parameters": [
           {
             "in": "path",
             "name": "collectionid",
             "required": true,
             "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "search_string",
+            "required": false,
+            "schema": {
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "required": false,
+            "schema": {
+              "type": "integer"
             }
           }
         ],
@@ -272,7 +397,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/SpecimensResponse"
+                }
               }
             },
             "description": "Successful response"
@@ -286,6 +413,16 @@
               }
             },
             "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
           }
         },
         "summary": "Collection Specimens",

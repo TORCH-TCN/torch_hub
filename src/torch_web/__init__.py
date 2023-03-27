@@ -18,6 +18,7 @@ def create_app():
     app = APIFlask(__name__, template_folder=".", title="TorchHub API", version="1.0")
     app.config.from_prefixed_env()
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("TORCH_HUB_DATABASE_URI")
+    app.config["VALIDATION_ERROR_SCHEMA"] = { 'properties': { 'error_message': { 'type': 'string' } }, 'type': 'object' }
     CORS(app)
 
     basedir = os.path.abspath(os.path.dirname(__file__))

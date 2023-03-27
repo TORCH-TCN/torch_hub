@@ -4,7 +4,7 @@ import click
 import os
 
 from apiflask import APIBlueprint, Schema
-from apiflask.fields import Integer, String, List, Nested
+from apiflask.fields import Integer, String, List, Nested, DateTime
 from flask import request, current_app, jsonify, make_response, redirect
 from flask_security import current_user
 from torch_web.collections import collections
@@ -25,6 +25,23 @@ specimens_bp = APIBlueprint("specimens", __name__)
 class SpecimenImageResponse(Schema):
     id = Integer()
     external_url = String()
+
+
+class SpecimenResponse(Schema):
+    id = Integer()
+    collection_id = Integer()
+    collection_name = String()
+    collection_code = String()
+    catalog_number = String()
+    images = List(Nested(SpecimenImageResponse))
+    status = String()
+    created_at = DateTime()
+    updated_at = DateTime()
+    
+
+class SpecimensResponse(Schema):
+    count = Integer()
+    specimens = List(Nested(SpecimenResponse))
 
 
 class CollectionResponse(Schema):
@@ -155,16 +172,31 @@ def collection_delete_cli(id):
     Console().print(f'Collection ID [bold cyan]{id}[/bold cyan] deleted!')
 
 
-@collections_bp.get("/<collectionid>/specimens")
-def collection_specimens(collectionid):
-    search_string = request.args.get('search_string')
-    only_error = request.args.get('only_error')
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 14, type=int)
-    specimens = collections.get_collection_specimens(collectionid, search_string, only_error, page, per_page)
+@collections_bp.get("/<int:collectionid>")
+@collections_bp.output(CollectionResponse)
+@collections_bp.doc(operation_id='GetCollection')
+def collection_get(collectionid):
+    result = collections.get_collection(collectionid)
+    return result
 
-    return {'specimens': json.dumps(specimens, indent=4, sort_keys=True, default=str),
-            'total_specimens': specimens.count()}
+
+class GetSpecimensRequest(Schema):
+    search_string = String(load_default=None)
+    page = Integer()
+    per_page = Integer()
+
+
+@collections_bp.get("/<int:collectionid>/specimens")
+@collections_bp.input(GetSpecimensRequest, location='query')
+@collections_bp.output(SpecimensResponse)
+@collections_bp.doc(operation_id='GetSpecimens')
+def collection_specimens(collectionid, query):
+    specimens = collections.get_collection_specimens(collectionid, query["search_string"], False, query["page"], query["per_page"])
+
+    return {
+        'specimens': specimens,
+        'count': 0
+    }
 
 
 @specimens_bp.cli.command("list")

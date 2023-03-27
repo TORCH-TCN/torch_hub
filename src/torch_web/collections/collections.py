@@ -74,8 +74,8 @@ def create_collection(institutionid, collection_id, name, code, default_prefix, 
     return local_collection
 
 
-def get_collection(collectioncode):
-    return db.session.scalars(select(Collection).where(Collection.code == collectioncode)).one_or_none()
+def get_collection(id):
+    return db.session.scalars(select(Collection).where(Collection.id == id)).one_or_none()
 
 
 def get_collection_specimens(collectionid, search_string, only_error, page=1, per_page=14):

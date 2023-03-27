@@ -1,0 +1,23 @@
+﻿@page "/collections/{Id:int}"
+
+<h3>@Model?.Name</h3>
+
+@if (Specimens != null)
+{
+    @foreach (var specimen in Specimens.Specimens)
+    {
+        <div>@specimen.Catalog_number</div>
+    }
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    CollectionResponse? Model;
+    SpecimensResponse? Specimens;
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await TorchCommands.GetCollectionAsync(Id);
+        Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+    }
+}
