@@ -22,14 +22,22 @@ collections_bp = APIBlueprint("collections", __name__, url_prefix="/collections"
 specimens_bp = APIBlueprint("specimens", __name__)
 
 
+class SpecimenImageResponse(Schema):
+    id = Integer()
+    external_url = String()
+
+
 class CollectionResponse(Schema):
     id = Integer()
     name = String()
     code = String()
+    cardimg = List(Nested(SpecimenImageResponse))
+    specimencount = Integer()
 
 
 class CollectionsResponse(Schema):
     collections = List(Nested(CollectionResponse))
+
 
 
 @home_bp.route("/")

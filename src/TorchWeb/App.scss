@@ -1,6 +1,15 @@
 @import 'Shared/MainLayout';
 @import 'Shared/NavMenu';
 
+@import 'Collections/Index';
+@import 'Collections/CollectionCard';
+
 #blazor-error-ui {
     display: none;
+}
+
+h1 {
+    font-size: 24px;
+    line-height: 28px;
+    margin-bottom: 24px; 
 }

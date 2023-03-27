@@ -1,15 +1,17 @@
 ﻿@page "/Collections"
-
-<h3>Collections</h3>
+<header>
+    <h1>All Collections</h1>
+    <button>Add New Collection</button>
+</header>
 
 @if (Model != null)
 {
-    <ul>
+    <section class="collections-index">
         @foreach (var collection in Model.Collections)
         {
-            <li>@collection.Code: @collection.Name</li>
+            <CollectionCard Collection="collection" />
         }
-    </ul>
+    </section>
 }
 
 @inject TorchApi TorchCommands

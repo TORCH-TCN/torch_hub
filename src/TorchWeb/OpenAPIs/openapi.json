@@ -3,6 +3,12 @@
     "schemas": {
       "CollectionResponse": {
         "properties": {
+          "cardimg": {
+            "items": {
+              "$ref": "#/components/schemas/SpecimenImageResponse"
+            },
+            "type": "array"
+          },
           "code": {
             "type": "string"
           },
@@ -11,6 +17,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "specimencount": {
+            "type": "integer"
           }
         },
         "type": "object"
@@ -33,6 +42,17 @@
           },
           "message": {
             "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SpecimenImageResponse": {
+        "properties": {
+          "external_url": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
           }
         },
         "type": "object"

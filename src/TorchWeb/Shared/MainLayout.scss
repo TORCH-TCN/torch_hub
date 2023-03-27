@@ -14,5 +14,10 @@
     > main {
         padding: 65px 7vw;
         overflow-y: auto;
+
+        > header {
+            display: flex;
+            justify-content: space-between;
+        }
     }
 }

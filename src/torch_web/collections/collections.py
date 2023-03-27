@@ -37,18 +37,19 @@ def get_collections(institutionid):
     collections_dict = []
     for c in collections_result:
         cd = c.as_dict()
-        cd["cardimg"] = get_collection_card_image(c.id)
+        cd["cardimg"] = get_collection_card_images(c.id)
+        cd["specimencount"] = db.session.query(Specimen).filter(Specimen.collection_id == c.id).count()
         collections_dict.append(cd)
 
     return collections_dict
 
 
-def get_collection_card_image(collection_id):
+def get_collection_card_images(collection_id):
     img = db.session.scalars(select(SpecimenImage).join(Specimen)
                              .where(Specimen.collection_id == collection_id)
                              .where(Specimen.deleted == 0)
-                             .where(SpecimenImage.size == 'THUMB')).first()
-    return img.external_url if img is not None else "/static/images/default.jpg"
+                             .where(SpecimenImage.size == 'THUMB').limit(10)).all()
+    return img
 
 
 def create_collection(institutionid, collection_id, name, code, default_prefix, catalog_number_regex, flow_id, workflow,
