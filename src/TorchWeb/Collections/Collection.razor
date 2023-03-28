@@ -1,15 +1,19 @@
 ﻿@page "/collections/{Id:int}"
 
-<h3>@Model?.Name</h3>
+<header>
+    <h1>@Model?.Name</h1>
+    <button>Upload Specimens</button>
+</header>
 
-@if (Specimens != null)
-{
-    @foreach (var specimen in Specimens.Specimens)
+<section class="collection">
+    @if (Specimens != null)
     {
-        <div>@specimen.Catalog_number</div>
+        @foreach (var specimen in Specimens.Specimens)
+        {
+            <SpecimenCard Specimen="specimen" />
+        }
     }
-}
-
+</section>
 @code {
     [Parameter] public int Id { get; set; }
 

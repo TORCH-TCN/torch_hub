@@ -1,0 +1,11 @@
+﻿<figure class="specimen-card">
+    <img src="@Specimen.Card_image?.External_url" alt="@Specimen.Catalog_number" />
+    <figcaption>
+        <h2>@Specimen.Catalog_number</h2>
+        <progress></progress>
+    </figcaption>
+</figure>
+
+@code {
+    [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
+}

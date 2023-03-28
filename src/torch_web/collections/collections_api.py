@@ -33,6 +33,7 @@ class SpecimenResponse(Schema):
     collection_name = String()
     collection_code = String()
     catalog_number = String()
+    card_image = Nested(SpecimenImageResponse)
     images = List(Nested(SpecimenImageResponse))
     status = String()
     created_at = DateTime()

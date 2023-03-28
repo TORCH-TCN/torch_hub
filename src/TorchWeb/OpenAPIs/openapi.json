@@ -59,6 +59,9 @@
       },
       "SpecimenResponse": {
         "properties": {
+          "card_image": {
+            "$ref": "#/components/schemas/SpecimenImageResponse"
+          },
           "catalog_number": {
             "type": "string"
           },
@@ -373,6 +376,8 @@
             "name": "search_string",
             "required": false,
             "schema": {
+              "default": null,
+              "nullable": true,
               "type": "string"
             }
           },

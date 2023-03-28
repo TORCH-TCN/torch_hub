@@ -32,7 +32,7 @@
         justify-self: flex-end;
 
         img {
-            min-height: 160px;
+            height: 160px;
             border-radius: 8px;
             width: auto;
             min-width: 100px;
@@ -56,16 +56,6 @@
                 text-align: center;
                 content: attr(alt);
             }
-        }
-    }
-
-    progress {
-        height: 8px;
-        border-radius: 16px;
-
-        &::-webkit-progress-bar {
-            background: #eaecf0;
-            border-radius: 12px;
         }
     }
 }

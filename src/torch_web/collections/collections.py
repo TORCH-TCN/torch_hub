@@ -94,7 +94,7 @@ def get_collection_specimens(collectionid, search_string, only_error, page=1, pe
     specimensdict = []
     for s in result:
         sd = s.as_dict()
-        sd["cardimg"] = s.card_image()
+        sd["card_image"] = s.card_image()
         specimensdict.append(sd)
 
     return specimensdict

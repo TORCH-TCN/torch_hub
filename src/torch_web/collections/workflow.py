@@ -70,7 +70,6 @@ def notify_specimen_update(specimen, state, socketio, progress):
             {
                 "id": specimen.id,
                 "name": specimen.name,
-                "cardimg": specimen.card_image(),
                 "create_date": str(specimen.create_date),
                 "flow_run_state": state,
                 "failed_task": specimen.failed_task,
