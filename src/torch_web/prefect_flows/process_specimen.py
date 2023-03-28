@@ -1,12 +1,17 @@
 import os
 
 import prefect
-from prefect import flow, get_run_logger
+from prefect import flow, get_run_logger, context
 from prefect.orion.schemas.states import Failed
 from torch_web.prefect_flows.tasks import check_catalog_number, check_orientation, generate_derivatives, save_specimen, upload, check_duplicate
 
 
-@flow(name="Process Specimen", version=os.getenv("GIT_COMMIT_SHA"))
+def emit_state_change(task, old_state, new_state):
+    print(f"Task {task.name} changed state from {old_state} to {new_state}")
+    context.socketio.emit('task_state_changed', { id: task.id, old_state: old_state, new_state: new_state })
+
+
+@flow(name="Process Specimen", version=os.getenv("GIT_COMMIT_SHA"), state_handlers=[emit_state_change])
 def execute(collection, specimen, app_config, progress):
     logger = get_run_logger()
     flow_run_id = prefect.context.get_run_context().flow_run.id.hex
