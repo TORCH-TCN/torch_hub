@@ -1,5 +1,5 @@
 import functools
-import sys
+import inspect
 
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, Dict, DateTime
@@ -23,8 +23,9 @@ class TorchTasksResponse(Schema):
 def torch_task(name, description=None):
     def decorate(func):
         global torch_task_registry
-        print('view me view me', flush=True)
-        torch_task_registry.append({ 'name': name, 'description': description, 'func_name': func.__name__ })
+        spec = inspect.signature(func)
+        parameters = { k: str(v.default) if v.default is not inspect.Parameter.empty else None for k, v in spec.parameters.items() }
+        torch_task_registry.append({ 'name': name, 'description': description, 'func_name': func.__name__, 'parameters': parameters })
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):

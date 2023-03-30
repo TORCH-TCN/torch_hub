@@ -2,4 +2,9 @@
     display: grid;
     grid-template-columns: 8fr 2fr;
     gap: 24px;
+
+    header {
+        display: flex;
+        justify-content: space-between;
+    }
 }

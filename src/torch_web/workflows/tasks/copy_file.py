@@ -1,14 +1,11 @@
-from prefect import get_run_logger, task
 import shutil
 import os
+from torch_web.workflows.workflow_api import torch_task
 
 
-@task
+@torch_task("Copy File")
 def copy_file(path: str):
-    logger = get_run_logger()
-
     split_path = os.path.splitext(path)
-    logger.info(f'Processing {split_path}...')
     new_file_name = split_path[0] + '-copy' + split_path[1]
     shutil.copyfile(path, new_file_name)
 

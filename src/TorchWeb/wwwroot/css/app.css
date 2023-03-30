@@ -43,6 +43,10 @@
   grid-template-columns: 8fr 2fr;
   gap: 24px;
 }
+.collection header {
+  display: flex;
+  justify-content: space-between;
+}
 
 .specimen-card {
   border: 1px solid #dfdfe3;
