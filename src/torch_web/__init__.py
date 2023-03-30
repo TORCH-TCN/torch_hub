@@ -33,6 +33,7 @@ def create_app():
     from torch_web.collections.collections_api import collections_bp, home_bp, specimens_bp
     from torch_web.reports.reports_api import reports_bp
     from torch_web.notifications.notifications_api import notifications_bp
+    from torch_web.workflows.workflow_api import workflow_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
@@ -43,6 +44,7 @@ def create_app():
     app.register_blueprint(notifications_bp)
     app.register_blueprint(specimens_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(workflow_bp)
 
     from torch_web.users.user import User
     from torch_web.users.role import Role

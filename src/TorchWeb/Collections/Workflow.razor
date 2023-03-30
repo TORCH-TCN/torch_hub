@@ -1,0 +1,22 @@
+﻿<aside class="workflow">
+    <ul>
+    @foreach (var task in AllTasks)
+        {
+            <li>
+                <header>@task.Name</header>
+                <aside>@task.Func_name</aside>
+            </li>
+        }
+    </ul>
+</aside>
+
+@code {
+    List<TorchTask> AllTasks = new();
+    List<TorchTask> CollectionTasks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var workflow = await TorchCommands.GetAllTasksAsync();
+        AllTasks = workflow.All_tasks.ToList();
+    }
+}

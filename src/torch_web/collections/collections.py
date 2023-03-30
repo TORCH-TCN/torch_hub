@@ -1,6 +1,6 @@
 from operator import or_
 
-from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, exists, select
+from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, JSON, exists, select
 from sqlalchemy.orm import joinedload
 
 from torch_web import db, Base
@@ -15,13 +15,8 @@ class Collection(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
-    default_prefix = Column(String(15))
-    catalog_number_regex = Column(Text)
     institution_id = Column(Integer, ForeignKey("institution.id"))
-    flow_id = Column(String(150))
-    workflow = Column(String(150))
-    collection_folder = Column(String(150))
-    project_ids = Column(String(150))
+    workflow = Column(JSON)
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

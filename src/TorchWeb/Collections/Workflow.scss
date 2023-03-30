@@ -1,0 +1,27 @@
+.workflow {
+    background: white;
+    position: fixed;
+    top: 80px;
+    bottom: 0;
+    right: 0;
+    width: 20vw;
+    padding: 16px;
+
+    li {
+        border: 1px solid #dfdfe3;
+        border-radius: 8px;
+        padding: 24px;
+        font-size: 16px;
+        font-weight: 400;
+
+        header {
+            margin-bottom: 8px;
+        }
+
+        aside {
+            font-size: 12px;
+            font-weight: 400;
+            color: #dfdfe3;
+        }
+    }
+}

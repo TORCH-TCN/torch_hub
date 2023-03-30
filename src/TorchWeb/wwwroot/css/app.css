@@ -39,8 +39,8 @@
 }
 
 .collection {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 8fr 2fr;
   gap: 24px;
 }
 
@@ -159,6 +159,31 @@
   line-height: 2;
   text-align: center;
   content: attr(alt);
+}
+
+.workflow {
+  background: white;
+  position: fixed;
+  top: 80px;
+  bottom: 0;
+  right: 0;
+  width: 20vw;
+  padding: 16px;
+}
+.workflow li {
+  border: 1px solid #dfdfe3;
+  border-radius: 8px;
+  padding: 24px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.workflow li header {
+  margin-bottom: 8px;
+}
+.workflow li aside {
+  font-size: 12px;
+  font-weight: 400;
+  color: #dfdfe3;
 }
 
 #blazor-error-ui {

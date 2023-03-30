@@ -44,7 +44,13 @@
     <Compile Include="prefect_flows\blocks\upload_credentials.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="prefect_flows\tasks\check_duplicate.py" />
+    <Compile Include="workflows\tasks\check_duplicate.py" />
+    <Compile Include="workflows\workflows.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="workflows\workflow_api.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="__init__.py" />
     <Compile Include="app.py" />
     <Compile Include="collections\collections_api.py" />
@@ -57,15 +63,15 @@
     <Compile Include="institutions\institutions.py" />
     <Compile Include="notifications\notifications_api.py" />
     <Compile Include="prefect_flows\process_specimen.py" />
-    <Compile Include="prefect_flows\tasks\check_catalog_number.py" />
-    <Compile Include="prefect_flows\tasks\check_orientation.py" />
-    <Compile Include="prefect_flows\tasks\copy_file.py" />
-    <Compile Include="prefect_flows\tasks\generate_derivatives.py" />
-    <Compile Include="prefect_flows\tasks\herbar.py" />
-    <Compile Include="prefect_flows\tasks\log_new_file_name.py" />
-    <Compile Include="prefect_flows\tasks\read_dir.py" />
-    <Compile Include="prefect_flows\tasks\save_specimen.py" />
-    <Compile Include="prefect_flows\tasks\upload.py" />
+    <Compile Include="workflows\tasks\check_catalog_number.py" />
+    <Compile Include="workflows\tasks\check_orientation.py" />
+    <Compile Include="workflows\tasks\copy_file.py" />
+    <Compile Include="workflows\tasks\generate_derivatives.py" />
+    <Compile Include="workflows\tasks\herbar.py" />
+    <Compile Include="workflows\tasks\log_new_file_name.py" />
+    <Compile Include="workflows\tasks\read_dir.py" />
+    <Compile Include="workflows\tasks\save_specimen.py" />
+    <Compile Include="workflows\tasks\upload.py" />
     <Compile Include="prefect_flows\templates\flow_template.py" />
     <Compile Include="prefect_flows\templates\task_template.py" />
     <Compile Include="reports\reports_api.py" />
@@ -80,6 +86,7 @@
     <Folder Include="config\" />
     <Folder Include="config\watchdog\" />
     <Folder Include="institutions" />
+    <Folder Include="workflows\" />
     <Folder Include="notifications" />
     <Folder Include="prefect_flows\" />
     <Folder Include="prefect_flows\blocks\" />
@@ -91,6 +98,7 @@
     <Folder Include="static\uploads\" />
     <Folder Include="static\uploads\Default" />
     <Folder Include="users" />
+    <Folder Include="workflows\tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <ProjectExtensions>

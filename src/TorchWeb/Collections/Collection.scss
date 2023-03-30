@@ -1,5 +1,5 @@
 .collection {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 8fr 2fr;
     gap: 24px;
 }

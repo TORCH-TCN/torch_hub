@@ -111,6 +111,44 @@
         },
         "type": "object"
       },
+      "TorchTask": {
+        "properties": {
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "func_name": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "TorchTasksResponse": {
+        "properties": {
+          "all_tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TorchTask"
+            },
+            "type": "array"
+          },
+          "collection_tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TorchTask"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "error_message": {
@@ -975,6 +1013,28 @@
           "Users"
         ]
       }
+    },
+    "/workflows/": {
+      "get": {
+        "operationId": "GetAllTasks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TorchTasksResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Workflows Getall",
+        "tags": [
+          "Workflows"
+        ]
+      }
     }
   },
   "servers": [
@@ -1006,6 +1066,9 @@
     },
     {
       "name": "Auth"
+    },
+    {
+      "name": "Workflows"
     }
   ]
 }
