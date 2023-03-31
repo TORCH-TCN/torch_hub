@@ -21,10 +21,6 @@ class Collection(Base):
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    def add_specimens(self, files, config, progress):
-        for file in files:
-            run_workflow(self, file, config, progress)
-
 
 def get_collections(institutionid):
     collections_result = db.session.scalars(select(Collection).filter_by(institution_id=institutionid)).all()
@@ -108,9 +104,10 @@ def retry_workflow(specimenid, config):
     return True
 
 
-def upload(collectionid, files, config, progress):
+def upload(collectionid, files, config, progress=None):
     collection = db.session.get(Collection, collectionid)
-    collection.add_specimens(files, config, progress)
+    for file in files:
+        run_workflow(collection, file, config, progress)
     return True
 
 

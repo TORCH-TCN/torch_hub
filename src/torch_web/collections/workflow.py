@@ -6,20 +6,20 @@ import os
 
 
 def run_workflow(collection, file, config, progress):
-    specimen, execute_workflow = upsert_specimen(collection, file, config)
+    specimen, execute_workflow = upsert_specimen(collection, file)
 
-    if execute_workflow:
+    # if execute_workflow:
         # notify_specimen_update(specimen, "Running", socketio)
         
-        if collection.workflow == "process_specimen":
-            state = process_specimen.execute(collection, specimen, config, return_state=True, progress=progress)
-        else:
-            raise NotImplementedError
+        #if collection.workflow == "process_specimen":
+        #    state = process_specimen.execute(collection, specimen, config, return_state=True, progress=progress)
+        #else:
+        #    raise NotImplementedError
 
         # notify_specimen_update(specimen, state.name, socketio)
 
 
-def upsert_specimen(collection, file, config):
+def upsert_specimen(collection, file):
     filename = os.path.basename(file).split(".")[0]
     extension = os.path.basename(file).split(".")[1]
 

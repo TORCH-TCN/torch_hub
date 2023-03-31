@@ -35,16 +35,19 @@
         }
     </section>
 
-    <button>Upload Specimens</button>
+    <button @onclick=SelectFiles>Upload Specimens</button>
+    <input type="file" name="file" @ref=FilePicker multiple hidden @onchange="Upload" />
 </aside>
 
 @inject IModalService Modal
+@inject IConfiguration Config
+@inject IJSRuntime JS
 @code {
     [Parameter] public CollectionResponse Collection { get; set; } = null!;
-
     List<TorchTask> AllTasks = new();
     List<TorchTask> CollectionTasks = new();
     bool IsEditing;
+    ElementReference FilePicker;
 
     protected override async Task OnInitializedAsync()
     {
@@ -71,6 +74,17 @@
     {
         CollectionTasks.Remove(task);
         await SaveAsync();
+    }
+
+    string UploadUrl => $"{Config["Blossom:Authority"]}/collections/{Collection.Id}/specimens";
+    async Task SelectFiles()
+    {
+        await JS.InvokeVoidAsync("triggerClick", FilePicker);
+    }
+
+    async Task Upload()
+    {
+        await JS.InvokeVoidAsync("upload", FilePicker, UploadUrl);
     }
 
     async Task SaveAsync()

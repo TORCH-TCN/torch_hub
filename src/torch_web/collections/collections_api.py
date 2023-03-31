@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import click
 import os
+import uuid
 
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, DateTime
@@ -14,6 +15,7 @@ from rich.progress import Progress
 from rich.prompt import Prompt
 from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 from torch_web.workflows.workflows import TorchTask
+from werkzeug.utils import secure_filename
 
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
@@ -223,17 +225,19 @@ def list_collections(collection_id, search_string, take):
 
 
 @collections_bp.post("/<collectionid>/specimens")
+@collections_bp.output({}, status_code=202)
 def upload(collectionid):
     files = request.files.getlist("file")
+    batch_id = str(uuid.uuid4())
     for file in files:
-        target_dir = os.path.join(config['BASE_DIR'], "static", "uploads", collection.collection_folder)
+        target_dir = os.path.join(current_app.config['BASE_DIR'], "static", "uploads", batch_id)
         Path(target_dir).mkdir(parents=True, exist_ok=True)
-        file = secure_filename(file.filename)
+        filename = secure_filename(file.filename)
         destination = os.path.join(target_dir, filename)
         file.save(destination)
 
-    result = collections.upload(collectionid, files, current_app.config)
-    return ajax_response(result, "")
+        collections.upload(collectionid, [destination], current_app.config)
+    return ''
 
 
 @specimens_bp.cli.command("process")

@@ -27,6 +27,16 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.triggerClick = (elt) => elt.click();
+        window.upload = (elt, action) => {
+            let formData = new FormData();
+            let files = elt.files;
+            for (var i = 0; i < files.length; i++)
+                formData.append('file', files[i]);
+            fetch(action, { method: 'POST', body: formData });
+        };
+    </script>
 </body>
 
 </html>

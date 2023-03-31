@@ -485,12 +485,7 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
+          "204": {
             "description": "Successful response"
           },
           "404": {
