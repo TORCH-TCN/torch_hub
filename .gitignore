@@ -134,3 +134,4 @@ process_specimen_config.json
 config.json
 torch-hub.db
 uploads
+/.vs
