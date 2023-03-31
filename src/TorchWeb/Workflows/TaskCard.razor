@@ -1,4 +1,4 @@
-﻿<article class="task">
+﻿<article class="task @(IsRunning ? "running" : "")">
     <header>@Task.Name</header>
     <aside>@Task.Func_name</aside>
 
@@ -27,6 +27,21 @@
     [Parameter] public TorchTask Task { get; set; } = null!;
     [Parameter] public EventCallback<TorchTask> OnAdd { get; set; }
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    bool IsRunning;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Socket.On("task_state_changed", (response) =>
+        {
+            var funcName = response.GetValue<string>(1);
+            if (funcName == Task.Func_name)
+            {
+                IsRunning = response.GetValue<string>(2) == "Running";
+                StateHasChanged();
+            }
+        });
+    }
 
     IDictionary<string, string> DisplayParameters => Task.Parameters
         .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")

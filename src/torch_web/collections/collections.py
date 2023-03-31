@@ -100,14 +100,14 @@ def get_collection_specimens(collectionid, search_string, only_error, page=1, pe
 def retry_workflow(specimenid, config):
     specimen = db.session.get(Specimen, specimenid)
     collection = db.session.get(Collection, specimen.collection_id)
-    run_workflow(collection, specimen, config=config)
+    run_workflow(collection, specimen)
     return True
 
 
 def upload(collectionid, files, config, progress=None):
     collection = db.session.get(Collection, collectionid)
     for file in files:
-        run_workflow(collection, file, config, progress)
+        run_workflow(collection, file)
     return True
 
 

@@ -8,6 +8,7 @@ if __name__ == "__main__":
     freeze_support()
     app = create_app()
     socketio = SocketIO(app)
+    socketio.init_app(app, cors_allowed_origins="*")
     mail = Mail(app)
 
     app.app_context().push()

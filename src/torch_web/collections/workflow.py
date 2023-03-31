@@ -1,22 +1,25 @@
 from torch_web import db
-from torch_web.prefect_flows import process_specimen
 from torch_web.collections.specimens import Specimen, SpecimenImage
 from sqlalchemy import select
 import os
+import importlib
+from prefect import context
 
-
-def run_workflow(collection, file, config, progress):
+def run_workflow(collection, file):
     specimen, execute_workflow = upsert_specimen(collection, file)
 
-    # if execute_workflow:
-        # notify_specimen_update(specimen, "Running", socketio)
-        
-        #if collection.workflow == "process_specimen":
-        #    state = process_specimen.execute(collection, specimen, config, return_state=True, progress=progress)
-        #else:
-        #    raise NotImplementedError
-
-        # notify_specimen_update(specimen, state.name, socketio)
+    if execute_workflow:
+        for task in collection.workflow:
+            context.socketio.emit('task_state_changed', (specimen.id, task['func_name'], 'Running'))
+            
+            module = importlib.import_module('workflows.tasks.' + task['func_name'])
+            func = getattr(module, task['func_name'])
+            func(specimen, task['parameters']["catalog_number_regex"])
+            
+            db.session.merge(specimen)
+            db.session.commit()
+            
+            context.socketio.emit('task_state_changed', (specimen.id, task['func_name'], 'Success'))
 
 
 def upsert_specimen(collection, file):

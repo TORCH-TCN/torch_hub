@@ -9,6 +9,10 @@
     position: relative;
     padding-bottom: 60px;
 
+    &.running {
+        background-color: red;
+    }
+
     header {
         margin-bottom: 8px;
         font-weight: 600;

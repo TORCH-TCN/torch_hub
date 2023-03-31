@@ -217,6 +217,9 @@
   position: relative;
   padding-bottom: 60px;
 }
+.task.running {
+  background-color: red;
+}
 .task header {
   margin-bottom: 8px;
   font-weight: 600;
