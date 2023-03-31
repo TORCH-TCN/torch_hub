@@ -2,10 +2,26 @@
     <img src="@Specimen.Card_image?.External_url" alt="@Specimen.Catalog_number" />
     <figcaption>
         <h2>@Specimen.Catalog_number</h2>
-        <progress></progress>
+        <aside>
+            @Status
+        </aside>
     </figcaption>
 </figure>
 
 @code {
     [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    SpecimenResponse LocalSpecimen;
+    string? Status;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LocalSpecimen = Specimen;
+        Socket.On($"specimen_updated_{Specimen.Id}", (response) =>
+        {
+            LocalSpecimen.Catalog_number = response.GetValue<string>(0);
+            Status = response.GetValue<string>(1);
+            StateHasChanged();
+        });
+    }
 }

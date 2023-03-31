@@ -66,9 +66,15 @@
       "SpecimenResponse": {
         "properties": {
           "card_image": {
-            "$ref": "#/components/schemas/SpecimenImageResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SpecimenImageResponse"
+              }
+            ],
+            "nullable": true
           },
           "catalog_number": {
+            "nullable": true,
             "type": "string"
           },
           "collection_code": {

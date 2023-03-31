@@ -7,19 +7,21 @@ from prefect import context
 
 def run_workflow(collection, file):
     specimen, execute_workflow = upsert_specimen(collection, file)
+    context.socketio.emit('specimen_added', specimen.id);
 
     if execute_workflow:
         for task in collection.workflow:
-            context.socketio.emit('task_state_changed', (specimen.id, task['func_name'], 'Running'))
-            
+            context.socketio.emit(task['func_name'], (specimen.id, task['func_name'], 'Running'))
+            context.socketio.emit('specimen_updated_' + str(specimen.id), (specimen.catalog_number, 'Running ' + task['func_name'] + '...'))
             module = importlib.import_module('workflows.tasks.' + task['func_name'])
             func = getattr(module, task['func_name'])
-            func(specimen, task['parameters']["catalog_number_regex"])
+            func(specimen, task['parameters'])
             
             db.session.merge(specimen)
             db.session.commit()
             
-            context.socketio.emit('task_state_changed', (specimen.id, task['func_name'], 'Success'))
+            context.socketio.emit(task['func_name'], (specimen.id, task['func_name'], 'Success'))
+            context.socketio.emit('specimen_updated_' + str(specimen.id), (specimen.catalog_number, 'Finished ' + task['func_name']))
 
 
 def upsert_specimen(collection, file):

@@ -32,14 +32,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Socket.On("task_state_changed", (response) =>
+        Socket.On(Task.Func_name, (response) =>
         {
-            var funcName = response.GetValue<string>(1);
-            if (funcName == Task.Func_name)
-            {
-                IsRunning = response.GetValue<string>(2) == "Running";
-                StateHasChanged();
-            }
+            IsRunning = response.GetValue<string>(2) == "Running";
+            StateHasChanged();
         });
     }
 

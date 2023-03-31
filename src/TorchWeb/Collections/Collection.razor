@@ -6,13 +6,15 @@
             <h1>@Model?.Name</h1>
         </header>
 
-        @if (Specimens != null)
-        {
-            @foreach (var specimen in Specimens.Specimens)
+        <section class="specimen-list">
+            @if (Specimens != null)
             {
-                <SpecimenCard Specimen="specimen" />
+                @foreach (var specimen in Specimens.Specimens)
+                {
+                    <SpecimenCard Specimen="specimen" />
+                }
             }
-        }
+        </section>
     </section>
 
     @if (Model != null)
@@ -24,6 +26,8 @@
 
 @code {
     [Parameter] public int Id { get; set; }
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+
 
     CollectionResponse? Model;
     SpecimensResponse? Specimens;
@@ -31,5 +35,12 @@
     {
         Model = await TorchCommands.GetCollectionAsync(Id);
         Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+
+        Socket.On("specimen_added", async (response) =>
+        {
+            Console.WriteLine("got it");
+            Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+            StateHasChanged();
+        });
     }
 }
