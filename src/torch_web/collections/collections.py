@@ -69,6 +69,12 @@ def create_collection(institutionid, collection_id, name, code, default_prefix, 
     return local_collection
 
 
+def update_workflow(collection_id, data):
+    collection = db.session.get(Collection, collection_id)
+    collection.workflow = data
+    db.session.commit()
+
+
 def get_collection(id):
     return db.session.scalars(select(Collection).where(Collection.id == id)).one_or_none()
 

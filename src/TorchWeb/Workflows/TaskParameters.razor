@@ -1,0 +1,23 @@
+﻿@inherits SparcModal
+
+<div class="task-parameters">
+    <p>
+        Set the parameters for this task.
+    </p>
+
+    @foreach (var key in Task.Parameters.Keys.Where(x => x != "specimen"))
+    {
+        <label>
+            @key
+            <input @bind="@Task.Parameters[key]" />
+        </label>
+    }
+
+    <button @onclick=Save>OK</button>
+</div>
+
+@code {
+    [Parameter] public TorchTask Task { get; set; } = null!;
+
+    async Task Save() => await Ok();
+}

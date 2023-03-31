@@ -1,0 +1,87 @@
+﻿<aside class="workflow @(IsEditing ? "editing" : "")">
+    @if (IsEditing)
+    {
+        <section class="available-tasks">
+            <header>
+                <h4>Available Tasks</h4>
+            </header>
+            <ul>
+                @foreach (var task in AllTasks)
+                {
+                    <li>
+                        <TaskCard Task="task" OnAdd="AddTask" />
+                    </li>
+                }
+            </ul>
+        </section>   
+    }
+
+    <section>
+        <header>
+            <h4>Workflow</h4>
+            <button class="secondary" @onclick=ToggleEdit>@(IsEditing ? "Done" : "Edit")</button>
+        </header>
+        <ul>
+            @foreach (var task in CollectionTasks)
+            {
+                <li>
+                    <TaskCard Task="task" OnDelete="RemoveTask" />
+                </li>
+            }
+        </ul>
+        @if (!CollectionTasks.Any())
+        {
+            <p>You haven't yet added any tasks to this workflow. Click the Edit button to browse the Task Catalog and set up your workflow.</p>
+        }
+    </section>
+
+    <button>Upload Specimens</button>
+</aside>
+
+@inject IModalService Modal
+@code {
+    [Parameter] public CollectionResponse Collection { get; set; } = null!;
+
+    List<TorchTask> AllTasks = new();
+    List<TorchTask> CollectionTasks = new();
+    bool IsEditing;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var workflow = await TorchCommands.GetAllTasksAsync();
+        AllTasks = workflow.Tasks.ToList();
+        if (Collection.Tasks != null)
+            CollectionTasks = Collection.Tasks.ToList();
+    }
+
+    async Task AddTask(TorchTask task)
+    {
+        if (task.Parameters.Any(x => x.Key != "specimen"))
+        {
+            var parameters = new ModalParameters().Add("Task", task);
+            var modal = Modal.Show<TaskParameters>("Set Up Your Task", parameters);
+            await modal.Result;
+        }
+
+        CollectionTasks.Add(task);
+        await SaveAsync();
+    }
+
+    async Task RemoveTask(TorchTask task)
+    {
+        CollectionTasks.Remove(task);
+        await SaveAsync();
+    }
+
+    async Task SaveAsync()
+    {
+        var workflow = new TorchTasksResponse
+        {
+            Tasks = CollectionTasks
+        };
+        await TorchCommands.UpdateWorkflowAsync(Collection.Id, workflow);
+        
+    }
+
+    void ToggleEdit() => IsEditing = !IsEditing;
+}

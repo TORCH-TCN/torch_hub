@@ -13,6 +13,7 @@ from rich.table import Table
 from rich.progress import Progress
 from rich.prompt import Prompt
 from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
+from torch_web.workflows.workflows import TorchTask
 
 
 ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
@@ -51,6 +52,7 @@ class CollectionResponse(Schema):
     code = String()
     cardimg = List(Nested(SpecimenImageResponse))
     specimencount = Integer()
+    tasks = List(Nested(TorchTask))
 
 
 class CollectionsResponse(Schema):
@@ -177,7 +179,9 @@ def collection_delete_cli(id):
 @collections_bp.output(CollectionResponse)
 @collections_bp.doc(operation_id='GetCollection')
 def collection_get(collectionid):
-    result = collections.get_collection(collectionid)
+    result = collections.get_collection(collectionid).as_dict()
+    if result["workflow"] is not None:
+        result["tasks"] = result["workflow"]
     return result
 
 

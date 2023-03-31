@@ -2,7 +2,7 @@ import ast
 import re
 
 from torch_web.collections import specimens
-from torch_web.workflows.workflow_api import torch_task
+from torch_web.workflows.workflows import torch_task
 
 
 @torch_task("Extract Catalog Number")

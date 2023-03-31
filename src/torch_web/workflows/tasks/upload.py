@@ -9,7 +9,7 @@ from minio import Minio
 
 from torch_web.collections.specimens import Specimen
 from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
-from torch_web.workflows.workflow_api import torch_task
+from torch_web.workflows.workflows import torch_task
 
 
 @torch_task("Upload")

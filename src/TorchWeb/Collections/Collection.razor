@@ -4,7 +4,6 @@
     <section>
         <header>
             <h1>@Model?.Name</h1>
-            <button>Upload Specimens</button>
         </header>
 
         @if (Specimens != null)
@@ -15,7 +14,11 @@
             }
         }
     </section>
-    <Workflow />
+
+    @if (Model != null)
+    {
+        <Workflow Collection="Model" />
+    }
 </section>
 
 

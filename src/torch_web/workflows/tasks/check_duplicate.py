@@ -1,6 +1,6 @@
 from torch_web.collections import specimens
 from sqlalchemy import or_, select
-from torch_web.workflows.workflow_api import torch_task
+from torch_web.workflows.workflows import torch_task
 from torch_web import db
 from torch_web.collections.specimens import SpecimenImage
 

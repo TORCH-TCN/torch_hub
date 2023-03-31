@@ -5,7 +5,7 @@ from typing import Optional
 from PIL import Image
 from torch_web.collections import specimens
 from torch_web.collections.collections import SpecimenImage
-from torch_web.workflows.workflow_api import torch_task
+from torch_web.workflows.workflows import torch_task
 from torch_web import db
 
 

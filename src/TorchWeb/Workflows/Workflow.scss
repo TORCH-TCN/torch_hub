@@ -1,0 +1,48 @@
+.workflow {
+    background: white;
+    position: fixed;
+    top: 80px;
+    bottom: 0;
+    right: 0;
+    width: 20vw;
+    padding: 16px;
+    display: grid;
+    grid-template-rows: auto 50px;
+    gap: 24px;
+    transition: width 0.3s ease-in-out;
+
+    .task button {
+        display: none;
+    }
+
+    &.editing {
+        width: 80vw;
+        grid-template-columns: auto 20vw;
+
+        .available-tasks {
+            grid-row: 1 / span 2;
+
+            ul {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+
+                li {
+                    width: 200px;
+                }
+            }
+        }
+
+        .task button {
+            display: block;
+        }
+    }
+
+    header {
+        margin-bottom: 24px;
+    }
+
+    > button {
+        text-align: center;
+    }
+}

@@ -20,6 +20,12 @@
           },
           "specimencount": {
             "type": "integer"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TorchTask"
+            },
+            "type": "array"
           }
         },
         "type": "object"
@@ -134,13 +140,7 @@
       },
       "TorchTasksResponse": {
         "properties": {
-          "all_tasks": {
-            "items": {
-              "$ref": "#/components/schemas/TorchTask"
-            },
-            "type": "array"
-          },
-          "collection_tasks": {
+          "tasks": {
             "items": {
               "$ref": "#/components/schemas/TorchTask"
             },
@@ -1031,6 +1031,59 @@
           }
         },
         "summary": "Workflows Getall",
+        "tags": [
+          "Workflows"
+        ]
+      }
+    },
+    "/workflows/{collectionid}": {
+      "post": {
+        "operationId": "UpdateWorkflow",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectionid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TorchTasksResponse"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
+          }
+        },
+        "summary": "Workflow Save",
         "tags": [
           "Workflows"
         ]

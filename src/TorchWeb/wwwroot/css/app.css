@@ -173,21 +173,90 @@
   right: 0;
   width: 20vw;
   padding: 16px;
+  display: grid;
+  grid-template-rows: auto 50px;
+  gap: 24px;
+  transition: width 0.3s ease-in-out;
 }
-.workflow li {
+.workflow .task button {
+  display: none;
+}
+.workflow.editing {
+  width: 80vw;
+  grid-template-columns: auto 20vw;
+}
+.workflow.editing .available-tasks {
+  grid-row: 1/span 2;
+}
+.workflow.editing .available-tasks ul {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.workflow.editing .available-tasks ul li {
+  width: 200px;
+}
+.workflow.editing .task button {
+  display: block;
+}
+.workflow header {
+  margin-bottom: 24px;
+}
+.workflow > button {
+  text-align: center;
+}
+
+.task {
   border: 1px solid #dfdfe3;
   border-radius: 8px;
   padding: 24px;
   font-size: 16px;
   font-weight: 400;
+  margin: 8px 0;
+  cursor: pointer;
+  position: relative;
+  padding-bottom: 60px;
 }
-.workflow li header {
+.task header {
   margin-bottom: 8px;
+  font-weight: 600;
 }
-.workflow li aside {
+.task aside {
   font-size: 12px;
   font-weight: 400;
   color: #dfdfe3;
+}
+.task button {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  font-size: 14px;
+  border-radius: 0;
+}
+.task dl {
+  font-size: 12px;
+  margin: 16px 0;
+}
+.task dl dt {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.task dl dd {
+  width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.task-parameters p {
+  margin-bottom: 24px;
+}
+.task-parameters label, .task-parameters input {
+  display: block;
+}
+.task-parameters input {
+  margin: 8px 0 16px;
+  width: 100%;
 }
 
 #blazor-error-ui {
@@ -198,4 +267,11 @@ h1 {
   font-size: 24px;
   line-height: 28px;
   margin-bottom: 24px;
+}
+
+button.secondary {
+  background-color: var(--grey-400);
+}
+button.secondary:hover {
+  background-color: var(--grey-300);
 }
