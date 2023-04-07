@@ -51,10 +51,7 @@ class Specimen(Base):
         return web_path
 
     def card_image(self):
-        img = db.session.scalars(select(SpecimenImage)
-                                 .filter(SpecimenImage.specimen_id == self.id)
-                                 .filter(SpecimenImage.size == 'THUMB')).first()
-        return img
+        return next(self.images.sort(key=lambda x: x.size), None)
 
 
 class SpecimenTask(Base):
