@@ -68,12 +68,7 @@
     <Compile Include="workflows\tasks\copy_file.py" />
     <Compile Include="workflows\tasks\generate_derivatives.py" />
     <Compile Include="workflows\tasks\herbar.py" />
-    <Compile Include="workflows\tasks\log_new_file_name.py" />
-    <Compile Include="workflows\tasks\read_dir.py" />
-    <Compile Include="workflows\tasks\save_specimen.py" />
     <Compile Include="workflows\tasks\upload.py" />
-    <Compile Include="prefect_flows\templates\flow_template.py" />
-    <Compile Include="prefect_flows\templates\task_template.py" />
     <Compile Include="reports\reports_api.py" />
     <Compile Include="reports\reports.py" />
     <Compile Include="users\role.py" />
@@ -91,7 +86,6 @@
     <Folder Include="prefect_flows\" />
     <Folder Include="prefect_flows\blocks\" />
     <Folder Include="prefect_flows\tasks\" />
-    <Folder Include="prefect_flows\templates\" />
     <Folder Include="reports" />
     <Folder Include="security" />
     <Folder Include="static\" />

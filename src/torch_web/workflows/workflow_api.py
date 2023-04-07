@@ -19,6 +19,11 @@ def workflows_getall():
 @workflow_bp.output({}, status_code=200)
 @workflow_bp.doc(operation_id='UpdateWorkflow')
 def workflow_save(collectionid: int, data: TorchTasksResponse):
+    # Encrypt passwords as necessary
+    for task in data['tasks']:
+        if task['func_name'] == 'upload':
+            task['parameters']['password'] = upload.encrypt(task['parameters']['password'])
+
     collections.update_workflow(collectionid, data['tasks']);
     return ''
 

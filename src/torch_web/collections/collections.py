@@ -1,13 +1,12 @@
 from operator import or_
+from typing import List
 
-from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, JSON, exists, select
-from sqlalchemy.orm import joinedload
+from sqlalchemy import Column, Integer, String, ForeignKey, func, exists, select
+from sqlalchemy.orm import Mapped, relationship, joinedload
 
 from torch_web import db, Base
 from torch_web.collections.specimens import Specimen, SpecimenImage
 from torch_web.collections.workflow import run_workflow
-
-ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
 
 
 class Collection(Base):
@@ -16,10 +15,30 @@ class Collection(Base):
     name = Column(String(150), unique=True)
     code = Column(String(10), unique=True)
     institution_id = Column(Integer, ForeignKey("institution.id"))
-    workflow = Column(JSON)
+    tasks: Mapped[List["CollectionTask"]] = relationship(back_populates="collection", lazy="selectin")
+    specimens: Mapped[List["Specimen"]] = relationship(back_populates="collection")
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class CollectionTask(Base):
+    __tablename__ = "collection_tasks"
+    id = Column(Integer, primary_key=True)
+    func_name = String()
+    name = String()
+    description = String(nullable=True)
+    collection: Mapped["Collection"] = relationship(back_populates="tasks")
+    parameters: Mapped[List["CollectionTaskParameter"]] = relationship(back_populates="task", lazy="selectin")
+
+
+class CollectionTaskParameter(Base):
+    __tablename__ = "collection_tasks_parameters"
+    id = Column(Integer, primary_key=True)
+    collection_task_id = Column(Integer, ForeignKey("collection_tasks.id"))
+    name = String()
+    value = String()
+    task: Mapped["CollectionTask"] = relationship(back_populates="parameters")
 
 
 def get_collections(institutionid):

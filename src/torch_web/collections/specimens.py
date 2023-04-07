@@ -1,7 +1,6 @@
-import glob
-import os
 import json
 from pathlib import Path
+from typing import List
 import imagehash
 
 from sqlalchemy import (
@@ -14,9 +13,10 @@ from sqlalchemy import (
 )
 from torch_web import Base, db
 from sqlalchemy.sql import func, select
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 from flask import current_app
-from PIL import Image
+
+from torch_web.collections.collections import Collection
 
 
 class Specimen(Base):
@@ -33,7 +33,9 @@ class Specimen(Base):
     failed_task = Column(String(150))
     deleted = Column(Integer, default=0)
     has_dng = Column(Integer, default=0)
-    images = relationship("SpecimenImage")
+    images: Mapped[List["SpecimenImage"]] = relationship(back_populates="specimen", lazy="selectin")
+    tasks: Mapped[List["SpecimenTask"]] = relationship(back_populates="specimen")
+    collection: Mapped["Collection"] = relationship(back_populates="specimens")
 
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__,
@@ -55,34 +57,23 @@ class Specimen(Base):
         return img
 
 
-def get_specimens_by_batch_id(batch_id):
-    root = "webapp/static/uploads/{}".format(batch_id)
-    files = []
-
-    if not os.path.isdir(root):
-        return files
-
-    for file in glob.glob("{}/*.*".format(root)):
-        fname = file.split(os.sep)[-1]
-        files.append(fname)
+class SpecimenTask(Base):
+    __tablename__ = "specimen_tasks"
+    id = Column(Integer, primary_key=True)
+    func_name = String()
+    name = String()
+    description = String(nullable=True)
+    specimen: Mapped["Specimen"] = relationship(back_populates="tasks")
+    parameters: Mapped[List["SpecimenTaskParameter"]] = relationship(back_populates="task", lazy="selectin")
 
 
-def is_portrait(image_path=None):
-    try:
-        with Image.open(image_path) as im:
-            width, height = im.size
-            if height > width:
-                return True
-            else:
-                return False
-    except Exception as e:
-        print('Error: ', e)
-        raise
-
-   
-def hash(image_path, hashfunc="average"):
-    with Image.open(image_path) as im:
-        return imagehash.average_hash(im) if hashfunc == "average" else imagehash.phash(im)
+class SpecimenTaskParameter(Base):
+    __tablename__ = "specimen_tasks_parameters"
+    id = Column(Integer, primary_key=True)
+    collection_task_id = Column(Integer, ForeignKey("specimen_tasks.id"))
+    name = String()
+    value = String()
+    task: Mapped["SpecimenTask"] = relationship(back_populates="parameters")
 
 
 class SpecimenImage(Base):
@@ -94,6 +85,7 @@ class SpecimenImage(Base):
     url = Column(Text)
     create_date = Column(DateTime(timezone=True), default=func.now())
     specimen_id = Column(Integer, ForeignKey("specimen.id"))
+    specimen: Mapped["Specimen"] = relationship(back_populates="images")
     external_url = Column(Text)
     hash_a = Column(String(16))
     hash_b = Column(String(16))

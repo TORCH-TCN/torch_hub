@@ -18,8 +18,6 @@ from torch_web.workflows.workflows import TorchTask
 from werkzeug.utils import secure_filename
 
 
-ORION_URL_DEFAULT = "http://127.0.0.1:4200/"
-
 home_bp = APIBlueprint("home", __name__, url_prefix="")
 collections_bp = APIBlueprint("collections", __name__, url_prefix="/collections")
 specimens_bp = APIBlueprint("specimens", __name__)
@@ -258,13 +256,10 @@ def process_local(collection_id, path):
 def specimen_get(collectionid, specimenid):
     collection = collections.get_collection(collectionid)
     specimen = collections.get_specimen(specimenid)
-    orion_url = current_app.config.get("PREFECT_ORION_URL", ORION_URL_DEFAULT)
-    prefect_url = orion_url + "flow-run/" + specimen.flow_run_id
 
     return {
         'specimen': specimen,
-        'collection': collection,
-        'prefect_url': prefect_url
+        'collection': collection
     }
 
 

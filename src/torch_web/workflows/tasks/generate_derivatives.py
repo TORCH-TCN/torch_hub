@@ -9,35 +9,52 @@ from torch_web.workflows.workflows import torch_task
 from torch_web import db
 
 
+def parse_sizes(sizes):
+    items = [item.strip() for item in sizes.split(",")]
+    output_dict = {}
+
+    # loop through the items
+    for item in items:
+      # split the item by colon and strip any whitespace
+      key_value = [kv.strip() for kv in item.split(":")]
+      # if there is only one element, it is the key and the value is None
+      if len(key_value) == 1:
+        output_dict[key_value[0]] = None
+      # if there are two elements, they are the key and the value
+      elif len(key_value) == 2:
+        # try to convert the value to an integer
+        try:
+          value = int(key_value[1])
+        # if it fails, use the original value as a string
+        except ValueError:
+          value = key_value[1]
+        # add the key-value pair to the dictionary
+        output_dict[key_value[0]] = value
+
+    # print the output dictionary
+    return output_dict
+
+
 @torch_task("Generate Derivatives")
-def generate_derivatives(specimen: specimens.Specimen, sizes_json):
+def generate_derivatives(specimen: specimens.Specimen, sizes_to_generate):
     try:
         local_specimen = db.session.merge(specimen)  # thread-safe
 
-        sizes = json.loads(sizes_json)
+        sizes = parse_sizes(sizes_to_generate)
 
         derivatives_to_add = {
             size: config
             for size, config in sizes.items()
-            if is_missing(local_specimen.images, size)
+            if not any(image.size == size for image in local_specimen.images)
         }
 
         for derivative in derivatives_to_add.keys():
-            new_derivative = generate_derivative(
-                local_specimen, derivative, derivatives_to_add[derivative]["WIDTH"]
-            )
+            new_derivative = generate_derivative(local_specimen, derivative, derivatives_to_add[derivative])
             local_specimen.images.append(new_derivative)
-
-        db.session.commit()
 
         return local_specimen
     except Exception as e:
-        db.session.commit()
-        return Failed(message=f"Unable to create derivatives for specimen {specimen.id}-{specimen.name}: {e}")
-
-
-def is_missing(images, size):
-    return not any(image.size == size for image in images)
+        return f"Unable to create derivatives: {e}"
 
 
 def generate_derivative(specimen: specimens.Specimen, size, width) -> Optional[specimens.SpecimenImage]:
@@ -48,7 +65,7 @@ def generate_derivative(specimen: specimens.Specimen, size, width) -> Optional[s
     try:
         img = Image.open(specimen.upload_path)
 
-        if size != 'FULL':
+        if width is None:
             img.thumbnail((width, width))
 
         img.save(derivative_path)
@@ -56,8 +73,8 @@ def generate_derivative(specimen: specimens.Specimen, size, width) -> Optional[s
         return SpecimenImage(
             specimen_id=specimen.id,
             size=size,
-            height=width if size != 'FULL' else img.height,
-            width=width if size != 'FULL' else img.width,
+            height=width if width is not None else img.height,
+            width=width if width is not None else img.width,
             url=derivative_path
         )
     except Exception as e:

@@ -2,16 +2,13 @@ import functools
 import inspect
 
 from apiflask import Schema
-from apiflask.fields import Integer, String, List, Nested, Dict, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, JSON, exists, select
 
+from apiflask.fields import List, Nested
+from torch_web import Base
+from sqlalchemy.orm import Mapped, relationship
 torch_task_registry = []
 
-
-class TorchTask(Schema):
-    func_name = String()
-    name = String()
-    description = String(nullable=True)
-    parameters = Dict(String(), String())
 
 
 class TorchTasksResponse(Schema):
