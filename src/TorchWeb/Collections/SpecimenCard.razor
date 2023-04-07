@@ -1,4 +1,4 @@
-﻿<figure class="specimen-card">
+﻿<figure class="specimen-card" @onclick=Open>
     <img src="@ImageUrl" alt="@Specimen.Catalog_number" />
     <figcaption>
         <h2>@Specimen.Catalog_number</h2>
@@ -9,6 +9,8 @@
 </figure>
 
 @inject IConfiguration Config
+@inject IModalService Modal
+
 @code {
     [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
@@ -28,4 +30,13 @@
 
     string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
         + Specimen.Card_image?.External_url;
+
+    async Task Open()
+    {
+        var fullSpecimen = await TorchCommands.GetSpecimenAsync(Specimen.Collection_id, Specimen.Id);
+        var parameters = new ModalParameters().Add("Specimen", fullSpecimen);
+        var options = new ModalOptions() { Size = ModalSize.Automatic };
+        var modal = Modal.Show<SpecimenDetail>(fullSpecimen.Catalog_number, parameters, options);
+        await modal.Result;
+    }
 }

@@ -27,6 +27,7 @@ class SpecimenImageResponse(Schema):
     id = Integer()
     external_url = String(nullable=True)
     url = String(nullable=True)
+    size = String()
 
 
 class SpecimenResponse(Schema):
@@ -37,6 +38,7 @@ class SpecimenResponse(Schema):
     catalog_number = String(nullable=True)
     card_image = Nested(SpecimenImageResponse, nullable=True)
     images = List(Nested(SpecimenImageResponse))
+    tasks = List(Nested(TorchTask))
     
 
 class SpecimensResponse(Schema):
@@ -248,15 +250,14 @@ def process_local(collection_id, path):
     
 
 
-@collections_bp.get("/<collectionid>/specimens/<specimenid>")
+@collections_bp.get("/<int:collectionid>/specimens/<int:specimenid>")
+@collections_bp.output(SpecimenResponse)
+@collections_bp.doc(operation_id='GetSpecimen')
 def specimen_get(collectionid, specimenid):
     collection = collections.get_collection(collectionid)
     specimen = collections.get_specimen(specimenid)
 
-    return {
-        'specimen': specimen,
-        'collection': collection
-    }
+    return specimen
 
 
 @collections_bp.put("/<collectionid>/specimens/<specimenid>")

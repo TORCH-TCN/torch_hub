@@ -24,6 +24,19 @@
         color: #dfdfe3;
     }
 
+    footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #eee;
+        padding: 8px;
+
+        aside {
+            color: #777;
+        }
+    }
+
     button {
         position: absolute;
         bottom: 0px;

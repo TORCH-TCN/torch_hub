@@ -20,8 +20,8 @@ class TorchTask(Schema):
     description = String(nullable=True)
     start_date = DateTime(nullable=True)
     end_date = DateTime(nullable=True)
-    run_state = DateTime(nullable=True)
-    run_message = DateTime(nullable=True)
+    run_state = String(nullable=True)
+    run_message = String(nullable=True)
     parameters = List(Nested(TorchTaskParameter))
 
 

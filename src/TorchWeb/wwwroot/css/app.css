@@ -178,6 +178,27 @@
   content: attr(alt);
 }
 
+.specimen-detail {
+  width: 80vw;
+  display: grid;
+  grid-template-columns: 3fr 5fr;
+  gap: 24px;
+}
+.specimen-detail img {
+  max-width: 100%;
+}
+.specimen-detail .images {
+  display: flex;
+  grid-row: 2;
+  grid-column: 1;
+}
+.specimen-detail .images img {
+  max-width: 100px;
+}
+.specimen-detail .task dl {
+  display: block;
+}
+
 .workflow {
   background: white;
   position: fixed;
@@ -242,6 +263,17 @@
   font-size: 12px;
   font-weight: 400;
   color: #dfdfe3;
+}
+.task footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #eee;
+  padding: 8px;
+}
+.task footer aside {
+  color: #777;
 }
 .task button {
   position: absolute;

@@ -1,4 +1,3 @@
-from tkinter import SEL
 import imagehash
 import datetime
 import importlib
@@ -243,17 +242,7 @@ def upload(collectionid, files):
 
 
 def get_specimen(specimenid):
-    specimen = db.session.scalars(select(Specimen).where(Specimen.id == specimenid)).first()
-    images = db.session.scalars(select(SpecimenImage)
-                                .filter(SpecimenImage.specimen_id == specimenid)
-                                .filter(SpecimenImage.size != "DNG")).all()
-    dng = db.session.scalars(select(SpecimenImage)
-                             .filter(SpecimenImage.specimen_id == specimenid)
-                             .filter(SpecimenImage.size == "DNG")).first()
-
-    specimen.images = images
-    specimen.images.add(dng)
-
+    specimen = db.session.scalars(select(Specimen).options(joinedload(Specimen.tasks)).where(Specimen.id == specimenid)).first()
     return specimen
 
 
@@ -387,7 +376,7 @@ def run_workflow(collection, specimen):
             notify(specimen_task, specimen, 'Error', result)
             break
             
-        notify(task, specimen, 'Success')
+        notify(specimen_task, specimen, 'Success')
 
 
 def upsert_specimen(collection, file):

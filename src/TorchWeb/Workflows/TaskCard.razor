@@ -21,6 +21,14 @@
     {
         <button class="secondary" @onclick="Delete">Delete</button>
     }
+
+    @if (Task.Run_state != null)
+    {
+        <footer>
+            @Task.Run_state
+            <aside>@Task.Run_message</aside>
+        </footer>
+    }
 </article>
 
 @code {

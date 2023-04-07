@@ -61,6 +61,9 @@
           "id": {
             "type": "integer"
           },
+          "size": {
+            "type": "string"
+          },
           "url": {
             "nullable": true,
             "type": "string"
@@ -98,6 +101,12 @@
           "images": {
             "items": {
               "$ref": "#/components/schemas/SpecimenImageResponse"
+            },
+            "type": "array"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TorchTask"
             },
             "type": "array"
           }
@@ -142,12 +151,10 @@
             "type": "array"
           },
           "run_message": {
-            "format": "date-time",
             "nullable": true,
             "type": "string"
           },
           "run_state": {
-            "format": "date-time",
             "nullable": true,
             "type": "string"
           },
@@ -587,13 +594,14 @@
         ]
       },
       "get": {
+        "operationId": "GetSpecimen",
         "parameters": [
           {
             "in": "path",
             "name": "collectionid",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           },
           {
@@ -601,7 +609,7 @@
             "name": "specimenid",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -609,7 +617,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/SpecimenResponse"
+                }
               }
             },
             "description": "Successful response"
