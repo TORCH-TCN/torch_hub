@@ -18,15 +18,13 @@ def hash(image: SpecimenImage, hashfunc="average"):
 
 
 @torch_task("Check for Duplicate Image")
-def check_duplicate(specimen):
+def check_duplicate(specimen, max_distance=35):
     """
     Hashes the incoming image and compares it against other hashes to 
     ensure uniqueness in the specimen database
     """
     
     for img in specimen.images:
-        max_distance = 35
-    
         hash(img)
         split_filter = or_(SpecimenImage.hash_a == img.hash_a,
                            SpecimenImage.hash_b == img.hash_b,

@@ -7,6 +7,7 @@ from torch_web.collections import collections
 from torch_web.collections.collections import SpecimenImage
 from torch_web.workflows.workflows import torch_task
 from torch_web import db
+from flask import current_app
 
 
 def parse_sizes(sizes):
@@ -75,7 +76,8 @@ def generate_derivative(specimen: collections.Specimen, size, width) -> Optional
             size=size,
             height=width if width is not None else img.height,
             width=width if width is not None else img.width,
-            url=derivative_path
+            url=derivative_path,
+            external_url = derivative_path.replace(current_app.config['BASE_DIR'] + "\\", '').replace("\\", "/")
         )
     except Exception as e:
         print("Unable to create derivative:", e)
