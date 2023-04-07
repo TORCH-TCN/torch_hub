@@ -13,7 +13,7 @@
             {
                 @foreach (var specimen in Specimens.Specimens)
                 {
-                    <SpecimenCard Specimen="specimen" />
+                    <SpecimenCard Specimen="specimen" @key=specimen.Id />
                 }
 
                 @if (Specimens.Specimens.Count == 0)

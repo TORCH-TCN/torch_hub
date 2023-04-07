@@ -85,6 +85,10 @@
   color: #242427;
   font-weight: 600;
 }
+.specimen-card figcaption aside {
+  font-size: 14px;
+  color: gray;
+}
 .specimen-card img {
   width: 100%;
   height: 100%;
