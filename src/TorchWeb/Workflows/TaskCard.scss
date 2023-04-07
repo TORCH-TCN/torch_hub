@@ -36,6 +36,7 @@
     dl {
         font-size: 12px;
         margin: 16px 0;
+        display: none;
 
         dt {
             font-weight: 600;
@@ -48,5 +49,9 @@
             white-space: nowrap;
             text-overflow: ellipsis;
         }
+    }
+
+    &.selected dl {
+        display: block;
     }
 }

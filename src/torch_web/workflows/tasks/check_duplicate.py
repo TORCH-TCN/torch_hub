@@ -25,16 +25,19 @@ def check_duplicate(specimen, max_distance=35):
     """
     
     for img in specimen.images:
-        hash(img)
-        split_filter = or_(SpecimenImage.hash_a == img.hash_a,
-                           SpecimenImage.hash_b == img.hash_b,
-                           SpecimenImage.hash_c == img.hash_c,
-                           SpecimenImage.hash_d == img.hash_d)
+        try:
+            hash(img)
+            split_filter = or_(SpecimenImage.hash_a == img.hash_a,
+                               SpecimenImage.hash_b == img.hash_b,
+                               SpecimenImage.hash_c == img.hash_c,
+                               SpecimenImage.hash_d == img.hash_d)
 
-        similar_images = db.session.scalars(select(collections.SpecimenImage).filter(SpecimenImage.id != img.id, split_filter))
-        too_close_images = [sim for sim in similar_images if abs(sim.average_hash() - img.average_hash()) < max_distance]
+            similar_images = db.session.scalars(select(collections.SpecimenImage).filter(SpecimenImage.id != img.id, SpecimenImage.hash_a is not None, split_filter))
+            too_close_images = [sim for sim in similar_images if abs(sim.average_hash() - img.average_hash()) < max_distance]
     
-        if len(too_close_images) > 0:
-            return f"Specimen image {img.id} is too similar to {too_close_images[0].url}"
+            if len(too_close_images) > 0:
+                return f"Specimen image {img.id} is too similar to {too_close_images[0].url}"
+        except:
+            return f'Unable to compare image {img.id}'
 
     return specimen

@@ -233,6 +233,7 @@ def retry_workflow(specimenid):
 
 def upload(collectionid, files):
     collection = db.session.get(Collection, collectionid)
+
     for file in files:
         specimen, execute_workflow = upsert_specimen(collection, file)
         context.socketio.emit('specimen_added', specimen.id);

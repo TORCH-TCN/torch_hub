@@ -47,6 +47,7 @@
     List<TorchTask> AllTasks = new();
     List<TorchTask> CollectionTasks = new();
     bool IsEditing;
+    bool IsSelected;
     ElementReference FilePicker;
 
     protected override async Task OnInitializedAsync()
@@ -94,7 +95,7 @@
             Tasks = CollectionTasks
         };
         await TorchCommands.UpdateWorkflowAsync(Collection.Id, workflow);
-        
+
     }
 
     void ToggleEdit() => IsEditing = !IsEditing;

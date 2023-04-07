@@ -26,5 +26,6 @@
         });
     }
 
-    string? ImageUrl => Config["Blossom:Authority"] + Specimen.Card_image?.External_url;
+    string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + Specimen.Card_image?.External_url;
 }

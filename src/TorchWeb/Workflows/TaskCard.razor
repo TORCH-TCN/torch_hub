@@ -1,4 +1,4 @@
-﻿<article class="task @(IsRunning ? "running" : "")">
+﻿<article class="task @(IsRunning ? "running" : "") @(IsSelected ? "selected" : "")" @onclick=Select>
     <header>@Task.Name</header>
     <aside>@Task.Func_name</aside>
 
@@ -29,6 +29,7 @@
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
     bool IsRunning;
+    bool IsSelected;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,4 +47,6 @@
     async Task Add() => await OnAdd.InvokeAsync(Task);
 
     async Task Delete() => await OnDelete.InvokeAsync(Task);
+
+    void Select() => IsSelected = !IsSelected;
 }

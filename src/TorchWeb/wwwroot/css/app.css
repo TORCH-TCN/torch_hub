@@ -190,6 +190,7 @@
   grid-template-rows: auto 50px;
   gap: 24px;
   transition: width 0.3s ease-in-out;
+  overflow-y: auto;
 }
 .workflow .task button {
   display: none;
@@ -252,6 +253,7 @@
 .task dl {
   font-size: 12px;
   margin: 16px 0;
+  display: none;
 }
 .task dl dt {
   font-weight: 600;
@@ -262,6 +264,9 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.task.selected dl {
+  display: block;
 }
 
 .task-parameters p {

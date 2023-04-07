@@ -36,7 +36,7 @@ def decrypt(password):
 
 @torch_task("Upload")
 def upload(specimen: Specimen, upload_folder: str, upload_type='sftp', host=None, username=None, password=None):
-    password = decrypt(password)
+    # password = decrypt(password)
     
     for image in specimen.images:
         if upload_type == "sftp":
@@ -51,7 +51,7 @@ def upload(specimen: Specimen, upload_folder: str, upload_type='sftp', host=None
 
 def upload_via_paramiko_sftp(collection_folder, path, host, username, password):
     transport = paramiko.Transport((host, 22))
-    transport.connect(username=username, password=password.get_secret_value())
+    transport.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(transport)
 
     mkdir_p(sftp, collection_folder)
@@ -60,7 +60,7 @@ def upload_via_paramiko_sftp(collection_folder, path, host, username, password):
     sftp.close()
     transport.close()
 
-    return final_url
+    return 'https://' + final_url.replace('windows.net', 'windows.net/torch-admin')
 
 
 def upload_via_s3(collection_folder, path, host, username, password):
@@ -72,7 +72,7 @@ def upload_via_s3(collection_folder, path, host, username, password):
         "s3",
         config=amazon_config,
         aws_access_key_id=username,
-        aws_secret_access_key=password.get_secret_value(),
+        aws_secret_access_key=password,
     )
 
     try:
@@ -91,7 +91,7 @@ def upload_via_pysftp(collection_folder, path, host, username, password):
     with pysftp.Connection(
         host=host,
         username=username,
-        password=password.get_secret_value(),
+        password=password,
         cnopts=cnopts,
     ) as sftp:
         try:
@@ -102,14 +102,14 @@ def upload_via_pysftp(collection_folder, path, host, username, password):
 
         sftp.put(path)
 
-        return f'{host}' + sftp.getcwd() + f"/{os.path.basename(path)}"
+        return f'https://{host}' + sftp.getcwd() + f"/{os.path.basename(path)}"
 
 
 def upload_via_minio(collection_folder, path, host, username, password):
     client = Minio(
         host,
         access_key=username,
-        secret_key=password.get_secret_value(),
+        secret_key=password,
     )
 
     found = client.bucket_exists(collection_folder)
@@ -120,7 +120,7 @@ def upload_via_minio(collection_folder, path, host, username, password):
 
     result = client.fput_object(collection_folder, os.path.basename(path), path)
 
-    return result.location
+    return 'https://' + result.location
 
 
 def mkdir_p(sftp, remote_directory):

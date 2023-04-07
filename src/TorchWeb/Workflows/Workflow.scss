@@ -10,6 +10,7 @@
     grid-template-rows: auto 50px;
     gap: 24px;
     transition: width 0.3s ease-in-out;
+    overflow-y: auto;
 
     .task button {
         display: none;
