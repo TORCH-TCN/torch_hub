@@ -1,14 +1,28 @@
 import functools
 import inspect
+from os import name
 
 from apiflask import Schema
-from sqlalchemy import Column, Integer, String, ForeignKey, func, Text, JSON, exists, select
+from apiflask.fields import Integer, String, List, Nested, Dict, DateTime
 
-from apiflask.fields import List, Nested
-from torch_web import Base
-from sqlalchemy.orm import Mapped, relationship
 torch_task_registry = []
 
+
+class TorchTaskParameter(Schema):
+    name = String()
+    value = String(nullable=True)
+
+
+class TorchTask(Schema):
+    func_name = String()
+    name = String()
+    sort_order = Integer()
+    description = String(nullable=True)
+    start_date = DateTime(nullable=True)
+    end_date = DateTime(nullable=True)
+    run_state = DateTime(nullable=True)
+    run_message = DateTime(nullable=True)
+    parameters = List(Nested(TorchTaskParameter))
 
 
 class TorchTasksResponse(Schema):
@@ -19,7 +33,7 @@ def torch_task(name, description=None):
     def decorate(func):
         global torch_task_registry
         spec = inspect.signature(func)
-        parameters = { k: str(v.default) if v.default is not inspect.Parameter.empty else None for k, v in spec.parameters.items() if k != 'specimen' }
+        parameters = [{ 'name': k, 'value': str(v.default) if v.default is not inspect.Parameter.empty else None } for k, v in spec.parameters.items() if k != 'specimen' ]
         torch_task_registry.append({ 'name': name, 'description': description, 'func_name': func.__name__, 'parameters': parameters })
 
         @functools.wraps(func)

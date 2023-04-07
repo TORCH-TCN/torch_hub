@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<CascadingValue Value="Socket">
+
 <div class="main-layout">
     <header>
         <NavMenu />
@@ -10,15 +10,3 @@
         @Body
     </main>
 </div>
-</CascadingValue>
-
-@inject IConfiguration Config
-@code {
-    public SocketIOClient.SocketIO Socket;
-
-    protected override async Task OnInitializedAsync()
-    {
-        Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
-        await Socket.ConnectAsync();
-    }
-}

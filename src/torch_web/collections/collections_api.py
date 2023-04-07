@@ -25,20 +25,18 @@ specimens_bp = APIBlueprint("specimens", __name__)
 
 class SpecimenImageResponse(Schema):
     id = Integer()
-    external_url = String()
+    external_url = String(nullable=True)
+    url = String(nullable=True)
 
 
 class SpecimenResponse(Schema):
     id = Integer()
     collection_id = Integer()
     collection_name = String()
-    collection_code = String()
+    collection_code = String(nullable=True)
     catalog_number = String(nullable=True)
     card_image = Nested(SpecimenImageResponse, nullable=True)
     images = List(Nested(SpecimenImageResponse))
-    status = String()
-    created_at = DateTime()
-    updated_at = DateTime()
     
 
 class SpecimensResponse(Schema):
@@ -179,9 +177,7 @@ def collection_delete_cli(id):
 @collections_bp.output(CollectionResponse)
 @collections_bp.doc(operation_id='GetCollection')
 def collection_get(collectionid):
-    result = collections.get_collection(collectionid).as_dict()
-    if result["workflow"] is not None:
-        result["tasks"] = result["workflow"]
+    result = collections.get_collection(collectionid)
     return result
 
 
@@ -234,7 +230,7 @@ def upload(collectionid):
         destination = os.path.join(target_dir, filename)
         file.save(destination)
 
-        collections.upload(collectionid, [destination], current_app.config)
+        collections.upload(collectionid, [destination])
     return ''
 
 
@@ -248,7 +244,7 @@ def process_local(collection_id, path):
         files = [path]
     
     with Progress() as progress:
-        collections.upload(collection_id, files, current_app.config, progress)
+        collections.upload(collection_id, files)
     
 
 

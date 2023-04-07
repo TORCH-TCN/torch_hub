@@ -7,7 +7,7 @@
         <dl>
             @foreach (var parameter in DisplayParameters)
             {
-                <dt>@parameter.Key</dt>
+                <dt>@parameter.Name</dt>
                 <dd title="@parameter.Value">@parameter.Value</dd>
             }
         </dl>
@@ -39,9 +39,9 @@
         });
     }
 
-    IDictionary<string, string> DisplayParameters => Task.Parameters
+    List<TorchTaskParameter> DisplayParameters => Task.Parameters
         .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
-        .ToDictionary(x => x.Key, x => x.Value);
+        .ToList();
 
     async Task Add() => await OnAdd.InvokeAsync(Task);
 

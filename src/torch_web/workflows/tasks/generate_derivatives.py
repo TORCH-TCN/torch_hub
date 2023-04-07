@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional
 
 from PIL import Image
-from torch_web.collections import specimens
+from torch_web.collections import collections
 from torch_web.collections.collections import SpecimenImage
 from torch_web.workflows.workflows import torch_task
 from torch_web import db
@@ -36,7 +36,7 @@ def parse_sizes(sizes):
 
 
 @torch_task("Generate Derivatives")
-def generate_derivatives(specimen: specimens.Specimen, sizes_to_generate):
+def generate_derivatives(specimen: collections.Specimen, sizes_to_generate):
     try:
         local_specimen = db.session.merge(specimen)  # thread-safe
 
@@ -57,7 +57,7 @@ def generate_derivatives(specimen: specimens.Specimen, sizes_to_generate):
         return f"Unable to create derivatives: {e}"
 
 
-def generate_derivative(specimen: specimens.Specimen, size, width) -> Optional[specimens.SpecimenImage]:
+def generate_derivative(specimen: collections.Specimen, size, width) -> Optional[collections.SpecimenImage]:
     full_image_path = Path(specimen.upload_path)
     derivative_file_name = full_image_path.stem + "_" + size + full_image_path.suffix
     derivative_path = str(full_image_path.parent.joinpath(derivative_file_name))

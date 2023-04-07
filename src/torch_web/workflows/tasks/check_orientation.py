@@ -1,4 +1,4 @@
-from torch_web.collections import specimens
+from torch_web.collections import collections
 from torch_web.workflows.workflows import torch_task
 from PIL import Image
 
@@ -17,8 +17,8 @@ def is_portrait(image_path=None):
 
 
 @torch_task("Check Portrait Orientation")
-def check_orientation(specimen: specimens.Specimen):
-    if not specimens.is_portrait(specimen.upload_path):
+def check_orientation(specimen: collections.Specimen):
+    if not is_portrait(specimen.upload_path):
         return f"Incorrect orientation"
 
     return specimen

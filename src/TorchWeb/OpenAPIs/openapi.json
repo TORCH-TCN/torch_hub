@@ -55,10 +55,15 @@
       "SpecimenImageResponse": {
         "properties": {
           "external_url": {
+            "nullable": true,
             "type": "string"
           },
           "id": {
             "type": "integer"
+          },
+          "url": {
+            "nullable": true,
+            "type": "string"
           }
         },
         "type": "object"
@@ -78,16 +83,13 @@
             "type": "string"
           },
           "collection_code": {
+            "nullable": true,
             "type": "string"
           },
           "collection_id": {
             "type": "integer"
           },
           "collection_name": {
-            "type": "string"
-          },
-          "created_at": {
-            "format": "date-time",
             "type": "string"
           },
           "id": {
@@ -98,13 +100,6 @@
               "$ref": "#/components/schemas/SpecimenImageResponse"
             },
             "type": "array"
-          },
-          "status": {
-            "type": "string"
-          },
-          "updated_at": {
-            "format": "date-time",
-            "type": "string"
           }
         },
         "type": "object"
@@ -129,6 +124,11 @@
             "nullable": true,
             "type": "string"
           },
+          "end_date": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
           "func_name": {
             "type": "string"
           },
@@ -136,10 +136,40 @@
             "type": "string"
           },
           "parameters": {
-            "additionalProperties": {
-              "type": "string"
+            "items": {
+              "$ref": "#/components/schemas/TorchTaskParameter"
             },
-            "type": "object"
+            "type": "array"
+          },
+          "run_message": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "run_state": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "sort_order": {
+            "type": "integer"
+          },
+          "start_date": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TorchTaskParameter": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "nullable": true,
+            "type": "string"
           }
         },
         "type": "object"

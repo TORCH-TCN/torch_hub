@@ -55,8 +55,6 @@
     <Compile Include="app.py" />
     <Compile Include="collections\collections_api.py" />
     <Compile Include="collections\collections.py" />
-    <Compile Include="collections\specimens.py" />
-    <Compile Include="collections\workflow.py" />
     <Compile Include="config\watchdog\watchdog_cli.py" />
     <Compile Include="config\watchdog\watchdog_handler.py" />
     <Compile Include="institutions\institutions_api.py" />

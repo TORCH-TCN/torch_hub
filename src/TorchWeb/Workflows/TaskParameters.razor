@@ -5,11 +5,11 @@
         Set the parameters for this task.
     </p>
 
-    @foreach (var key in Task.Parameters.Keys.Where(x => x != "specimen"))
+    @foreach (var key in Task.Parameters.Where(x => x.Name != "specimen"))
     {
         <label>
-            @key
-            <input @bind="@Task.Parameters[key]" />
+            @key.Name
+            <input @bind="@key.Value" />
         </label>
     }
 

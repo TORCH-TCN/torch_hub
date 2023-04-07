@@ -48,6 +48,10 @@
   flex-wrap: wrap;
   gap: 24px;
 }
+.collection .specimen-list > aside {
+  color: gray;
+  font-size: 14px;
+}
 .collection header {
   display: flex;
   justify-content: space-between;

@@ -59,7 +59,7 @@
 
     async Task AddTask(TorchTask task)
     {
-        if (task.Parameters.Any(x => x.Key != "specimen"))
+        if (task.Parameters.Any(x => x.Name != "specimen"))
         {
             var parameters = new ModalParameters().Add("Task", task);
             var modal = Modal.Show<TaskParameters>("Set Up Your Task", parameters);

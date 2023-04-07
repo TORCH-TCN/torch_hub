@@ -7,6 +7,11 @@
         display: flex;
         flex-wrap: wrap;
         gap: 24px;
+
+        > aside {
+            color: gray;
+            font-size: 14px;
+        }
     }
 
     header {

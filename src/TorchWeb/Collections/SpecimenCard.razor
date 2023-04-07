@@ -1,5 +1,5 @@
 ﻿<figure class="specimen-card">
-    <img src="@Specimen.Card_image?.External_url" alt="@Specimen.Catalog_number" />
+    <img src="@ImageUrl" alt="@Specimen.Catalog_number" />
     <figcaption>
         <h2>@Specimen.Catalog_number</h2>
         <aside>
@@ -8,6 +8,7 @@
     </figcaption>
 </figure>
 
+@inject IConfiguration Config
 @code {
     [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
@@ -24,4 +25,6 @@
             StateHasChanged();
         });
     }
+
+    string? ImageUrl => Config["Blossom:Authority"] + Specimen.Card_image?.External_url;
 }

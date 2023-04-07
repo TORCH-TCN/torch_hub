@@ -6,10 +6,10 @@ import pysftp
 from botocore.config import Config
 from botocore.exceptions import ClientError
 from minio import Minio
-from PBKDF2 import PBKDF2
-from Crypto.Cipher import AES
+from pbkdf2 import PBKDF2
+from Cryptodome.Cipher import AES
 
-from torch_web.collections.specimens import Specimen
+from torch_web.collections.collections import Specimen
 from torch_web.workflows.workflows import torch_task
 
 
