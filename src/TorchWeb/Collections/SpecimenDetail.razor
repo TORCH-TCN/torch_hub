@@ -1,0 +1,53 @@
+﻿@inherits SparcModal
+
+<div class="specimen-detail">
+    <figure>
+        @if (ImageUrl != null)
+        {
+            <img src="@SelectedImageUrl" alt="@Specimen.Catalog_number" />
+        }
+        <figcaption>
+            <dl>
+                <dt>Catalog Number</dt>
+                <dd>@Specimen.Catalog_number</dd>
+                <dt>Collection</dt>
+                <dd>@Specimen.Collection_code: @Specimen.Collection_name</dd>
+            </dl>
+        </figcaption>
+    </figure>
+    <div class="images">
+        @foreach (var img in Specimen.Images)
+        {
+            <figure class="@(SelectedImage == img ? "selected" : "")" @onclick="@(() => Select(img))">
+                <img src="@img.External_url" alt="@img.Size" />
+                <figcaption>
+                    @img.Size
+                </figcaption>
+            </figure>
+        }
+    </div>
+    <div class="tasks">
+        @foreach (var task in Specimen.Tasks)
+        {
+            <TaskCard Task="task" />
+        }
+    </div>
+</div>
+
+@inject IConfiguration Config
+@code {
+    [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
+    SpecimenImageResponse? SelectedImage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        SelectedImage = Specimen.Images.FirstOrDefault();
+    }
+
+    string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + Specimen.Card_image?.External_url;
+
+    string? SelectedImageUrl => SelectedImage?.External_url ?? ImageUrl;
+
+    void Select(SpecimenImageResponse img) => SelectedImage = img;
+}

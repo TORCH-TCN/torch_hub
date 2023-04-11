@@ -1,0 +1,70 @@
+.task {
+    border: 1px solid #dfdfe3;
+    border-radius: 8px;
+    padding: 24px;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 8px 0;
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 60px;
+
+    &.running {
+        background-color: red;
+    }
+
+    header {
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    aside {
+        font-size: 12px;
+        font-weight: 400;
+        color: #dfdfe3;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #eee;
+        padding: 8px;
+
+        aside {
+            color: #777;
+        }
+    }
+
+    button {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        font-size: 14px;
+        border-radius: 0;
+    }
+
+
+    dl {
+        font-size: 12px;
+        margin: 16px 0;
+        display: none;
+
+        dt {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        dd {
+            width: 160px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    &.selected dl {
+        display: block;
+    }
+}

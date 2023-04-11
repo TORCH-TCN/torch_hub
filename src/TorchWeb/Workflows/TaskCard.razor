@@ -1,0 +1,60 @@
+﻿<article class="task @(IsRunning ? "running" : "") @(IsSelected ? "selected" : "")" @onclick=Select>
+    <header>@Task.Name</header>
+    <aside>@Task.Func_name</aside>
+
+    @if (DisplayParameters.Any())
+    {
+        <dl>
+            @foreach (var parameter in DisplayParameters)
+            {
+                <dt>@parameter.Name</dt>
+                <dd title="@parameter.Value">@parameter.Value</dd>
+            }
+        </dl>
+    }
+
+    @if (OnAdd.HasDelegate)
+    {
+        <button class="secondary" @onclick="Add">Add</button>
+    }
+    @if (OnDelete.HasDelegate)
+    {
+        <button class="secondary" @onclick="Delete">Delete</button>
+    }
+
+    @if (Task.Run_state != null)
+    {
+        <footer>
+            @Task.Run_state
+            <aside>@Task.Run_message</aside>
+        </footer>
+    }
+</article>
+
+@code {
+    [Parameter] public TorchTask Task { get; set; } = null!;
+    [Parameter] public EventCallback<TorchTask> OnAdd { get; set; }
+    [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    bool IsRunning;
+    bool IsSelected;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Socket.On(Task.Func_name, (response) =>
+        {
+            IsRunning = response.GetValue<string>(2) == "Running";
+            StateHasChanged();
+        });
+    }
+
+    List<TorchTaskParameter> DisplayParameters => Task.Parameters
+        .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
+        .ToList();
+
+    async Task Add() => await OnAdd.InvokeAsync(Task);
+
+    async Task Delete() => await OnDelete.InvokeAsync(Task);
+
+    void Select() => IsSelected = !IsSelected;
+}

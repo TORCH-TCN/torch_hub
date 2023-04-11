@@ -19,11 +19,11 @@ pip install -r requirements.txt
 App specific configs: The current version needs a `.env` file inside the `src/torch` folder. Use [.env.sample](src/.env.sample) as a template.
 
 Workflow specific configs:
-Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch/prefect_flows/templates/flow_template.py). There is a process_specimen workflow on this solution, use the [process_specimen_config_example.json](src/torch/prefect_flows/configs/process_specimen_config_example.json) as template.
+Workflow configs should be added inside the `src/torch/prefect_flows/configs` folder, example: `workflow_name_config.json`, this file should be loaded from the workflow function as necessary check [flow_template_config.json](src/torch_hub/prefect_flows/configs/flow_template_config.json) and [flow_template.py](src/torch_hub/prefect_flows/templates/flow_template.py). There is a process_specimen workflow on this solution, use the [process_specimen_config_example.json](src/torch_hub/prefect_flows/configs/process_specimen_config_example.json) as template.
 
 ## How to create a new workflow
-1. Add a new flow file inside `src/torch/prefect_flows/` folder following the [flow template](src/torch/prefect_flows/templates/flow_template.py)
-2. Register the new flow on the `run_workflow` function at [workflow.py](src/torch/collections/workflow.py)
+1. Add a new flow file inside `src/torch/prefect_flows/` folder following the [flow template](src/torch_hub/prefect_flows/templates/flow_template.py)
+2. Register the new flow on the `run_workflow` function at [workflow.py](src/torch_hub/collections/workflow.py)
 
 ## How to run
 

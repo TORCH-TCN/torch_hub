@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
+@page "/"
+
+<header>
+    <h1>All Collections</h1>
+    <button>Add New Collection</button>
+</header>
+
+@if (Model != null)
+{
+    <section class="collections-index">
+        @foreach (var collection in Model.Collections)
+        {
+            <CollectionCard Collection="collection" />
+        }
+    </section>
+}
+
+@code {
+    
+    CollectionsResponse? Model;
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await TorchCommands.GetCollectionsAsync();
+    }
+}

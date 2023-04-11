@@ -1,0 +1,23 @@
+.main-layout {
+    display: grid;
+    grid-template-rows: 80px auto;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: #f9fafb;
+
+    > header {
+        background: #ffffff;
+        padding: 0 7vw;
+    }
+
+    > main {
+        padding: 65px 7vw;
+        overflow-y: auto;
+
+        > header {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}

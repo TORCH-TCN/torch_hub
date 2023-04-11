@@ -1,0 +1,65 @@
+﻿@implements IDisposable
+@page "/collections/{Id:int}"
+
+<CascadingValue Value="Socket">
+<section class="collection">
+    <section>
+        <header>
+            <h1>@Model?.Name</h1>
+        </header>
+
+        <section class="specimen-list">
+            @if (Specimens != null)
+            {
+                @foreach (var specimen in Specimens.Specimens)
+                {
+                    <SpecimenCard Specimen="specimen" @key=specimen.Id />
+                }
+
+                @if (Specimens.Specimens.Count == 0)
+                    {
+                        <aside>
+                            No specimens have been added to this collection yet. 
+                            Click the Upload Specimens button at the bottom right to begin uploading.
+                        </aside>
+                    }
+                }
+        </section>
+    </section>
+
+    @if (Model != null)
+    {
+        <Workflow Collection="Model" />
+    }
+</section>
+</CascadingValue>
+
+
+@inject IConfiguration Config
+@code {
+    [Parameter] public int Id { get; set; }
+    public SocketIOClient.SocketIO Socket { get; set; } = null!;
+
+    CollectionResponse? Model;
+    SpecimensResponse? Specimens;
+    protected override async Task OnInitializedAsync()
+    {
+        Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
+        await Socket.ConnectAsync();
+
+        Socket.On("specimen_added", async (response) =>
+        {
+            Console.WriteLine("got it");
+            Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+            StateHasChanged();
+        });
+
+        Model = await TorchCommands.GetCollectionAsync(Id);
+        Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+    }
+
+    public void Dispose()
+    {
+        Socket.Dispose();
+    }
+}

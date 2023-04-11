@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a21b8773-30bd-4adc-9cd3-986092994965}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>app.py</StartupFile>
+    <SearchPath>..\..\src</SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <InterpreterId />
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <PythonWsgiHandler>{StartupModule}.wsgi_app</PythonWsgiHandler>
+    <Name>Torch.Api</Name>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".env" />
+    <Content Include="requirements.txt" />
+    <Content Include="security\base.html" />
+    <Content Include="security\change_password.html" />
+    <Content Include="security\forgot_password.html" />
+    <Content Include="security\login_user.html" />
+    <Content Include="security\register_user.html" />
+    <Content Include="security\reset_password.html" />
+    <Content Include="static\security.css" />
+    <Content Include="security\_macros.html" />
+    <Content Include="static\uploads\Default\BRIT240602.jpg" />
+    <Content Include="static\uploads\Default\BRIT259313.jpg" />
+    <Content Include="static\uploads\Default\BRIT259313_MED.jpg" />
+    <Content Include="static\uploads\Default\BRIT259313_THUMB.jpg" />
+    <Content Include="static\uploads\Default\BRIT337760.jpg" />
+    <Content Include="static\uploads\Default\BRIT342753.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="prefect_flows\blocks\upload_credentials.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="workflows\tasks\check_duplicate.py" />
+    <Compile Include="workflows\workflows.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="workflows\workflow_api.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="__init__.py" />
+    <Compile Include="app.py" />
+    <Compile Include="collections\collections_api.py" />
+    <Compile Include="collections\collections.py" />
+    <Compile Include="config\watchdog\watchdog_cli.py" />
+    <Compile Include="config\watchdog\watchdog_handler.py" />
+    <Compile Include="institutions\institutions_api.py" />
+    <Compile Include="institutions\institutions.py" />
+    <Compile Include="notifications\notifications_api.py" />
+    <Compile Include="prefect_flows\process_specimen.py" />
+    <Compile Include="workflows\tasks\check_catalog_number.py" />
+    <Compile Include="workflows\tasks\check_orientation.py" />
+    <Compile Include="workflows\tasks\copy_file.py" />
+    <Compile Include="workflows\tasks\generate_derivatives.py" />
+    <Compile Include="workflows\tasks\herbar.py" />
+    <Compile Include="workflows\tasks\upload.py" />
+    <Compile Include="reports\reports_api.py" />
+    <Compile Include="reports\reports.py" />
+    <Compile Include="users\role.py" />
+    <Compile Include="users\roles_api.py" />
+    <Compile Include="users\user.py" />
+    <Compile Include="users\users_api.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="collections" />
+    <Folder Include="config\" />
+    <Folder Include="config\watchdog\" />
+    <Folder Include="institutions" />
+    <Folder Include="workflows\" />
+    <Folder Include="notifications" />
+    <Folder Include="prefect_flows\" />
+    <Folder Include="prefect_flows\blocks\" />
+    <Folder Include="prefect_flows\tasks\" />
+    <Folder Include="reports" />
+    <Folder Include="security" />
+    <Folder Include="static\" />
+    <Folder Include="static\uploads\" />
+    <Folder Include="static\uploads\Default" />
+    <Folder Include="users" />
+    <Folder Include="workflows\tasks\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

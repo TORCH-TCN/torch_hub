@@ -1,0 +1,141 @@
+{% extends "../base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+    <h3 align="left" class="my-4">Users</h3>
+    <div class="form-container">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th>Email</th>
+                <th>Roles</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        {% if user.active %}
+                            <i class="fa fa-user" style="color:green"></i>
+                        {% else %}
+                            <i class="fa fa-user"></i>
+                        {% endif %}
+                        {{ user.email }}
+                    </td>
+                    <td>
+
+                        {% for role in user.roles %}
+                            <p>
+                                {{ role.name }}
+                                <button type="button" class="close"
+                                        onClick="deleteRoleFromUser({{ user.id }}, '{{ role.name }}')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </p>
+                        {% endfor %}
+
+                    </td>
+                    <td>
+                        <a class="btn btn-link" href="/users/{{ user.id }}">Edit</a>
+                        |
+                        <button type="button" class="btn btn-link" onClick="openRoleModal({{ user.id }})">
+                            Add role
+                        </button>
+                        |
+                        <button type="button" class="btn btn-link"
+                                onClick="changeUserActive({{ user.id }}, '{{ user.active }}')">
+                            {% if user.active %}
+                                Deactivate
+                            {% else %}
+                                Activate
+                            {% endif %}
+                        </button>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="modal modal-users-roles" id="exampleModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Assign Role</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Role:</label>
+                            <select class="form-control" id="selectedRole">
+                                <option value="0">Select an option</option>
+                                {% for role in roles %}
+                                    <option value="{{ role.name }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer pr-3 pb-3">
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                    <button type="button" class="btn btn-primary" onclick="addRoleToUser()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedUserId = 0;
+
+        function openRoleModal(userId) {
+            console.log('openRoleModal', userId);
+            selectedUserId = userId;
+            $("#exampleModal").modal()
+        }
+
+        function changeUserActive(userId, active) {
+            let str = eval(active.toLowerCase()) === true ? "deactivate" : "activate";
+
+            if (confirm(`Are you sure you want to ${str} this user?`) === true) {
+                fetch("/users/" + userId + "/active", {
+                    method: "POST",
+                    body: JSON.stringify({userId: userId}),
+                }).then((_res) => {
+                    window.location.href = "/users";
+                });
+            }
+        }
+
+        function addRoleToUser() {
+            const selectedRole = document.getElementById('selectedRole').value;
+            console.log('addRoleToUser', selectedUserId, selectedRole);
+
+            fetch("/users/" + selectedUserId + "/roles", {
+                method: "POST",
+                body: JSON.stringify({userId: selectedUserId, role: selectedRole}),
+            }).then((_res) => {
+                $("#exampleModal").modal('hide')
+                window.location.href = "/users";
+            });
+        }
+
+        function deleteRoleFromUser(userId, role) {
+            if (confirm("Are you sure you want to remove this role?") === true) {
+                fetch("/users/" + userId + "/roles", {
+                    method: "DELETE",
+                    body: JSON.stringify({userId: userId, role: role}),
+                }).then((_res) => {
+                    window.location.href = "/users";
+                });
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,102 @@
+﻿<aside class="workflow @(IsEditing ? "editing" : "")">
+    @if (IsEditing)
+    {
+        <section class="available-tasks">
+            <header>
+                <h4>Available Tasks</h4>
+            </header>
+            <ul>
+                @foreach (var task in AllTasks)
+                {
+                    <li>
+                        <TaskCard Task="task" OnAdd="AddTask" />
+                    </li>
+                }
+            </ul>
+        </section>   
+    }
+
+    <section>
+        <header>
+            <h4>Workflow</h4>
+            <button class="secondary" @onclick=ToggleEdit>@(IsEditing ? "Done" : "Edit")</button>
+        </header>
+        <ul>
+            @foreach (var task in CollectionTasks)
+            {
+                <li>
+                    <TaskCard Task="task" OnDelete="RemoveTask" />
+                </li>
+            }
+        </ul>
+        @if (!CollectionTasks.Any())
+        {
+            <p>You haven't yet added any tasks to this workflow. Click the Edit button to browse the Task Catalog and set up your workflow.</p>
+        }
+    </section>
+
+    <button @onclick=SelectFiles>Upload Specimens</button>
+    <input type="file" name="file" @ref=FilePicker multiple hidden @onchange="Upload" />
+</aside>
+
+@inject IModalService Modal
+@inject IConfiguration Config
+@inject IJSRuntime JS
+@code {
+    [Parameter] public CollectionResponse Collection { get; set; } = null!;
+    List<TorchTask> AllTasks = new();
+    List<TorchTask> CollectionTasks = new();
+    bool IsEditing;
+    bool IsSelected;
+    ElementReference FilePicker;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var workflow = await TorchCommands.GetAllTasksAsync();
+        AllTasks = workflow.Tasks.ToList();
+        if (Collection.Tasks != null)
+            CollectionTasks = Collection.Tasks.ToList();
+    }
+
+    async Task AddTask(TorchTask task)
+    {
+        if (task.Parameters.Any(x => x.Name != "specimen"))
+        {
+            var parameters = new ModalParameters().Add("Task", task);
+            var modal = Modal.Show<TaskParameters>("Set Up Your Task", parameters);
+            await modal.Result;
+        }
+
+        CollectionTasks.Add(task);
+        await SaveAsync();
+    }
+
+    async Task RemoveTask(TorchTask task)
+    {
+        CollectionTasks.Remove(task);
+        await SaveAsync();
+    }
+
+    string UploadUrl => $"{Config["Blossom:Authority"]}/collections/{Collection.Id}/specimens";
+    async Task SelectFiles()
+    {
+        await JS.InvokeVoidAsync("triggerClick", FilePicker);
+    }
+
+    async Task Upload()
+    {
+        await JS.InvokeVoidAsync("upload", FilePicker, UploadUrl);
+    }
+
+    async Task SaveAsync()
+    {
+        var workflow = new TorchTasksResponse
+        {
+            Tasks = CollectionTasks
+        };
+        await TorchCommands.UpdateWorkflowAsync(Collection.Id, workflow);
+
+    }
+
+    void ToggleEdit() => IsEditing = !IsEditing;
+}

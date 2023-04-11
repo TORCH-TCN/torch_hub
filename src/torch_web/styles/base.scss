@@ -1,0 +1,179 @@
+:root {
+  /* Colour Variables */
+  --primary-700: #6941C6;
+  --primary-600: #7F56D9;
+
+  --grey-900: #101828;
+  --grey-700: #344054;
+  --grey-600: #475467;
+  --grey-500: #667085;
+  --grey-400: #98A2B3;
+  --grey-300: #D0D5DD;
+  --grey-200: #EAECF0;
+  --grey-100: #F2F4F7;
+  --grey-50: #F9FAFB;
+
+  --error-700: #B42318;
+
+  --white: #FFFFFF;
+  --off-white: #F9FAFB;
+
+  --overlay-bg: rgba(71, 84, 103, 0.25);
+
+
+  /* Font Weight */
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+
+  /* Shadow Box Styles */
+  --shadow-box-xs: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-box-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
+}
+
+/* Font Awesome Icon Colour Changes */
+.fa-triangle-exclamation {
+  color: var(--error-700);
+}
+
+/* Font sizes */
+p {
+  margin-bottom: 6px;
+
+  &.small {
+    font-size: 14px;
+    line-height: 143%;
+  }
+
+  &.xsmall {
+    font-size: 12px;
+    line-height: 150%;
+  }
+}
+
+a {
+  color: var(--primary-700);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+textarea:focus, input:focus select:focus {
+  outline: none;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  font-weight: var(--font-weight-400);
+}
+
+p, label, h6 {
+  margin: 0;
+}
+
+body {
+  background-color: var(--off-white);
+  position: relative;
+  margin: 0;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.content {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 30px;
+  color: var(--grey-900);
+  text-align: center;
+  line-height: 127%;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--grey-500);
+  text-align: center;
+  line-height: 150%;
+}
+
+h3 {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--grey-500);
+  text-align: center;
+  line-height: 143%;
+}
+
+
+section {
+  margin-top: 55px;
+  padding: 0px 18px;
+}
+
+/* Button/Input styling reset */
+button, input[type="submit"], input[type="reset"] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.right button {
+  color: #667085;
+  float: right;
+  margin-right: 15px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.line {
+  width: 100%;
+  border-bottom: 1px solid var(--grey-100);;
+}
+
+.overlay {
+  background: var(--overlay-bg);
+  position: fixed;
+  width: 100vw;
+  height: 91vh;
+  left: 0;
+  right: 0;
+  top: 81px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 10;
+}
+
+header {
+  margin-bottom: 24px;
+}
+
+@media (min-width: 1200px) {
+  body .container {
+    max-width: 1215px;
+  }
+}
+
+.btn.btn-primary {
+  background: var(--primary-600);
+  border: 1px solid #7F56D9;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+  height: 40px;
+}
+
+.remember-field input {
+  width: auto;
+}
