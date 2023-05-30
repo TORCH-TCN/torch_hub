@@ -1,6 +1,6 @@
 # About the TORCH Hub
 
-The TORCH Hub is a web based application designed to...
+The TORCH Hub is a web-based application designed to help streamline digitization workflows in consortial and collaborative projects. 
 
 ## Contributors
 Diego Barroso
