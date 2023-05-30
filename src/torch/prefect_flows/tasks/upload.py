@@ -101,7 +101,8 @@ def upload_via_minio(collection, path):
 
     result = client.fput_object(bucket, os.path.basename(path), path)
 
-    return result.location
+    #return result.location
+    return result.object_name
 
 
 def mkdir_p(sftp, remote_directory):
