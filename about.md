@@ -17,5 +17,5 @@ Members of the Sparc Cooperative
 
 ## Acknowledgements
 
-Development of this software is supported by the National Science Foundation under Grant No. 1902078.
+Development of this software is supported by the National Science Foundation under Grant No. <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1902078" target="_blank">1902078</a>.
 
