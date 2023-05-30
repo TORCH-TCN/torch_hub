@@ -120,7 +120,8 @@ def upload_via_minio(collection_folder, path, host, username, password):
 
     result = client.fput_object(collection_folder, os.path.basename(path), path)
 
-    return 'https://' + result.location
+    #return 'https://' + result.location
+    return 'https://' + result.location.object_name
 
 
 def mkdir_p(sftp, remote_directory):
