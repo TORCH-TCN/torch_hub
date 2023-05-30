@@ -13,7 +13,7 @@ Antonio Correia
 
 Joseph Young
 
-Members of the Sparc Cooperative
+Members of the <a href="https://sparc.coop/" target="_blank">Sparc Cooperative</a>
 
 ## Acknowledgements
 
