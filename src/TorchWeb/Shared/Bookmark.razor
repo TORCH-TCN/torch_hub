@@ -1,0 +1,18 @@
+﻿<nav class="bookmark" @onclick=Toggle>
+    <figure>
+        @ChildContent
+    </figure>
+    <div class="border"></div>
+    <div class="circle"></div>
+</nav>
+
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    async Task Toggle()
+    {
+        await OnClick.InvokeAsync();
+    }
+}

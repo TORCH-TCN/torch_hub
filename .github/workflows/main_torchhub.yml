@@ -7,7 +7,7 @@ name: Build and deploy Python app to Azure Web App - torchhub
 on:
   push:
     branches:
-      - main
+      - feature/disabled
   workflow_dispatch:
 
 jobs:

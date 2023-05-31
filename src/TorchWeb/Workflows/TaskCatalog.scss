@@ -1,0 +1,16 @@
+.task-catalog {
+    display: grid;
+    grid-template-columns: auto 300px;
+    gap: 32px;
+
+    .task-parameters {
+        margin: 24px 0;
+    }
+
+    button {
+        padding-left: 48px;
+        padding-right: 48px;
+        font-weight: 400;
+        margin-top: 32px;
+    }
+}

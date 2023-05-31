@@ -1,0 +1,68 @@
+.workflow {
+    display: grid;
+    height: calc(100% - 64px);
+    grid-template-rows: auto 1fr 50px;
+    gap: 24px;
+
+    .task {
+        button.secondary {
+            display: none;
+        }
+        &:hover {
+            button.secondary {
+                display: block;
+            }
+        }
+        footer {
+            display: none;
+        }
+    }
+
+    .progress {
+        box-sizing: border-box;
+        position: relative;
+        width: 179px;
+        height: 179px;
+        margin-top: 22px;
+        left: 82px;
+        margin-bottom: 53px;
+
+        img {
+            position: absolute;
+        }
+
+        .inside-circle {
+            width: 116.16px;
+            height: 116.16px;
+            left: 31px;
+            position: absolute;
+            margin-top: 28px;
+
+
+            p {
+                position: absolute;
+                left: 30px;
+                margin-top: 42px;
+                width: 63px;
+                height: 35px;
+                font-weight: 600;
+                font-size: 29px;
+                line-height: 35px;
+                text-align: center;
+                color: #32374E;
+            }
+        }
+    }
+
+    ul {
+        margin-top: 32px;
+    }
+
+    > button {
+        text-align: center;
+        border-radius: 15px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 17px;
+    }
+}

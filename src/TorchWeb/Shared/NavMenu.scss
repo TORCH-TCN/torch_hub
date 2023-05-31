@@ -1,0 +1,22 @@
+.nav-menu {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+
+    ul, > div {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+    }
+
+    a {
+        font-size: 16px;
+        color: #667085;
+
+        &:hover, &.active {
+            color: var(--primary-500);
+        }
+    }
+}

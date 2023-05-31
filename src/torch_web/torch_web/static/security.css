@@ -1,0 +1,57 @@
+.login {
+    width: 360px;
+    margin: 200px auto;
+    text-align: center;
+    color: #101828;
+}
+
+    .login h1 {
+        font-size: 30px;
+        line-height: 38px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .login aside {
+        font-size: 16px;
+        line-height: 24px;
+        color: #667085;
+    }
+
+    .login form {
+        margin: 32px 0;
+        text-align: left;
+    }
+
+    .login label {
+        display: block;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        color: #344054;
+        margin-bottom: 6px;
+    }
+
+    .login form p {
+        margin-bottom: 20px;
+    }
+
+    .login input:not([type=checkbox]) {
+        padding: 10px 14px;
+        width: 100%;
+        height: 44px;
+        background: white;
+        border: 1px solid #d0d5dd;
+        border-radius: 8px;
+    }
+
+    .login input[type=submit] {
+        margin-top: 16px;
+        padding: 10px 18px;
+        width: 100%;
+        height: 44px;
+        background: #7f56d9;
+        border-radius: 8px;
+        color: white;
+        text-align: center;
+    }

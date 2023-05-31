@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4741518c-09e2-4129-9d34-b5cac3fe9c5e}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>MSBuild|venv|$(MSBuildProjectFullPath)</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="src\requirements.txt" />
+    <Content Include="src\torchhub.egg-info\dependency_links.txt" />
+    <Content Include="src\torchhub.egg-info\requires.txt" />
+    <Content Include="src\torchhub.egg-info\SOURCES.txt" />
+    <Content Include="src\torchhub.egg-info\top_level.txt" />
+    <Content Include="src\torch_web\base.html" />
+    <Content Include="src\torch_web\collections\all_collections.html" />
+    <Content Include="src\torch_web\collections\settings.html" />
+    <Content Include="src\torch_web\collections\specimen.html" />
+    <Content Include="src\torch_web\collections\specimens.html" />
+    <Content Include="src\torch_web\collections\torch\static\css\collections.css" />
+    <Content Include="src\torch_web\collections\torch\static\css\settings.css" />
+    <Content Include="src\torch_web\institutions\institutions.html" />
+    <Content Include="src\torch_web\reports\export.html" />
+    <Content Include="src\torch_web\reports\import.html" />
+    <Content Include="src\torch_web\reports\torch\static\css\reports.css" />
+    <Content Include="src\torch_web\security\base.html" />
+    <Content Include="src\torch_web\security\change_password.html" />
+    <Content Include="src\torch_web\security\forgot_password.html" />
+    <Content Include="src\torch_web\security\login_user.html" />
+    <Content Include="src\torch_web\security\register_user.html" />
+    <Content Include="src\torch_web\security\reset_password.html" />
+    <Content Include="src\torch_web\static\css\app.css" />
+    <Content Include="src\torch_web\static\images\arrow-left.svg" />
+    <Content Include="src\torch_web\static\images\BRIT240602.jpg" />
+    <Content Include="src\torch_web\static\images\close_icon.svg" />
+    <Content Include="src\torch_web\static\images\default.jpg" />
+    <Content Include="src\torch_web\static\images\dng_file.png" />
+    <Content Include="src\torch_web\static\images\down-filled-triangular-arrow.png" />
+    <Content Include="src\torch_web\static\images\error.png" />
+    <Content Include="src\torch_web\static\images\list.png" />
+    <Content Include="src\torch_web\static\images\plus.png" />
+    <Content Include="src\torch_web\static\images\plus_icon.svg" />
+    <Content Include="src\torch_web\static\images\retry_icon.svg" />
+    <Content Include="src\torch_web\static\images\upload_icon.svg" />
+    <Content Include="src\torch_web\static\js\alpine_modules.js" />
+    <Content Include="src\torch_web\static\js\dropbox.js" />
+    <Content Include="src\torch_web\static\uploads\Default\BRIT240602.jpg" />
+    <Content Include="src\torch_web\static\uploads\Default\BRIT259313.jpg" />
+    <Content Include="src\torch_web\static\uploads\Default\BRIT259313_MED.jpg" />
+    <Content Include="src\torch_web\static\uploads\Default\BRIT259313_THUMB.jpg" />
+    <Content Include="src\torch_web\static\uploads\Default\BRIT337760.jpg" />
+    <Content Include="src\torch_web\static\uploads\Default\BRIT342753.jpg" />
+    <Content Include="src\torch_web\torch\static\css\app.css" />
+    <Content Include="src\torch_web\users\edit.html" />
+    <Content Include="src\torch_web\users\profile.html" />
+    <Content Include="src\torch_web\users\roles.html" />
+    <Content Include="src\torch_web\users\users.html" />
+    <Content Include="tests\brit_random_urls_100.txt" />
+    <Content Include="tests\brit_random_urls_20.txt" />
+    <Content Include="tests\image_url_notes.txt" />
+    <Content Include="tests\nlu_random_urls_100.txt" />
+    <Content Include="tests\nlu_random_urls_20.txt" />
+    <Content Include="tests\okla_random_urls_100.txt" />
+    <Content Include="tests\okla_random_urls_20.txt" />
+    <Content Include="tests\vdb_random_urls_100.txt" />
+    <Content Include="tests\vdb_random_urls_20.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\torch_cli\torch.py" />
+    <Compile Include="src\torch_hub\collections\collections.py" />
+    <Compile Include="src\torch_hub\collections\specimens.py" />
+    <Compile Include="src\torch_hub\collections\workflow.py" />
+    <Compile Include="src\torch_hub\config\watchdog\watchdog_cli.py" />
+    <Compile Include="src\torch_hub\config\watchdog\watchdog_handler.py" />
+    <Compile Include="src\torch_hub\institutions\institutions.py" />
+    <Compile Include="src\torch_hub\prefect_flows\process_specimen.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\check_catalog_number.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\check_orientation.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\copy_file.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\generate_derivatives.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\herbar.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\log_new_file_name.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\read_dir.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\save_specimen.py" />
+    <Compile Include="src\torch_hub\prefect_flows\tasks\upload.py" />
+    <Compile Include="src\torch_hub\prefect_flows\templates\flow_template.py" />
+    <Compile Include="src\torch_hub\prefect_flows\templates\task_template.py" />
+    <Compile Include="src\torch_hub\reports\reports.py" />
+    <Compile Include="src\torch_hub\users\role.py" />
+    <Compile Include="src\torch_hub\users\user.py" />
+    <Compile Include="src\torch_hub\__init__.py" />
+    <Compile Include="src\torch_web\app.py" />
+    <Compile Include="src\torch_web\collections\collections.py" />
+    <Compile Include="src\torch_web\institutions\institutions.py" />
+    <Compile Include="src\torch_web\notifications\notifications.py" />
+    <Compile Include="src\torch_web\reports\reports.py" />
+    <Compile Include="src\torch_web\users\roles.py" />
+    <Compile Include="src\torch_web\users\users.py" />
+    <Compile Include="src\torch_web\__init__.py" />
+    <Compile Include="tests\tests.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src" />
+    <Folder Include="src\torchhub.egg-info" />
+    <Folder Include="src\torch_cli" />
+    <Folder Include="src\torch_hub" />
+    <Folder Include="src\torch_hub\collections" />
+    <Folder Include="src\torch_hub\config\watchdog" />
+    <Folder Include="src\torch_hub\institutions" />
+    <Folder Include="src\torch_hub\prefect_flows" />
+    <Folder Include="src\torch_hub\prefect_flows\tasks" />
+    <Folder Include="src\torch_hub\prefect_flows\templates" />
+    <Folder Include="src\torch_hub\reports" />
+    <Folder Include="src\torch_hub\users" />
+    <Folder Include="src\torch_web" />
+    <Folder Include="src\torch_web\collections" />
+    <Folder Include="src\torch_web\collections\torch\static\css" />
+    <Folder Include="src\torch_web\institutions" />
+    <Folder Include="src\torch_web\notifications" />
+    <Folder Include="src\torch_web\reports" />
+    <Folder Include="src\torch_web\reports\torch\static\css" />
+    <Folder Include="src\torch_web\security" />
+    <Folder Include="src\torch_web\static\css" />
+    <Folder Include="src\torch_web\static\images" />
+    <Folder Include="src\torch_web\static\js" />
+    <Folder Include="src\torch_web\static\uploads\Default" />
+    <Folder Include="src\torch_web\torch\static\css" />
+    <Folder Include="src\torch_web\users" />
+    <Folder Include="tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="venv\">
+      <Id>venv</Id>
+      <Description>venv (Python 3.9 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <Version>3.9</Version>
+      <Architecture>X64</Architecture>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

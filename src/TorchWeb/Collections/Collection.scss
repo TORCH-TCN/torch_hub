@@ -1,0 +1,46 @@
+.collection {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    padding: 32px;
+    grid-template-columns: 32px 1fr 32px 0px 32px 0vw 32px;
+    gap: 4px;
+    background: linear-gradient(180deg, #FFFFFF 1.34%, #DDDEE8 84.08%);
+    transition: 0.3s ease-in-out;
+
+    &-specimens {
+        grid-template-columns: 32px 1fr 32px 0fr 32px 0px 32px;
+
+        &-taskboard {
+            grid-template-columns: 32px 1fr 32px 0fr 32px 300px 32px;
+        }
+    }
+
+    &-catalog {
+        grid-template-columns: 32px 0fr 32px 1fr 32px 0px 32px;
+
+        &-taskboard {
+            grid-template-columns: 32px 0fr 32px 1fr 32px 300px 32px;
+        }
+    }
+
+    > * {
+        overflow: hidden;
+    }
+
+    > section {
+        padding: 32px 0;
+    }
+
+    .deleteCollectionBtn {
+        margin-bottom: 15px;
+    }
+
+    .back {
+        color: var(--grey-500);
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 10px;
+    }
+}

@@ -1,0 +1,140 @@
+.task {
+    margin: 1px 0;
+    position: relative;
+
+    &:hover {
+        cursor: pointer;
+
+        header {
+            background-color: #f4ebff;
+
+            aside {
+                display: none;
+            }
+        }
+    }
+
+    &-Error {
+        header {
+            h4 {
+                color: #e3392d !important;
+            }
+
+            aside {
+                color: #e3392d !important;
+            }
+        }
+
+        footer aside {
+            color: #F04438 !important;
+        }
+    }
+
+    header {
+        border-radius: 32px;
+        background: white;
+        display: flex;
+        margin-bottom: 8px;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 11px 16px;
+
+
+        h4 {
+            font-size: 13px;
+            margin-left: 15px;
+            color: var(--grey-800);
+        }
+
+        aside {
+            position: absolute;
+            right: 24px;
+            color: #777;
+            font-size: 13px;
+        }
+    }
+
+    aside {
+        font-size: 17px;
+        font-weight: 400;
+        color: #dfdfe3;
+    }
+
+    footer {
+        padding: 8px 16px;
+        margin-bottom: 32px;
+
+        aside {
+            color: #777;
+        }
+    }
+
+    button.secondary {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        height: 46px;
+        font-size: 12px;
+        border-radius: 0;
+        background: transparent;
+        color: #7f56d9;
+
+        &:hover {
+            background: transparent;
+            text-decoration: underline;
+        }
+    }
+
+
+    dl {
+        font-size: 17px;
+        margin: 16px 0;
+        display: none;
+
+        dt {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        dd {
+            overflow: hidden;
+        }
+
+        &.results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
+
+    .images {
+        display: flex;
+        gap: 10px;
+
+        figure {
+            background: linear-gradient(0.36deg, rgba(255, 255, 255, 0.59) 0.41%, rgba(255, 255, 255, 0) 179.92%);
+            border-radius: 22px;
+            width: 174px;
+            padding: 16px;
+
+            img {
+                max-inline-size: 100%;
+                block-size: auto;
+                object-fit: contain;
+            }
+
+            figcaption {
+                color: #434966;
+                font-size: 12px;
+                padding-top: 16px;
+            }
+        }
+    }
+}
+
+.selected .task header {
+    border: 1px solid #7f56d9;
+    background-color: #f4ebff;
+}

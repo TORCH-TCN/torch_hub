@@ -1,0 +1,45 @@
+﻿<figure class="specimen-card">
+    <img src="@ImageUrl" alt="@(Specimen.Catalog_number ?? Specimen.Create_date.ToString("d"))" />
+    <figcaption>
+        <h3>@Specimen.Catalog_number</h3>
+        <time>@Specimen.Create_date.ToString("d")</time>
+        <aside>
+            @Status
+        </aside>
+        <button @onclick=Delete @onclick:stopPropagation=true>Delete</button>
+    </figcaption>
+</figure>
+
+@inject IConfiguration Config
+@inject IJSRuntime JS
+
+@code {
+    [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    SpecimenResponse LocalSpecimen;
+    string? Status;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LocalSpecimen = Specimen;
+        Socket.On($"specimen_updated_{Specimen.Id}", (response) =>
+        {
+            LocalSpecimen.Catalog_number = response.GetValue<string>(0);
+            LocalSpecimen.Create_date = response.GetValue<DateTime>(0);
+            Status = response.GetValue<string>(1);
+            StateHasChanged();
+        });
+    }
+
+    string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + Specimen.Card_image?.External_url;
+
+    void Go() => Nav.NavigateTo($"/collections/{Specimen.Collection_id}/{Specimen.Id}");
+
+    async Task Delete()
+    {
+        var confirm = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete this specimen?");
+        if (confirm)
+            await TorchCommands.DeleteSpecimenAsync(Specimen.Collection_id, Specimen.Id);
+    }
+}

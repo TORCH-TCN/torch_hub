@@ -1,0 +1,50 @@
+﻿@page "/collections/{CollectionId:int}/{SpecimenId:int}"
+
+<div class="specimen-detail">
+    @if (FullSpecimen != null)
+    {
+        <section class="tasks">
+            @foreach (var task in FullSpecimen.Tasks.OrderBy(x => x.Start_date))
+            {
+                <TaskCard Task="task" />
+            }
+        </section>
+        <figure>
+            @if (ImageUrl != null)
+            {
+                <img src="@SelectedImageUrl" alt="@FullSpecimen.Catalog_number" />
+            }
+        </figure>
+    }
+</div>
+
+@inject IConfiguration Config
+@code {
+    [Parameter] public int CollectionId { get; set; }
+    [Parameter] public int SpecimenId { get; set; }
+    [Parameter] public SpecimenResponse? Specimen { get; set; }
+    SpecimenImageResponse? SelectedImage;
+    SpecimenResponse? FullSpecimen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FullSpecimen = Specimen == null
+            ? await TorchCommands.GetSpecimenAsync(CollectionId, SpecimenId)
+            : await TorchCommands.GetSpecimenAsync(Specimen.Collection_id, Specimen.Id);
+
+        SelectedImage = FullSpecimen.Images.FirstOrDefault();
+    }
+
+    //protected override async Task OnParametersSetAsync()
+    //{
+    //    //SelectedImage = Specimen.Images.FirstOrDefault();
+    //    //SelectedImage = FullSpecimen.Images.FirstOrDefault();
+    //}
+
+    string? ImageUrl => (FullSpecimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + FullSpecimen.Card_image?.External_url;
+
+    string? SelectedImageUrl => SelectedImage?.External_url ?? ImageUrl;
+
+    void Select(SpecimenImageResponse img) => SelectedImage = img;
+}

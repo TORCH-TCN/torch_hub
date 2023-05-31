@@ -1,0 +1,142 @@
+﻿@implements IDisposable
+@page "/collections/{Id:int}"
+
+<CascadingValue Value="Socket">
+    <section class="collection @ActiveTabClass">
+        <Bookmark OnClick="GoToSpecimens">
+            <SpecimensIcon />
+        </Bookmark>
+
+        @if (SelectedSpecimen != null)
+        {
+            <section>
+                <header>
+                    <aside class="back" @onclick=CloseSpecimenDetails>
+                        &larr; Back
+                    </aside>
+                    <h1>
+                        <a href="/">Collections</a> &#8250; @Model?.Name &#8250; @SelectedSpecimen.Catalog_number
+                    </h1>
+                </header>
+                <SpecimenDetail Specimen="SelectedSpecimen" />
+            </section>
+        }
+        else
+        {
+            <section>
+                <header>
+                    <h1><a href="/">Collections</a> &#8250; @Model?.Name</h1>
+                    <h2>Specimens</h2>
+                    <button class="deleteCollectionBtn" @onclick=Delete>Delete Collection</button>
+                </header>
+
+                <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="DisplaySpecimenDetails" />
+            </section>
+        }
+
+        <Bookmark OnClick="GoToCatalog">
+            <Catalog />
+        </Bookmark>
+
+        <section>
+            <header>
+                <h1>Task Catalog</h1>
+            </header>
+            <TaskCatalog OnTaskAdded="AddTask" />
+        </section>
+
+        <Bookmark OnClick="ToggleTaskboard">
+            <TaskBoard />
+        </Bookmark>
+
+        <section>
+            <header>
+                <h1>Task Board</h1>
+            </header>
+            @if (Model != null)
+            {
+                <Workflow Collection="Model" />
+            }
+        </section>
+
+        <Bookmark>
+            <Settings />
+        </Bookmark>
+    </section>
+</CascadingValue>
+
+
+@inject IConfiguration Config
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+@code {
+    [Parameter] public int Id { get; set; }
+    public SocketIOClient.SocketIO Socket { get; set; } = null!;
+    string ActiveTab = "specimens";
+    bool IsTaskboardActive = true;
+    string ActiveTabClass => $"collection-{ActiveTab}{(IsTaskboardActive ? "-taskboard" : "")}";
+
+    CollectionResponse? Model;
+    SpecimensResponse? TheSpecimens;
+    SpecimenResponse? SelectedSpecimen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
+        await Socket.ConnectAsync();
+
+        Socket.On("specimen_added", async (response) =>
+        {
+            TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+            StateHasChanged();
+        });
+
+        Model = await TorchCommands.GetCollectionAsync(Id);
+        TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+    }
+
+    void GoToSpecimens() => ActiveTab = "specimens";
+
+    void GoToCatalog() => ActiveTab = "catalog";
+
+    void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
+
+    void Select(SpecimenResponse specimen)
+    {
+        SelectedSpecimen = specimen;
+        IsTaskboardActive = false;
+    }
+
+    void DisplaySpecimenDetails(SpecimenResponse specimen)
+    {
+        SelectedSpecimen = specimen;
+        IsTaskboardActive = false;
+    }
+
+    void CloseSpecimenDetails() => SelectedSpecimen = null;
+
+    async Task AddTask(TorchTask task)
+    {
+        Model!.Tasks.Add(task);
+        await TorchCommands.UpdateWorkflowAsync(Id, new TorchTasksResponse
+            {
+                Tasks = Model.Tasks
+            });
+        IsTaskboardActive = true;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        Socket.Dispose();
+    }
+
+    async Task Delete()
+    {        
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this collection?");
+        if (confirm)
+            await TorchCommands.DeleteCollectionAsync(Model.Id);
+            NavigationManager.NavigateTo("/");
+    }
+}
