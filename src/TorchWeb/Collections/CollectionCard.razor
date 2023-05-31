@@ -1,0 +1,20 @@
+﻿<article class="collection-card" @onclick=Go>
+    <header>
+        <h2>@Collection.Name</h2>
+        <aside>@Collection.Specimencount images</aside>    
+    </header>
+    <section>
+        @foreach (var img in Collection.Cardimg)
+        {
+            <img src="@img.External_url" alt="Image @img.Id" />
+        }
+    </section>
+</article>
+
+@code {
+    [Parameter]
+    public CollectionResponse Collection { get; set; } = null!;
+
+    void Go() => Nav.NavigateTo($"/collections/{Collection.Id}");
+}
+

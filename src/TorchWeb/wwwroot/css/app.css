@@ -1,0 +1,568 @@
+﻿.main-layout {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: auto;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #f9fafb;
+}
+.main-layout > header {
+  background: #ffffff;
+  padding: 0 7vw;
+}
+.main-layout > main {
+  padding: 0;
+  overflow-y: auto;
+}
+.main-layout > main > header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-menu {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-menu ul, .nav-menu > div {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-menu a {
+  font-size: 16px;
+  color: #667085;
+}
+.nav-menu a:hover, .nav-menu a.active {
+  color: var(--primary-500);
+}
+
+.bookmark {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+.bookmark:hover {
+  transform: scale(1.1, 1.01);
+  cursor: pointer;
+}
+.bookmark figure {
+  margin-bottom: 12px;
+}
+.bookmark .border {
+  width: 1px;
+  height: 90vh;
+  border-left: 1px solid white;
+}
+.bookmark .circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+}
+
+.collections-index {
+  padding: 32px;
+}
+
+.collection {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  padding: 32px;
+  grid-template-columns: 32px 1fr 32px 0px 32px 0vw 32px;
+  gap: 4px;
+  background: linear-gradient(180deg, #FFFFFF 1.34%, #DDDEE8 84.08%);
+  transition: 0.3s ease-in-out;
+}
+.collection-specimens {
+  grid-template-columns: 32px 1fr 32px 0fr 32px 0px 32px;
+}
+.collection-specimens-taskboard {
+  grid-template-columns: 32px 1fr 32px 0fr 32px 300px 32px;
+}
+.collection-catalog {
+  grid-template-columns: 32px 0fr 32px 1fr 32px 0px 32px;
+}
+.collection-catalog-taskboard {
+  grid-template-columns: 32px 0fr 32px 1fr 32px 300px 32px;
+}
+.collection > * {
+  overflow: hidden;
+}
+.collection > section {
+  padding: 32px 0;
+}
+.collection .deleteCollectionBtn {
+  margin-bottom: 15px;
+}
+.collection .back {
+  color: var(--grey-500);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+
+.specimen-card {
+  width: 226.86px;
+  height: 248px;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.25)) drop-shadow(0px 0px 9px rgba(227, 227, 227, 0.1));
+  border-radius: 22px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  overflow: hidden;
+}
+.specimen-card:hover {
+  z-index: 1;
+  transform: scale(1.1, 1.1);
+}
+.specimen-card figcaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 16px;
+}
+.specimen-card figcaption h3 {
+  font-size: 17px;
+  line-height: 21px;
+  color: var(--grey-800);
+  font-weight: 500;
+}
+.specimen-card figcaption time {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--grey-400);
+}
+.specimen-card figcaption aside {
+  font-size: 14px;
+  color: gray;
+}
+.specimen-card figcaption button {
+  background: transparent;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  color: var(--primary-500);
+  font-size: 12px;
+  display: none;
+}
+.specimen-card figcaption button:hover {
+  text-decoration: underline;
+}
+.specimen-card:hover figcaption button {
+  display: block;
+}
+.specimen-card img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+  object-fit: cover;
+  object-position: center;
+  text-align: center;
+  color: var(--grey-500);
+  font-size: 12px;
+  transform: scale(1.1);
+}
+.specimen-card img[alt]:after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #eee;
+  font-weight: 300;
+  line-height: 2;
+  text-align: center;
+  content: attr(alt);
+}
+.specimen-card progress {
+  height: 8px;
+  border-radius: 16px;
+}
+.specimen-card progress::-webkit-progress-bar {
+  background: #eaecf0;
+  border-radius: 12px;
+}
+
+.collection-card {
+  border: 1px solid #dfdfe3;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  align-items: center;
+  height: 239px;
+  background: white;
+  cursor: pointer;
+  margin: 30px;
+  padding: 24px;
+  transition: transform 0.2s ease-in-out;
+}
+.collection-card:hover {
+  transform: scale(1.03, 1.03);
+}
+.collection-card header {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 30px;
+  color: #242427;
+}
+.collection-card header aside {
+  font-size: 16px;
+  color: var(--grey-500);
+  font-weight: 400;
+}
+.collection-card section {
+  justify-self: flex-end;
+}
+.collection-card section img {
+  height: 160px;
+  border-radius: 8px;
+  width: auto;
+  min-width: 100px;
+  text-align: center;
+  color: var(--grey-500);
+  font-size: 12px;
+  position: relative;
+}
+.collection-card section img[alt]:after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #eee;
+  font-weight: 300;
+  line-height: 2;
+  text-align: center;
+  content: attr(alt);
+}
+
+.specimen-detail {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 32px;
+}
+.specimen-detail > section {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.specimen-detail > figure img {
+  max-inline-size: 100%;
+  max-height: 80vh;
+  block-size: auto;
+  object-fit: contain;
+}
+
+.selectedNumber {
+  justify-content: flex-end;
+  display: flex;
+  bottom: 37px;
+  position: relative;
+}
+.selectedNumber p {
+  color: #7F56D9;
+}
+
+.specimen-list {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 16px;
+}
+.specimen-list > aside {
+  color: gray;
+  font-size: 14px;
+}
+.specimen-list .selected .specimen-card {
+  filter: drop-shadow(0px 0px 1px #7F56D9) drop-shadow(0px 0px 9px #7F56D9);
+}
+.specimen-list .selected .specimen-card figcaption {
+  background-color: #7F56D9;
+}
+.specimen-list .selected .specimen-card figcaption h3 {
+  color: #FFFFFF;
+}
+.specimen-list .selected .specimen-card figcaption time {
+  color: #CEBCF8;
+}
+
+.add-collection p {
+  margin-bottom: 24px;
+}
+.add-collection label, .add-collection input {
+  display: block;
+}
+.add-collection input {
+  margin: 8px 0 16px;
+  width: 100%;
+  background: white;
+  border: 1px solid #d0d5dd;
+}
+
+.workflow {
+  display: grid;
+  height: calc(100% - 64px);
+  grid-template-rows: auto 1fr 50px;
+  gap: 24px;
+}
+.workflow .task button.secondary {
+  display: none;
+}
+.workflow .task:hover button.secondary {
+  display: block;
+}
+.workflow .task footer {
+  display: none;
+}
+.workflow .progress {
+  box-sizing: border-box;
+  position: relative;
+  width: 179px;
+  height: 179px;
+  margin-top: 22px;
+  left: 82px;
+  margin-bottom: 53px;
+}
+.workflow .progress img {
+  position: absolute;
+}
+.workflow .progress .inside-circle {
+  width: 116.16px;
+  height: 116.16px;
+  left: 31px;
+  position: absolute;
+  margin-top: 28px;
+}
+.workflow .progress .inside-circle p {
+  position: absolute;
+  left: 30px;
+  margin-top: 42px;
+  width: 63px;
+  height: 35px;
+  font-weight: 600;
+  font-size: 29px;
+  line-height: 35px;
+  text-align: center;
+  color: #32374E;
+}
+.workflow ul {
+  margin-top: 32px;
+}
+.workflow > button {
+  text-align: center;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+.task-catalog {
+  display: grid;
+  grid-template-columns: auto 300px;
+  gap: 32px;
+}
+.task-catalog .task-parameters {
+  margin: 24px 0;
+}
+.task-catalog button {
+  padding-left: 48px;
+  padding-right: 48px;
+  font-weight: 400;
+  margin-top: 32px;
+}
+
+.task {
+  margin: 1px 0;
+  position: relative;
+}
+.task:hover {
+  cursor: pointer;
+}
+.task:hover header {
+  background-color: #f4ebff;
+}
+.task:hover header aside {
+  display: none;
+}
+.task-Error header h4 {
+  color: #e3392d !important;
+}
+.task-Error header aside {
+  color: #e3392d !important;
+}
+.task-Error footer aside {
+  color: #F04438 !important;
+}
+.task header {
+  border-radius: 32px;
+  background: white;
+  display: flex;
+  margin-bottom: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 11px 16px;
+}
+.task header h4 {
+  font-size: 13px;
+  margin-left: 15px;
+  color: var(--grey-800);
+}
+.task header aside {
+  position: absolute;
+  right: 24px;
+  color: #777;
+  font-size: 13px;
+}
+.task aside {
+  font-size: 17px;
+  font-weight: 400;
+  color: #dfdfe3;
+}
+.task footer {
+  padding: 8px 16px;
+  margin-bottom: 32px;
+}
+.task footer aside {
+  color: #777;
+}
+.task button.secondary {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 46px;
+  font-size: 12px;
+  border-radius: 0;
+  background: transparent;
+  color: #7f56d9;
+}
+.task button.secondary:hover {
+  background: transparent;
+  text-decoration: underline;
+}
+.task dl {
+  font-size: 17px;
+  margin: 16px 0;
+  display: none;
+}
+.task dl dt {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.task dl dd {
+  overflow: hidden;
+}
+.task dl.results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.task .images {
+  display: flex;
+  gap: 10px;
+}
+.task .images figure {
+  background: linear-gradient(0.36deg, rgba(255, 255, 255, 0.59) 0.41%, rgba(255, 255, 255, 0) 179.92%);
+  border-radius: 22px;
+  width: 174px;
+  padding: 16px;
+}
+.task .images figure img {
+  max-inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}
+.task .images figure figcaption {
+  color: #434966;
+  font-size: 12px;
+  padding-top: 16px;
+}
+
+.selected .task header {
+  border: 1px solid #7f56d9;
+  background-color: #f4ebff;
+}
+
+.task-parameters p {
+  margin-bottom: 24px;
+}
+.task-parameters label, .task-parameters input {
+  display: block;
+}
+.task-parameters input {
+  margin: 8px 0 16px;
+  width: 100%;
+  background: white;
+  border: 1px solid #d0d5dd;
+}
+
+#blazor-error-ui {
+  display: none;
+}
+
+h1 {
+  font-size: 20px;
+  line-height: 24.2px;
+  letter-spacing: 0.05em;
+  margin-bottom: 42px;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+button {
+  border-radius: 15px;
+}
+
+button.secondary {
+  background-color: var(--grey-400);
+}
+button.secondary:hover {
+  background-color: var(--grey-300);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #7f56d9;
+  border-radius: 10px;
+}
+
+:root {
+  --grey-900: #111219;
+  --grey-800: #212433;
+  --grey-500: #606580;
+  --grey-400: #7A8099;
+}

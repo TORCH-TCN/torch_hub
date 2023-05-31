@@ -1,0 +1,29 @@
+﻿@inherits SparcModal
+
+<div class="add-collection">
+    <p>
+        Add a new collection to your institution.
+    </p>
+
+    <label>
+        Collection Name
+        <input @bind=Request.Name />
+    </label>
+
+    <label>
+        Collection Code
+        <input @bind=Request.Code />
+    </label>
+
+    <button @onclick=Save>Create Collection</button>
+</div>
+
+@code {
+    AddCollectionRequest Request = new();
+
+    async Task Save()
+    {
+        await TorchCommands.AddCollectionAsync(Request);
+        await Ok();
+    }
+}

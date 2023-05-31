@@ -1,0 +1,61 @@
+﻿@if (SelectedSpecimens.Count() >= 1)
+{
+    <header class="selectedNumber">
+        <p class="xsmall">@SelectedSpecimens.Count() Selected</p>
+    </header>
+}
+<section class="specimen-list">
+    @if (Specimens != null)
+    {
+        @foreach (var specimen in Specimens)
+        {
+            <article @onclick="@(() => Select(specimen))" class="@(SelectedSpecimens.Contains(specimen) ? "selected" : "")">
+                <SpecimenCard Specimen="specimen" @key=specimen.Id />
+            </article>
+        }
+
+        @if (Specimens.Count() == 0)
+        {
+            <aside>
+                No specimens have been added to this collection yet.
+                Click the Upload Specimens button at the bottom right to begin uploading.
+            </aside>
+        }
+    }
+</section>
+
+@inject IJSRuntime JSRuntime
+
+@code {
+    [Parameter] public IEnumerable<SpecimenResponse> Specimens { get; set; } = null!;
+    [Parameter] public EventCallback<SpecimenResponse> OnSelect { get; set; }
+    int i = 0;
+
+    public List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();
+
+    async Task Select(SpecimenResponse specimen)
+    {
+        if (await IsCtrlKeyPressedAsync())
+        {
+            if (SelectedSpecimens.Contains(specimen))
+            {
+                SelectedSpecimens.Remove(specimen);
+            }
+            else
+            {
+                SelectedSpecimens.Add(specimen);
+            }
+        }
+        else
+        {
+            SelectedSpecimens.Clear();
+            await OnSelect.InvokeAsync(specimen);
+        }
+    }
+
+    async Task<bool> IsCtrlKeyPressedAsync()
+    {
+        var ctrlKey = await JSRuntime.InvokeAsync<bool>("ctrlKeyPressed", new object[] { });
+        return ctrlKey;
+    }
+}

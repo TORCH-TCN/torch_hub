@@ -1,0 +1,110 @@
+﻿<article class="task task-@(RunState) @(IsSelected ? "selected" : "")" @onclick=Select>
+    <header>
+        <img src="/images/ellipse186.png" alt="" />
+        <h4>@Task.Name</h4>
+        @*<aside>@RunState</aside>*@
+    </header>
+
+    @if (DisplayParameters.Any())
+    {
+        <dl>
+            @foreach (var parameter in DisplayParameters)
+            {
+                <dt>@parameter.Name</dt>
+                <dd title="@parameter.Value">@parameter.Value</dd>
+            }
+        </dl>
+    }
+
+    @if (OnDelete.HasDelegate)
+    {
+        <button class="secondary" @onclick="Delete">Delete</button>
+    }
+
+    @if (RunMessage != null)
+    {
+        <footer>
+            @if (Derivatives != null)
+            {
+                <div class="images">
+                    @foreach (var img in Derivatives)
+                    {
+                        <figure @onclick="@(() => SelectImage(img.size))">
+                            <img src="@img.url" alt="@img.size" />
+                            <figcaption>
+                                @img.size (@img.width x @img.height)
+                            </figcaption>
+                        </figure>
+                    }
+                </div>
+            }
+            else if (Result != null)
+            {
+                <dl class="results">
+                    @foreach (var item in Result)
+                    {
+                        <dt>@item.Key</dt>
+                        @if (item.Value.ToString()?.StartsWith("http") == true)
+                        {
+                            <dd>
+                                <a href="@item.Value.ToString()" target="_blank">@item.Value</a>
+                            </dd>
+                        }
+                        else
+                        {
+                            <dd>
+                                @item.Value
+                            </dd>
+                        }
+                    }
+                </dl>
+            }
+            else
+            {
+                <aside>@RunMessage</aside>
+            }
+        </footer>
+    }
+</article>
+
+@code {
+    [Parameter] public TorchTask Task { get; set; } = null!;
+    [Parameter] public EventCallback<TorchTask> OnAdd { get; set; }
+    [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    record Derivative(string url, string size, int width, int height);
+    bool IsSelected;
+    string? RunState;
+    string? RunMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        RunState = Task.Run_state;
+        RunMessage = Task.Run_message;
+        Socket.On(Task.Func_name, (response) =>
+        {
+            RunState = response.GetValue<string>(2);
+            RunMessage = response.GetValue<string>(3);
+            StateHasChanged();
+        });
+    }
+
+    Dictionary<string, object>? Result => RunMessage?.StartsWith("{") == true
+        ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(RunMessage)
+        : null;
+
+    List<Derivative?>? Derivatives => Task.Name == "Generate Derivatives" && Result != null
+        ? Result.Keys.Select(x => System.Text.Json.JsonSerializer.Deserialize<Derivative>(Result[x].ToString())).ToList()
+        : null;
+
+    List<TorchTaskParameter> DisplayParameters => Task.Parameters
+        .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
+        .ToList();
+
+    async Task Add() => await OnAdd.InvokeAsync(Task);
+
+    async Task Delete() => await OnDelete.InvokeAsync(Task);
+
+    void Select() => IsSelected = !IsSelected;
+    void SelectImage(object img) => Console.WriteLine(img);
+}

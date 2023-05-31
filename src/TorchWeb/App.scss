@@ -1,0 +1,67 @@
+@import 'Shared/MainLayout';
+@import 'Shared/NavMenu';
+@import 'Shared/Bookmark';
+
+@import 'Collections/Index';
+@import 'Collections/Collection';
+@import 'Collections/SpecimenCard';
+@import 'Collections/CollectionCard';
+@import 'Collections/SpecimenDetail';
+@import 'Collections/SpecimenList';
+@import 'Collections/AddCollection';
+
+@import 'Workflows/Workflow';
+@import 'Workflows/TaskCatalog';
+@import 'Workflows/TaskCard';
+@import 'Workflows/TaskParameters';
+
+#blazor-error-ui {
+    display: none;
+}
+
+h1 {
+    font-size: 20px;
+    line-height: 24.2px;
+    letter-spacing: 0.05em;
+    margin-bottom: 42px;
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+button {
+    border-radius: 15px;
+}
+
+button.secondary {
+    background-color: var(--grey-400);
+
+    &:hover {
+        background-color: var(--grey-300);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    &-track {
+        background: transparent;
+    }
+    &-thumb {
+        background: #7f56d9;
+        border-radius: 10px;
+    }
+}
+
+:root {
+    --grey-900: #111219;
+    --grey-800: #212433;
+    --grey-500: #606580;
+    --grey-400: #7A8099;
+}

@@ -1,0 +1,69 @@
+﻿<section class="task-catalog">
+    <section>
+        <header>
+            <h2>Configuration</h2>
+        </header>
+        @if (SelectedTask != null)
+        {
+            <section>
+                <header>
+                    <h3>@SelectedTask.Name</h3>
+                    <aside>@SelectedTask.Description</aside>
+                </header>
+
+                <section class="task-parameters">
+                    @foreach (var key in SelectedTask.Parameters.Where(x => x.Name != "specimen"))
+                    {
+                        <label>
+                            @key.Name
+                            <input @bind="@key.Value" />
+                        </label>
+                    }
+                </section>
+
+                <button @onclick=AddTask>Add to Task Board</button>
+            </section>
+        }
+    </section>
+    <section>
+        <header>
+            <h2>Available Tasks</h2>
+        </header>
+        @if (Tasks != null)
+        {
+            <ul>
+                @foreach (var task in Tasks)
+                {
+                    <li class="@(SelectedTask == task ? "selected" : "")" @onclick="@(() => Select(task))">
+                        <TaskCard Task="task" />
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+</section>
+
+@code {
+    [Parameter] public EventCallback<TorchTask> OnTaskAdded { get; set; }
+    ICollection<TorchTask> Tasks { get; set; } = null!;
+    TorchTask? SelectedTask { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tasks = (await TorchCommands.GetAllTasksAsync()).Tasks;
+    }
+
+    void Select(TorchTask task)
+    {
+        SelectedTask = SelectedTask == task ? null : task;
+    }
+
+    async Task AddTask()
+    {
+        if (SelectedTask == null)
+            return;
+        
+        await OnTaskAdded.InvokeAsync(SelectedTask);   
+    }
+}

@@ -1,0 +1,60 @@
+{% extends "../base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <h3 align="left" class="my-4">Institutions</h3>
+
+    <div class="form-container">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for institution in institutions %}
+                <tr>
+                    <td>{{ institution.name }}</td>
+                    <td>{{ institution.code }}</td>
+                    <td>
+                        <button type="button" class="close" onClick="deleteInstitution({{ institution.id }})">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+        <form method="POST" class="form-inline">
+            <div class="form-group">
+                <label for="institution" class="mr-2">Name:</label>
+                <input type="text" name="institution" id="institution" class="form-control"/>
+            </div>
+            <div class="form-group mx-2">
+                <label for="code" class="mr-2">Code:</label>
+                <input type="text" name="code" id="code" class="form-control"/>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Add Institution</button>
+
+        </form>
+    </div>
+
+    <script>
+        function deleteInstitution(institutionId) {
+            if (confirm("Are you sure you want to remove this institution?") === true) {
+                fetch("/delete-institution", {
+                    method: "POST",
+                    body: JSON.stringify({institutionId: institutionId}),
+                }).then((_res) => {
+                    window.location.href = "/institutions";
+                });
+            }
+        }
+    </script>
+
+{% endblock %}

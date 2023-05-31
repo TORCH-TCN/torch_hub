@@ -1,0 +1,16 @@
+.add-collection {
+    p {
+        margin-bottom: 24px;
+    }
+
+    label, input {
+        display: block;
+    }
+
+    input {
+        margin: 8px 0 16px;
+        width: 100%;
+        background: white;
+        border: 1px solid #d0d5dd;
+    }
+}

@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
+@page "/"
+
+<div class="collections-index">
+    <header>
+        <h1>All Collections</h1>
+        <button @onclick=Add>Add New Collection</button>
+    </header>
+
+    @if (Model != null)
+    {
+        <section>
+            @foreach (var collection in Model.Collections)
+            {
+                @if (collection.Deleted_date == null)
+                {
+                    <CollectionCard Collection="collection" />
+                }
+            }
+        </section>
+    }
+</div>
+
+@inject IModalService Modal
+@code {
+
+    CollectionsResponse? Model;
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await TorchCommands.GetCollectionsAsync();
+    }
+
+    async Task Add()
+    {
+        var modal = Modal.Show<AddCollection>();
+        await modal.Result;
+        Model = await TorchCommands.GetCollectionsAsync();
+    }
+}

@@ -1,0 +1,37 @@
+﻿@using Sparc.Blossom.Authentication;
+@using System.Security.Claims;
+
+<nav class="nav-menu">
+    <ul>
+        <li>
+            <NavLink href="/" Match="NavLinkMatch.Prefix">
+                Collections
+            </NavLink>
+        </li>
+        <li>
+            <NavLink href="/Settings" Match="NavLinkMatch.Prefix">
+                Settings
+            </NavLink>
+        </li>
+    </ul>
+    <div>
+        <p>Hi, @User?.Identity?.Name!</p>
+        <img src="/images/notification.svg" alt="Notifications" />
+        <button @onclick=LogoutAsync>Log Out</button>
+    </div>
+</nav>
+
+@inject BlossomAuthenticationStateProvider Auth
+@code {
+    ClaimsPrincipal? User;
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await Auth.GetAuthenticationStateAsync();
+        User = user?.User;
+    }
+
+    async Task LogoutAsync()
+    {
+        await Auth.LogoutAsync();
+    }
+}

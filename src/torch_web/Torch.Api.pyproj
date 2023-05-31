@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a21b8773-30bd-4adc-9cd3-986092994965}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>app.py</StartupFile>
+    <SearchPath>..\..\src</SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <InterpreterId />
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <PythonWsgiHandler>{StartupModule}.wsgi_app</PythonWsgiHandler>
+    <Name>Torch.Api</Name>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".env" />
+    <Content Include="requirements.txt" />
+    <Content Include="torch_web\security\base.html" />
+    <Content Include="torch_web\security\change_password.html" />
+    <Content Include="torch_web\security\forgot_password.html" />
+    <Content Include="torch_web\security\login_user.html" />
+    <Content Include="torch_web\security\register_user.html" />
+    <Content Include="torch_web\security\reset_password.html" />
+    <Content Include="torch_web\static\security.css" />
+    <Content Include="torch_web\security\_macros.html" />
+    <Content Include="torch_web\static\uploads\Default\BRIT240602.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT259313.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT259313_MED.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT259313_THUMB.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT337760.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT342753.jpg" />
+    <Content Include="torch_web\templates\swagger.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="torch_web\prefect_flows\blocks\upload_credentials.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="torch_web\workflows\tasks\check_duplicate.py" />
+    <Compile Include="torch_web\workflows\tasks\get_exif_data.py" />
+    <Compile Include="torch_web\workflows\tasks\recognize_text.py" />
+    <Compile Include="torch_web\workflows\workflows.py" />
+    <Compile Include="torch_web\workflows\workflow_api.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="torch_web\__init__.py" />
+    <Compile Include="app.py" />
+    <Compile Include="torch_web\collections\collections_api.py" />
+    <Compile Include="torch_web\collections\collections.py" />
+    <Compile Include="torch_web\config\watchdog\watchdog_cli.py" />
+    <Compile Include="torch_web\config\watchdog\watchdog_handler.py" />
+    <Compile Include="torch_web\institutions\institutions_api.py" />
+    <Compile Include="torch_web\institutions\institutions.py" />
+    <Compile Include="torch_web\notifications\notifications_api.py" />
+    <Compile Include="torch_web\prefect_flows\process_specimen.py" />
+    <Compile Include="torch_web\workflows\tasks\check_catalog_number.py" />
+    <Compile Include="torch_web\workflows\tasks\check_orientation.py" />
+    <Compile Include="torch_web\workflows\tasks\copy_file.py" />
+    <Compile Include="torch_web\workflows\tasks\generate_derivatives.py" />
+    <Compile Include="torch_web\workflows\tasks\herbar.py" />
+    <Compile Include="torch_web\workflows\tasks\upload.py" />
+    <Compile Include="torch_web\reports\reports_api.py" />
+    <Compile Include="torch_web\reports\reports.py" />
+    <Compile Include="torch_web\users\role.py" />
+    <Compile Include="torch_web\users\roles_api.py" />
+    <Compile Include="torch_web\users\user.py" />
+    <Compile Include="torch_web\users\users_api.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="torch_web\collections\" />
+    <Folder Include="torch_web\config\" />
+    <Folder Include="torch_web\config\watchdog\" />
+    <Folder Include="torch_web\institutions\" />
+    <Folder Include="torch_web\" />
+    <Folder Include="torch_web\templates\" />
+    <Folder Include="torch_web\workflows\" />
+    <Folder Include="torch_web\notifications\" />
+    <Folder Include="torch_web\prefect_flows\" />
+    <Folder Include="torch_web\prefect_flows\blocks\" />
+    <Folder Include="torch_web\prefect_flows\tasks\" />
+    <Folder Include="torch_web\reports\" />
+    <Folder Include="torch_web\security\" />
+    <Folder Include="torch_web\static\" />
+    <Folder Include="torch_web\static\uploads\" />
+    <Folder Include="torch_web\static\uploads\Default\" />
+    <Folder Include="torch_web\users\" />
+    <Folder Include="torch_web\workflows\tasks\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

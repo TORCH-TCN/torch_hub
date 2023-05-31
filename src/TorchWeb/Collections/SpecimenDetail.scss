@@ -1,0 +1,19 @@
+.specimen-detail {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 32px;
+
+    > section {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    > figure {
+        img {
+            max-inline-size: 100%;
+            max-height: 80vh;
+            block-size: auto;
+            object-fit: contain;
+        }
+    }
+}

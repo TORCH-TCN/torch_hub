@@ -1,0 +1,74 @@
+﻿<section class="workflow @(IsEditing ? "editing" : "")">
+    <section>
+        <header>
+            <h2>Progress</h2>
+        </header>
+        <div class="progress">
+            <img src="/images/ellipse196.png" alt="" />
+            <div class="inside-circle">
+                <img src="/images/ellipse194.png" alt="" />
+                <p>60%</p>            @*show task progress percentage here*@
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <header>
+            <h2>Tasks</h2>
+        </header>
+        <ul>
+            @foreach (var task in Collection.Tasks)
+            {
+                <li>
+                    <TaskCard Task="task" OnDelete="RemoveTask" />
+                </li>
+            }
+        </ul>
+        @if (!Collection.Tasks.Any())
+        {
+            <p>You haven't yet added any tasks to this workflow. Open the Task Catalog to browse available tasks and set up your workflow.</p>
+        }
+    </section>
+
+    <button @onclick=SelectFiles>Upload</button>
+    <input type="file" name="file" @ref=FilePicker multiple hidden @onchange="Upload" />
+</section>
+
+@inject IModalService Modal
+@inject IConfiguration Config
+@inject IJSRuntime JS
+@code {
+    [Parameter] public CollectionResponse Collection { get; set; } = null!;
+    bool IsEditing;
+    bool IsSelected;
+    ElementReference FilePicker;
+
+    async Task RemoveTask(TorchTask task)
+    {
+        Collection.Tasks.Remove(task);
+        await SaveAsync();
+    }
+
+    string UploadUrl => $"{Config["Blossom:Authority"]}/collections/{Collection.Id}/specimens";
+    async Task SelectFiles()
+    {
+        await JS.InvokeVoidAsync("triggerClick", FilePicker);
+    }
+
+    async Task Upload()
+    {
+        await JS.InvokeVoidAsync("upload", FilePicker, UploadUrl);
+    }
+
+    async Task SaveAsync()
+    {
+        var workflow = new TorchTasksResponse
+        {
+            Tasks = Collection.Tasks
+        };
+        await TorchCommands.UpdateWorkflowAsync(Collection.Id, workflow);
+
+    }
+
+    void ToggleEdit() => IsEditing = !IsEditing;
+}
